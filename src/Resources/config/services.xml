@@ -2,6 +2,19 @@
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <!-- Put your services here -->
+        <service
+            class="BitBag\SyliusAdyenPlugin\Form\Type\ConfigurationType"
+            id="bit_bag.sylius_adyen_plugin.form.type.configuration_type"
+        >
+            <tag name="form.type"/>
+            <tag name="sylius.gateway_configuration_type" type="adyen" label="bitbag_sylius_adyen_plugin.ui.ayden_gateway_label"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\AdyenGatewayFactory"
+            id="bit_bag.sylius_adyen_plugin.adyen_gateway_factory"
+        >
+            <tag name="payum.gateway_factory_builder" factory="adyen"/>
+        </service>
     </services>
 </container>
