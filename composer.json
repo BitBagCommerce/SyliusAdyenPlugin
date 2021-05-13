@@ -1,7 +1,7 @@
 {
     "name": "sylius/plugin-skeleton",
     "type": "sylius-plugin",
-    "description": "Acme example plugin for Sylius.",
+    "description": "BitBag example plugin for Sylius.",
     "keywords": [
         "sylius",
         "sylius-plugin"
@@ -32,7 +32,7 @@
         "phpstan/phpstan-webmozart-assert": "0.12.12",
         "phpunit/phpunit": "^9.5",
         "sensiolabs/security-checker": "^6.0",
-        "sylius-labs/coding-standard": "^3.1",
+        "sylius-labs/coding-standard": "^4.0",
         "symfony/browser-kit": "^4.4",
         "symfony/debug-bundle": "^4.4 || ^5.0",
         "symfony/dotenv": "^4.4 || ^5.0",
@@ -51,11 +51,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Acme\\SyliusExamplePlugin\\": "src/",
-            "Tests\\Acme\\SyliusExamplePlugin\\": "tests/"
+            "BitBag\\SyliusAdyenPlugin\\": "src/"
         }
     },
     "autoload-dev": {
+        "psr-4": {
+            "Tests\\BitBag\\SyliusAdyenPlugin\\": "tests/"
+        },
         "classmap": [
             "tests/Application/Kernel.php"
         ]

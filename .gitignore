@@ -11,3 +11,5 @@
 /behat.yml
 /phpspec.yml
 /phpunit.xml
+
+ecs.php
