@@ -1,0 +1,8 @@
+{% if form.vars.value == 'adyen' %}
+
+    <div class="adyen-payment-container">
+        adyen!
+    </div>
+
+    <script src="{{ asset('/bundles/bitbagsyliusadyenplugin/js/checkout.js') }}"></script>
+{% endif %}
