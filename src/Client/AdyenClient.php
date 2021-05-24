@@ -9,11 +9,11 @@ use Adyen\Config;
 use Adyen\Environment;
 use Adyen\Service\Checkout;
 use Payum\Core\Bridge\Spl\ArrayObject;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Psr\Http\Client\ClientInterface;
 
 final class AdyenClient implements AdyenClientInterface
 {
-    protected $options = [
+    private $options = [
         'apiKey' => null,
         'skinCode' => null,
         'merchantAccount' => null,
@@ -25,15 +25,14 @@ final class AdyenClient implements AdyenClientInterface
         'ws_user' => null,
         'ws_user_password' => null,
     ];
-    /**
-     * @var HttpClientInterface
-     */
+
+    /** @var ClientInterface */
     private $httpClient;
 
     public function __construct(
-        array $options, HttpClientInterface $httpClient
-    )
-    {
+        array $options,
+        ClientInterface $httpClient
+    ) {
         $options = ArrayObject::ensureArrayObject($options);
         $options->defaults($this->options);
         $options->validateNotEmpty([
@@ -66,9 +65,11 @@ final class AdyenClient implements AdyenClientInterface
     }
 
     public function getAvailablePaymentMethods(
-        string $locale, string $countryCode, int $amount, string $currencyCode
-    ): array
-    {
+        string $locale,
+        string $countryCode,
+        int $amount,
+        string $currencyCode
+    ): array {
         $payload = [
             'amount'=>[
                 'value'=>$amount,
@@ -82,10 +83,10 @@ final class AdyenClient implements AdyenClientInterface
 
         $result = $this->createClient()->paymentMethods($payload);
 
-        if(!isset($result['paymentMethods'])){
-            throw new \RuntimeException(sprintf("Adyen API failed to return any payment methods"));
+        if (!isset($result['paymentMethods'])) {
+            throw new \RuntimeException(sprintf('Adyen API failed to return any payment methods'));
         }
 
-        return array_column($result['paymentMethods'], 'type', 'name');
+        return array_column($result['paymentMethods'], 'name', 'type');
     }
 }

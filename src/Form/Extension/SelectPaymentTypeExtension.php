@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Form\Extension;
-
 
 use Sylius\Bundle\CoreBundle\Form\Type\Checkout\SelectPaymentType;
 use Symfony\Component\Form\AbstractTypeExtension;
@@ -22,6 +22,4 @@ class SelectPaymentTypeExtension extends AbstractTypeExtension
     {
         return [SelectPaymentType::class];
     }
-
-
 }

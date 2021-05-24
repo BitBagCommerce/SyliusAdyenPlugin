@@ -6,3 +6,6 @@ parameters:
 services:
     BitBag\SyliusAdyenPlugin\Command\TestCommand:
         autoconfigure: true
+        arguments:
+            - '@bit_bag.sylius_adyen_plugin.client.adyen_client'
+

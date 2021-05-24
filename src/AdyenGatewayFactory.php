@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin;
 
+use BitBag\SyliusAdyenPlugin\Client\AdyenClient;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\GatewayFactory;
@@ -51,19 +52,20 @@ final class AdyenGatewayFactory extends GatewayFactory
             $config['payum.api'] = function (ArrayObject $config) {
                 $config->validateNotEmpty($config['payum.required_options']);
 
-                return new \stdClass(
+                return new AdyenClient(
                     [
-                        'skinCode' => $config['skinCode'],
+                        'apiKey' => $config['apiKey'],
+                        //'skinCode' => $config['skinCode'],
                         'merchantAccount' => $config['merchantAccount'],
-                        'hmacKey' => $config['hmacKey'],
-                        'notification_hmac' => $config['hmacNotification'],
+                        //'hmacKey' => $config['hmacKey'],
+                        //'notification_hmac' => $config['hmacNotification'],
                         'environment' => $config['environment'],
-                        'notification_method' => $config['notification_method'],
-                        'default_payment_fields' => $config['default_payment_fields'],
-                        'ws_user' => $config['wsUser'],
-                        'ws_user_password' => $config['wsUserPassword'],
+                        //'notification_method' => $config['notification_method'],
+                        //'default_payment_fields' => $config['default_payment_fields'],
+                        //'ws_user' => $config['wsUser'],
+                        //'ws_user_password' => $config['wsUserPassword'],
                     ],
-                    $config['payum.http_client']
+                    $config['httplug.client']
                 );
             };
         }

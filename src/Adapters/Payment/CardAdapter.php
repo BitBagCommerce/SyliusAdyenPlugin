@@ -1,15 +1,12 @@
 <?php
 
+declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Adapters\Payment;
 
-
 final class CardAdapter implements PaymentAdapterInterface
 {
-
-    /**
-     * @var string
-     */
+    /** @var string */
     private $setLocalizedName;
 
     public function setLocalizedName(string $localizedName): void
@@ -24,8 +21,6 @@ final class CardAdapter implements PaymentAdapterInterface
     {
         return $this->setLocalizedName;
     }
-
-
 
     public static function getKey(): string
     {

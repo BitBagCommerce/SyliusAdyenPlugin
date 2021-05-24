@@ -1,3 +1,7 @@
+# Notes:
+- { resource: "@BitBagAdyenPlugin/Resources/config/config.yaml" }
+
+---------
 <p align="center">
     <a href="https://sylius.com" target="_blank">
         <img src="https://demo.sylius.com/assets/shop/img/logo.png" />

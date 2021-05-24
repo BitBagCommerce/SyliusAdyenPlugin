@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Form\Type;
 
 use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
+use BitBag\SyliusAdyenPlugin\Validator\Constraint\AdyenCredentials;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ConfigurationType extends AbstractType
@@ -82,6 +84,22 @@ class ConfigurationType extends AbstractType
                         'groups' => ['sylius'],
                     ])
                 ],
+            ])
+            ->add('apiKey', TextType::class, [
+                'label' => 'apiKey',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'bitbag_sylius_adyen_plugin.ws_user_password.not_blank',
+                        'groups' => ['sylius'],
+                    ])
+                ],
             ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefault('constraints', [
+            new AdyenCredentials()
+        ]);
     }
 }

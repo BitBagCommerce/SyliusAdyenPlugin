@@ -19,25 +19,16 @@ use Tests\BitBag\SyliusAdyenPlugin\Behat\Page\Admin\PaymentMethod\CreatePageInte
 
 final class ManagingPaymentMethodAdyenContext implements Context
 {
-    /**
-     * @var CurrentPageResolverInterface
-     */
+    /** @var CurrentPageResolverInterface */
     private $currentPageResolver;
 
-    /**
-     * @var CreatePageInterface
-     */
+    /** @var CreatePageInterface */
     private $createPage;
 
-    /**
-     * @param CurrentPageResolverInterface $currentPageResolver
-     * @param CreatePageInterface $createPage
-     */
     public function __construct(
         CurrentPageResolverInterface $currentPageResolver,
         CreatePageInterface $createPage
-    )
-    {
+    ) {
         $this->createPage = $createPage;
         $this->currentPageResolver = $currentPageResolver;
     }
@@ -51,7 +42,6 @@ final class ManagingPaymentMethodAdyenContext implements Context
     {
         $this->createPage->open(['factory' => 'adyen']);
     }
-
 
     /**
      * @When I configure it with test Adyen credentials
