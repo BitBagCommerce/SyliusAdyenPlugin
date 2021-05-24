@@ -5,13 +5,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Command;
 
 use Adyen\AdyenException;
-use BitBag\SyliusAdyenPlugin\AdyenGatewayFactory;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClient;
-use Payum\Core\ApiAwareInterface;
-use Payum\Core\Exception\UnsupportedApiException;
-use Payum\Core\GatewayAwareInterface;
-use Payum\Core\GatewayInterface;
-use Payum\Core\Payum;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,27 +13,25 @@ use Symfony\Component\HttpFoundation\Response;
 class TestCommand extends \Symfony\Component\Console\Command\Command
 {
     protected static $defaultName = 'app:test';
-    /**
-     * @var AdyenClient
-     */
+
+    /** @var AdyenClient */
     private $adyenClient;
 
     public function __construct(AdyenClient $adyenClient)
     {
         parent::__construct();
 
-
         $this->adyenClient = $adyenClient;
     }
-
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
             $gate = $this->adyenClient->getAvailablePaymentMethods('pl_PL', 'pl', 10000, 'PLN');
-        }catch(AdyenException $ex){
-            if($ex->getCode() == Response::HTTP_UNAUTHORIZED){
+        } catch (AdyenException $ex) {
+            if ($ex->getCode() == Response::HTTP_UNAUTHORIZED) {
                 $output->writeln('Unauth');
+
                 return 2;
             }
 
@@ -47,7 +39,6 @@ class TestCommand extends \Symfony\Component\Console\Command\Command
         }
 
         return 0;
-
         /*$client = new \Adyen\Client();
 
         $client->setXApiKey('AQEkhmfuXNWTK0Qc+iSSm3AapuPCENmSp+0jS5/eTOkvRWd50GqdEMFdWw2+5HzctViMSCJMYAc=-I/vPUkVOC0sraNXTF0j9OSgprjxrK2Ck7e7IoOkKids=-S7BUq^y)UP9ry]mq');
@@ -96,5 +87,4 @@ class TestCommand extends \Symfony\Component\Console\Command\Command
 
         return 0;
     }
-
 }

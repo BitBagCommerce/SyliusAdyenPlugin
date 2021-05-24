@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Repository;
 
@@ -10,7 +11,6 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 
 class PaymentMethodRepository extends BasePaymentMethodRepository implements PaymentMethodRepositoryInterface
 {
-
     public function findAllForAdyenAndCode(string $code): array
     {
         return $this->createQueryBuilder('o')

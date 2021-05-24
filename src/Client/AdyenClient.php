@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Client;
 
+use Adyen\AdyenException;
 use Adyen\Client;
 use Adyen\Config;
 use Adyen\Environment;
 use Adyen\Service\Checkout;
+use BitBag\SyliusAdyenPlugin\Exception\AuthenticationException;
+use BitBag\SyliusAdyenPlugin\Exception\InvalidApiKeyException;
+use BitBag\SyliusAdyenPlugin\Exception\InvalidMerchantAccountException;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Psr\Http\Client\ClientInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 final class AdyenClient implements AdyenClientInterface
 {
@@ -49,15 +54,15 @@ final class AdyenClient implements AdyenClientInterface
         $this->httpClient = $httpClient;
     }
 
-    private function createClient(): Checkout
+    private function createClient($options): Checkout
     {
         $client = new Client(new Config([
             'httpClient'=>$this->httpClient
         ]));
 
-        $client->setXApiKey($this->options['apiKey']);
+        $client->setXApiKey($options['apiKey']);
         $client->setEnvironment(
-            $this->options['environment'] == 'test' ? \Adyen\Environment::TEST : Environment::LIVE
+            $options['environment'] == 'test' ? Environment::TEST : Environment::LIVE
         );
         $client->setTimeout(30);
 
@@ -81,12 +86,47 @@ final class AdyenClient implements AdyenClientInterface
             'shopperLocale' => $locale
         ];
 
-        $result = $this->createClient()->paymentMethods($payload);
+        $result = $this->createClient($this->options)->paymentMethods($payload);
 
         if (!isset($result['paymentMethods'])) {
             throw new \RuntimeException(sprintf('Adyen API failed to return any payment methods'));
         }
 
         return array_column($result['paymentMethods'], 'name', 'type');
+    }
+
+    private function dispatchException(AdyenException $exception)
+    {
+        if ($exception->getCode() === Response::HTTP_UNAUTHORIZED) {
+            throw new InvalidApiKeyException();
+        }
+
+        if ($exception->getCode() === Response::HTTP_FORBIDDEN) {
+            throw new InvalidMerchantAccountException();
+        }
+
+        throw $exception;
+    }
+
+    /**
+     * @throws AuthenticationException|AdyenException
+     */
+    public function isApiKeyValid(string $environment, string $merchantAccount, string $apiKey): bool
+    {
+        $payload = [
+            'merchantAccount' => $merchantAccount
+        ];
+        $options = [
+            'environment'=>$environment,
+            'apiKey'=>$apiKey
+        ];
+
+        try {
+            $this->createClient($options)->paymentMethods($payload);
+        } catch (AdyenException $exception) {
+            $this->dispatchException($exception);
+        }
+
+        return true;
     }
 }

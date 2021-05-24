@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Query;
-
 
 use Sylius\Component\Core\Model\OrderInterface;
 
@@ -15,14 +15,8 @@ class GetAvailablePaymentMethodsForOrder
         $this->order = $order;
     }
 
-    /**
-     * @return OrderInterface
-     */
     public function getOrder(): OrderInterface
     {
         return $this->order;
     }
-
-
-
 }

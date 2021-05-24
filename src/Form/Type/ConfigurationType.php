@@ -99,7 +99,9 @@ class ConfigurationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefault('constraints', [
-            new AdyenCredentials()
+            new AdyenCredentials([
+                'groups'=>['sylius']
+            ])
         ]);
     }
 }

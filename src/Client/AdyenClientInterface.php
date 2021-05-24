@@ -16,4 +16,6 @@ interface AdyenClientInterface
         int $amount,
         string $currencyCode
     ): array;
+
+    public function isApiKeyValid(string $environment, string $merchantAccount, string $apiKey): bool;
 }
