@@ -108,11 +108,23 @@ final class AdyenClient implements AdyenClientInterface
         throw $exception;
     }
 
+    private function validateArguments(?string $merchantAccount, ?string $apiKey)
+    {
+        if(!$merchantAccount){
+            throw new InvalidMerchantAccountException();
+        }
+        if(!$apiKey){
+            throw new InvalidApiKeyException();
+        }
+    }
+
     /**
      * @throws AuthenticationException|AdyenException
      */
-    public function isApiKeyValid(string $environment, string $merchantAccount, string $apiKey): bool
+    public function isApiKeyValid(string $environment, ?string $merchantAccount, ?string $apiKey): bool
     {
+        $this->validateArguments($merchantAccount, $apiKey);
+
         $payload = [
             'merchantAccount' => $merchantAccount
         ];
