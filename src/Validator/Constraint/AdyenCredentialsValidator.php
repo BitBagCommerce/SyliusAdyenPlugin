@@ -25,9 +25,9 @@ class AdyenCredentialsValidator extends ConstraintValidator
         try {
             $this->adyenClient->isApiKeyValid($value['environment'], $value['merchantAccount'], $value['apiKey']);
         } catch (InvalidApiKeyException $ex) {
-            $this->context->buildViolation('invalid api key')->addViolation();
+            $this->context->buildViolation($constraint->messageInvalidApiKey)->addViolation();
         } catch (InvalidMerchantAccountException $ex) {
-            $this->context->buildViolation('invalid merchant account')->addViolation();
+            $this->context->buildViolation($constraint->messageInvalidMerchantAccount)->addViolation();
         }
     }
 }
