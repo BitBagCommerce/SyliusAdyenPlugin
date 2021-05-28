@@ -110,10 +110,10 @@ final class AdyenClient implements AdyenClientInterface
 
     private function validateArguments(?string $merchantAccount, ?string $apiKey)
     {
-        if(!$merchantAccount){
+        if (!$merchantAccount) {
             throw new InvalidMerchantAccountException();
         }
-        if(!$apiKey){
+        if (!$apiKey) {
             throw new InvalidApiKeyException();
         }
     }

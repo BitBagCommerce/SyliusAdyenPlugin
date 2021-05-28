@@ -44,18 +44,18 @@
             <argument type="service" id="psr18.http_client" />
         </service>
 
-        <service
+        <!--<service
             class="BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepository"
             id="bit_bag.sylius_adyen_plugin.repository.payment_method_repository"
         >
 
-        </service>
+        </service>-->
 
         <service
             class="BitBag\SyliusAdyenPlugin\Client\AdyenClient"
             id="bit_bag.sylius_adyen_plugin.client.adyen_client"
         >
-            <factory service="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider" method="getClient"/>
+            <factory service="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider" method="getDefaultClient"/>
         </service>
 
         <service
@@ -67,10 +67,18 @@
         </service>
 
         <service
-            class="BitBag\SyliusAdyenPlugin\Form\Extension\GatewayConfigTypeExtension"
-            id="bit_bag.sylius_adyen_plugin.form.extension.gateway_config_type_extension"
+            class="BitBag\SyliusAdyenPlugin\Form\Extension\PaymentTypeExtension"
+            id="bit_bag.sylius_adyen_plugin.form.extension.payment_type_extension"
+        >
+            <tag name="form.type_extension" />
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Form\Extension\PaymentMethodChoiceTypeExtension"
+            id="bit_bag.sylius_adyen_plugin.form.extension.payment_method_choice_type_extension"
         >
             <tag name="form.type_extension"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
         </service>
 
     </services>

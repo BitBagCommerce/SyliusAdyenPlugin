@@ -31,7 +31,7 @@ class AdyenClientProvider
         $this->httpClient = $httpClient;
     }
 
-    public function getClient(): AdyenClient
+    public function getDefaultClient(): AdyenClient
     {
         $paymentMethod = $this->paymentMethodRepository->findOneByChannel(
             $this->channelContext->getChannel()
@@ -45,5 +45,17 @@ class AdyenClientProvider
         $config = $gateway->getConfig();
 
         return new AdyenClient($config, $this->httpClient);
+    }
+
+    public function getClientForCode(string $code): AdyenClient
+    {
+        $paymentMethod = $this->paymentMethodRepository->findAllForAdyenAndCode($code);
+        $paymentMethod = $paymentMethod ? array_pop($paymentMethod) : null;
+
+        if (!$paymentMethod) {
+            throw new \InvalidArgumentException(sprintf('Adyen for "%s" code is not configured', $code));
+        }
+
+        return new AdyenClient($paymentMethod->getGatewayConfig()->getConfig(), $this->httpClient);
     }
 }
