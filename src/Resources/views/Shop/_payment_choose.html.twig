@@ -7,12 +7,37 @@
     <div class="content">
         <a class="header">{{ form_label(form, null, {'label_attr': {'data-test-payment-method-label': ''}}) }}</a>
 
-        {{ dump(available_methods) }}
-
         {% if method.description is not null %}
             <div class="description">
                 <p>{{ method.description }}</p>
             </div>
         {% endif %}
+
+        {% for keyChoice, choice in available_methods.vars.choices %}
+            <div class="online-payment__item online-payment__item--{{ choice.value }}">
+
+                <input
+                        type="radio"
+                        value="{{ choice.value }}"
+                        id="choice-{{ keyChoice }}"
+                        name="{{ available_methods.vars.full_name }}"
+                        class="online-payment__input"
+                >
+                <label for="choice-{{ keyChoice }}" class="online-payment__label">
+                    {#<img class="online-payment__image" src="{{ choice.attr['image'] }}">#}
+                    {{ choice.label }}
+                </label>
+
+                {#{% if choice.value == 'creditcard' and true == gatewayConfig.config['components'] %}
+                    {% include 'BitBagSyliusMolliePlugin:Shop/PaymentMollie:_creditCardForm.html.twig' %}
+                {% elseif choice.value == 'ideal' %}
+                    {% for key, method in mollie_payment_options %}
+                        {% if key == 'issuers' and method.vars.choices|length > 0 %}
+                            {% include 'BitBagSyliusMolliePlugin:Shop/PaymentMollie:_issuers.html.twig' %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}#}
+            </div>
+        {% endfor %}
     </div>
 </div>

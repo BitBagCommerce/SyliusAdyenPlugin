@@ -18,13 +18,6 @@
         </service>
 
         <service
-            class="BitBag\SyliusAdyenPlugin\Form\Extension\SelectPaymentTypeExtension"
-            id="bit_bag.sylius_adyen_plugin.form.extension.select_payment_type_extension"
-        >
-            <tag name="form.type_extension"/>
-        </service>
-
-        <service
             class="Symfony\Component\Messenger\MessageBus"
             id="bit_bag.sylius_adyen_plugin.message_bus"
         />
@@ -70,15 +63,21 @@
             class="BitBag\SyliusAdyenPlugin\Form\Extension\PaymentTypeExtension"
             id="bit_bag.sylius_adyen_plugin.form.extension.payment_type_extension"
         >
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.resolver.order.payment_checkout_order_resolver"/>
+            <argument type="service" id="sylius.repository.payment_method"/>
+            <argument type="service" id="sylius.context.shopper"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
             <tag name="form.type_extension" />
         </service>
 
         <service
-            class="BitBag\SyliusAdyenPlugin\Form\Extension\PaymentMethodChoiceTypeExtension"
-            id="bit_bag.sylius_adyen_plugin.form.extension.payment_method_choice_type_extension"
+            class="BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolver"
+            id="bit_bag.sylius_adyen_plugin.resolver.order.payment_checkout_order_resolver"
         >
-            <tag name="form.type_extension"/>
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
+
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="sylius.context.cart"/>
+            <argument type="service" id="sylius.repository.order"/>
         </service>
 
     </services>

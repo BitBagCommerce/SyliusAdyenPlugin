@@ -8,6 +8,7 @@ use BitBag\SyliusAdyenPlugin\Client\AdyenClient;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use Psr\Http\Client\ClientInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Resource\Exception\UpdateHandlingException;
 
 class AdyenClientProvider
@@ -47,6 +48,19 @@ class AdyenClientProvider
         return new AdyenClient($config, $this->httpClient);
     }
 
+    public function getForPaymentMethod(PaymentMethodInterface $paymentMethod): AdyenClient
+    {
+        $isAdyen = $paymentMethod->getGatewayConfig()->getConfig()['adyen'] ?? null;
+        if (!$isAdyen) {
+            throw new \InvalidArgumentException(sprintf(
+                'Provided PaymentMethod #%d is not an Adyen instance',
+                $paymentMethod->getId()
+            ));
+        }
+
+        return new AdyenClient($paymentMethod->getGatewayConfig()->getConfig(), $this->httpClient);
+    }
+
     public function getClientForCode(string $code): AdyenClient
     {
         $paymentMethod = $this->paymentMethodRepository->findAllForAdyenAndCode($code);
@@ -56,6 +70,6 @@ class AdyenClientProvider
             throw new \InvalidArgumentException(sprintf('Adyen for "%s" code is not configured', $code));
         }
 
-        return new AdyenClient($paymentMethod->getGatewayConfig()->getConfig(), $this->httpClient);
+        return $this->getForPaymentMethod($paymentMethod);
     }
 }
