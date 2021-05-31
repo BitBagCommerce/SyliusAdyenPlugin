@@ -42,6 +42,7 @@ class PaymentMethodRepository extends BasePaymentMethodRepository implements Pay
     {
         return $this
             ->getQueryForChannel($channel)
+            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult()
         ;
