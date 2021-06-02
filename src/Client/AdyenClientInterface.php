@@ -18,4 +18,6 @@ interface AdyenClientInterface
     ): array;
 
     public function isApiKeyValid(string $environment, ?string $merchantAccount, ?string $apiKey): bool;
+
+    public function getEnvironment(): string;
 }

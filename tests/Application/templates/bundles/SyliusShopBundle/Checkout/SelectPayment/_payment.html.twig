@@ -10,7 +10,7 @@
                 {% include '@BitBagSyliusAdyenPlugin/Shop/_payment_choose.html.twig' with {
                     'form': choice_form,
                     'method': form.method.vars.choices[key].data,
-                    'available_methods': form.details[choice_form.vars.value]
+                    'available_methods': form.channels[choice_form.vars.value]
                 } %}
             {% else %}
                 {% include '@SyliusShop/Checkout/SelectPayment/_choice.html.twig' with {

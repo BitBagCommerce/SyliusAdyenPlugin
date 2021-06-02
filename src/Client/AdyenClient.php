@@ -86,13 +86,24 @@ final class AdyenClient implements AdyenClientInterface
             'shopperLocale' => $locale
         ];
 
-        $result = $this->createClient($this->options)->paymentMethods($payload);
+        $paymentMethods = $this->createClient($this->options)->paymentMethods($payload);
 
-        if (!isset($result['paymentMethods'])) {
+        if (!isset($paymentMethods['paymentMethods'])) {
             throw new \RuntimeException(sprintf('Adyen API failed to return any payment methods'));
         }
 
-        return array_column($result['paymentMethods'], 'name', 'type');
+        $result = [];
+        foreach($paymentMethods['paymentMethods'] as $paymentMethod){
+            if(!empty($paymentMethod['brands'])){
+                foreach($paymentMethod['brands'] as $brand){
+                    $result[$brand] = $paymentMethod['name'];
+                }
+                continue;
+            }
+            $result[$paymentMethod['type']] = $paymentMethod['name'];
+        }
+
+        return $result;
     }
 
     private function dispatchException(AdyenException $exception)
@@ -140,5 +151,10 @@ final class AdyenClient implements AdyenClientInterface
         }
 
         return true;
+    }
+
+    public function getEnvironment(): string
+    {
+        return $this->options['environment'];
     }
 }
