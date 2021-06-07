@@ -1,6 +1,10 @@
-<div class="item" {{ sylius_test_html_attribute('payment-item') }}>
+<div
+    class="adyen-method item"
+    {{ sylius_test_html_attribute('payment-item') }}
+    data-code="{{ available_methods.vars.name }}"
+>
     <div class="field">
-        <div class="ui radio checkbox" {{ sylius_test_html_attribute('payment-method-checkbox') }}>
+        <div class="ui radio checkbox adyen" {{ sylius_test_html_attribute('payment-method-checkbox') }}>
             {{ form_widget(form, sylius_test_form_attribute('payment-method-select')) }}
         </div>
     </div>
@@ -13,7 +17,8 @@
             </div>
         {% endif %}
 
-        {% for keyChoice, choice in available_methods.vars.choices %}
+        <div class="adyen-method-grid">
+        {% for keyChoice, choice in available_methods.vars.choices -%}
             <div class="online-payment__item online-payment__item--{{ choice.value }}">
                 <button type="submit" title="{{ choice.data }}">
                     <img class="online-payment__image" src="{{
@@ -21,6 +26,7 @@
                     }}">
                 </button>
             </div>
-        {% endfor %}
+        {%- endfor %}
+        </div>
     </div>
 </div>
