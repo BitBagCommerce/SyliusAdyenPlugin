@@ -1,3 +1,11 @@
+{% set payment_configuration = adyen_payment_configuration(order) %}
+
+{% if payment_configuration is empty %}
+    <button type="submit" class="ui huge primary fluid icon labeled button" {{ sylius_test_html_attribute('confirmation-button') }}>
+        <i class="check icon"></i> {{ 'sylius.ui.place_order'|trans }}
+    </button>
+{% else %}
+
 <script src="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/4.5.0/adyen.js"
         integrity="sha384-Co94gRjtPsf3110lIIB8CaogV5Khwg8lcSh4fK5r1gzfWZHxaqpBXwEFjaFGcLaj"
         crossorigin="anonymous"></script>
@@ -13,9 +21,9 @@
 
     const checkout = new AdyenCheckout({
         paymentMethodsResponse: {{ adyen_payment_methods(order)|json_encode|raw }},
-        clientKey: "{{ adyen_payment_configuration(order)['clientKey'] }}", // Web Drop-in versions before 3.10.1 use originKey instead of clientKey.
+        clientKey: "{{ payment_configuration['clientKey'] }}", // Web Drop-in versions before 3.10.1 use originKey instead of clientKey.
         locale: "{{ order.localeCode }}",
-        environment: "{{ adyen_payment_configuration(order)['environment'] }}",
+        environment: "{{ payment_configuration['environment'] }}",
         onSubmit: (state, dropin) => {
             console.log(state, dropin);
 
@@ -61,3 +69,4 @@
             .mount('#dropin-container');
     })
 </script>
+{% endif %}

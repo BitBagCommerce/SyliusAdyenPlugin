@@ -44,7 +44,12 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
          * @var $payment PaymentMethodInterface
          */
         $payment = $order->getLastPayment();
-        $client = $this->adyenClientProvider->getForPaymentMethod($payment->getMethod());
+
+        try {
+            $client = $this->adyenClientProvider->getForPaymentMethod($payment->getMethod());
+        } catch (\InvalidArgumentException $ex) {
+            return false;
+        }
 
         return $client->getAvailablePaymentMethods(
             $order->getLocaleCode(),
