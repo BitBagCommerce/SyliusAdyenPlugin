@@ -1,0 +1,63 @@
+<script src="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/4.5.0/adyen.js"
+        integrity="sha384-Co94gRjtPsf3110lIIB8CaogV5Khwg8lcSh4fK5r1gzfWZHxaqpBXwEFjaFGcLaj"
+        crossorigin="anonymous"></script>
+
+<link rel="stylesheet"
+      href="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/4.5.0/adyen.css"
+      integrity="sha384-8EGo5meqBqlQ4MFf3nbQYD/onCuTfclYfNl3a5uQ1swwv0XXcTkda75dvjlYbZI8"
+      crossorigin="anonymous">
+
+<div id="dropin-container"></div>
+
+<script>
+
+    const checkout = new AdyenCheckout({
+        paymentMethodsResponse: {{ adyen_payment_methods(order)|json_encode|raw }},
+        clientKey: "{{ adyen_payment_configuration(order)['clientKey'] }}", // Web Drop-in versions before 3.10.1 use originKey instead of clientKey.
+        locale: "{{ order.localeCode }}",
+        environment: "{{ adyen_payment_configuration(order)['environment'] }}",
+        onSubmit: (state, dropin) => {
+            console.log(state, dropin);
+
+            // Global configuration for onSubmit
+            // Your function calling your server to make the `/payments` request
+            /*makePayment(state.data)
+                .then(response => {
+                    if (response.action) {
+                        // Drop-in handles the action object from the /payments response
+                        dropin.handleAction(response.action);
+                    } else {
+                        // Your function to show the final result to the shopper
+                        showFinalResult(response);
+                    }
+                })
+                .catch(error => {
+                    throw Error(error);
+                });*/
+        },
+        onAdditionalDetails: (state, dropin) => {
+            console.log(state, dropin)
+
+            // Your function calling your server to make a `/payments/details` request
+            /*makeDetailsCall(state.data)
+                .then(response => {
+                    if (response.action) {
+                        // Drop-in handles the action object from the /payments response
+                        dropin.handleAction(response.action);
+                    } else {
+                        // Your function to show the final result to the shopper
+                        showFinalResult(response);
+                    }
+                })
+                .catch(error => {
+                    throw Error(error);
+                });*/
+        },
+    });
+
+    document.addEventListener('DOMContentLoaded', (e) => {
+        const dropin = checkout
+            .create('dropin')
+            .mount('#dropin-container');
+    })
+</script>

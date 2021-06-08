@@ -80,5 +80,13 @@
             <argument type="service" id="sylius.repository.order"/>
         </service>
 
+        <service
+            class="BitBag\SyliusAdyenPlugin\Twig\Extension\PaymentMethodsForOrderExtension"
+            id="bit_bag.sylius_adyen_plugin.twig.extension.payment_methods_for_order_extension"
+        >
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
+            <tag name="twig.extension"/>
+        </service>
+
     </services>
 </container>

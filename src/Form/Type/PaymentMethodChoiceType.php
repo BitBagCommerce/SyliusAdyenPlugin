@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Form\Type;
-
 
 use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -27,6 +27,4 @@ class PaymentMethodChoiceType extends ChoiceType
         parent::buildView($view, $form, $options);
         $view->vars['environment'] = $options['environment'];
     }
-
-
 }

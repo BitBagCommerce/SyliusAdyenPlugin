@@ -63,11 +63,10 @@ class PaymentTypeExtension extends AbstractTypeExtension
 
     private function getChoicesForPaymentMethod(
         AdyenClientInterface $client
-    ): array
-    {
+    ): array {
         $order = $this->paymentCheckoutOrderResolver->resolve();
 
-        return $client->getAvailablePaymentMethods(
+        return $client->getAvailablePaymentMethodsForForm(
             $order->getLocaleCode(),
             $order->getBillingAddress()->getCountryCode(),
             $order->getTotal(),

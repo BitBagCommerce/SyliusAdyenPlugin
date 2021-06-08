@@ -69,6 +69,28 @@ final class AdyenClient implements AdyenClientInterface
         return new Checkout($client);
     }
 
+    public function getAvailablePaymentMethodsForForm(
+        string $locale,
+        string $countryCode,
+        int $amount,
+        string $currencyCode
+    ): array {
+        $paymentMethods = $this->getAvailablePaymentMethods($locale, $countryCode, $amount, $currencyCode);
+        $result = [];
+        foreach ($paymentMethods['paymentMethods'] as $paymentMethod) {
+            if (!empty($paymentMethod['brands'])) {
+                foreach ($paymentMethod['brands'] as $brand) {
+                    $result[$brand] = $paymentMethod['name'];
+                }
+
+                continue;
+            }
+            $result[$paymentMethod['type']] = $paymentMethod['name'];
+        }
+
+        return $result;
+    }
+
     public function getAvailablePaymentMethods(
         string $locale,
         string $countryCode,
@@ -92,18 +114,7 @@ final class AdyenClient implements AdyenClientInterface
             throw new \RuntimeException(sprintf('Adyen API failed to return any payment methods'));
         }
 
-        $result = [];
-        foreach($paymentMethods['paymentMethods'] as $paymentMethod){
-            if(!empty($paymentMethod['brands'])){
-                foreach($paymentMethod['brands'] as $brand){
-                    $result[$brand] = $paymentMethod['name'];
-                }
-                continue;
-            }
-            $result[$paymentMethod['type']] = $paymentMethod['name'];
-        }
-
-        return $result;
+        return $paymentMethods;
     }
 
     private function dispatchException(AdyenException $exception)

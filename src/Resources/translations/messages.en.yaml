@@ -10,3 +10,4 @@ bitbag_sylius_adyen_plugin:
     ayden_gateway_label: Adyen
     ws_user: WS user
     ws_user_password: WS user password
+    client_key: Client key

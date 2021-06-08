@@ -32,6 +32,15 @@ class ConfigurationType extends AbstractType
                     ])
                 ],
             ])
+            ->add('clientKey', TextType::class, [
+                'label' => 'bitbag_sylius_adyen_plugin.ui.client_key',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'bitbag_sylius_adyen_plugin.merchant_account.not_blank',
+                        'groups' => ['sylius'],
+                    ])
+                ]
+            ])
             ->add('merchantAccount', TextType::class, [
                 'label' => 'bitbag_sylius_adyen_plugin.ui.merchant_account',
                 'constraints' => [
