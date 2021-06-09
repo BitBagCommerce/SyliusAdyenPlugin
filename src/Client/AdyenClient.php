@@ -117,6 +117,28 @@ final class AdyenClient implements AdyenClientInterface
         return $paymentMethods;
     }
 
+    public function submitPayment(
+        int $amount,
+        string $currencyCode,
+        string $reference,
+        string $redirectUrl,
+        array $paymentData
+    )
+    {
+        $payload = [
+            'amount'=>[
+                'value'=>$amount,
+                'currency'=> $currencyCode
+            ],
+            'reference' => $reference,
+            'merchantAccount' => $this->options['merchantAccount'],
+            'returnUrl' => $redirectUrl,
+            'paymentMethod'=>$paymentData
+        ];
+
+        return $this->createClient($this->options)->payments($payload);
+    }
+
     private function dispatchException(AdyenException $exception)
     {
         if ($exception->getCode() === Response::HTTP_UNAUTHORIZED) {

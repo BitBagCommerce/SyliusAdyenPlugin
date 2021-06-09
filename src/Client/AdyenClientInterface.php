@@ -22,4 +22,12 @@ interface AdyenClientInterface
     public function getEnvironment(): string;
 
     public function getAvailablePaymentMethodsForForm(string $locale, string $countryCode, int $amount, string $currencyCode): array;
+
+    public function submitPayment(
+        int $amount,
+        string $currencyCode,
+        string $reference,
+        string $redirectUrl,
+        array $paymentData
+    );
 }

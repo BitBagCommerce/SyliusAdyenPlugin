@@ -1,0 +1,5 @@
+# Delete these routes and define your own shop routes here
+
+bitbag_adyen_payments:
+  path: /payment/adyen
+  controller: bit_bag.sylius_adyen_plugin.controller.shop.payments_action

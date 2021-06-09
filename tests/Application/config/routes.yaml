@@ -1,9 +1,9 @@
-acme_sylius_example_shop:
-    resource: "@BitBagSyliusAdyenPlugin/Resources/config/shop_routing.yml"
+bitbag_adyen_plugin_shop_routing:
+    resource: "@BitBagSyliusAdyenPlugin/Resources/config/routing/shop_routing.yml"
     prefix: /{_locale}
     requirements:
         _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
 
-acme_sylius_example_admin:
-    resource: "@BitBagSyliusAdyenPlugin/Resources/config/admin_routing.yml"
+bitbag_adyen_plugin_admin:
+    resource: "@BitBagSyliusAdyenPlugin/Resources/config/routing/admin_routing.yml"
     prefix: /admin
