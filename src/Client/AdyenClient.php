@@ -123,8 +123,7 @@ final class AdyenClient implements AdyenClientInterface
         string $reference,
         string $redirectUrl,
         array $paymentData
-    )
-    {
+    ) {
         $payload = [
             'amount'=>[
                 'value'=>$amount,

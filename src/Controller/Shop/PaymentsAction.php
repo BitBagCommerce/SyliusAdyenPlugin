@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
-use BitBag\SyliusAdyenPlugin\AdyenGatewayFactory;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Payment\AdyenActionResolver;
 use Payum\Core\Security\GenericTokenFactory;
@@ -16,25 +15,19 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class PaymentsAction
 {
-    /**
-     * @var AdyenClientProvider
-     */
+    /** @var AdyenClientProvider */
     private $adyenClientProvider;
-    /**
-     * @var OrderRepositoryInterface
-     */
+
+    /** @var OrderRepositoryInterface */
     private $orderRepository;
-    /**
-     * @var MessageBusInterface
-     */
+
+    /** @var MessageBusInterface */
     private $messageBus;
-    /**
-     * @var AdyenActionResolver
-     */
+
+    /** @var AdyenActionResolver */
     private $adyenActionResolver;
-    /**
-     * @var GenericTokenFactory
-     */
+
+    /** @var GenericTokenFactory */
     private $genericTokenFactory;
 
     public function __construct(
@@ -43,8 +36,7 @@ class PaymentsAction
         MessageBusInterface $messageBus,
         AdyenActionResolver $adyenActionResolver,
         GenericTokenFactory $genericTokenFactory
-    )
-    {
+    ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->orderRepository = $orderRepository;
         $this->messageBus = $messageBus;
@@ -52,14 +44,13 @@ class PaymentsAction
         $this->genericTokenFactory = $genericTokenFactory;
     }
 
-
     public function __invoke(int $orderId, Request $request)
     {
         /**
          * @var $order OrderInterface
          */
         $order = $this->orderRepository->find($orderId);
-        if(!$order){
+        if (!$order) {
             throw new NotFoundHttpException();
         }
 
@@ -71,7 +62,8 @@ class PaymentsAction
 
         $client = $this->adyenClientProvider->getForPaymentMethod($payment->getMethod());
         $payments = $client->submitPayment(
-            $order->getTotal(), $order->getCurrencyCode()
+            $order->getTotal(),
+            $order->getCurrencyCode()
         );
 
         // TODO: Implement __invoke() method.
