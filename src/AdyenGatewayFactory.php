@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin;
 
+use BitBag\SyliusAdyenPlugin\Action\CaptureAction;
+use BitBag\SyliusAdyenPlugin\Action\ConvertPaymentAction;
+use BitBag\SyliusAdyenPlugin\Action\StatusAction;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClient;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
@@ -28,7 +31,7 @@ final class AdyenGatewayFactory extends GatewayFactory
     {
         $config->defaults([
             'payum.factory_name' => self::FACTORY_NAME,
-            'payum.factory_title' => 'Adyen',
+            'payum.factory_title' => 'Adyen'
         ]);
 
         if (false === (bool) $config['payum.api']) {

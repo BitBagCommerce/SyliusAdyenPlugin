@@ -27,21 +27,29 @@
         onSubmit: (state, dropin) => {
             console.log(state, dropin);
 
+            const options = {
+                method: 'POST',
+                body: JSON.stringify(state.data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+
             // Global configuration for onSubmit
             // Your function calling your server to make the `/payments` request
-            /*makePayment(state.data)
+            fetch('{{ path('bitbag_adyen_payments', {orderId: order.id}) }}', options)
                 .then(response => {
                     if (response.action) {
                         // Drop-in handles the action object from the /payments response
                         dropin.handleAction(response.action);
                     } else {
                         // Your function to show the final result to the shopper
-                        showFinalResult(response);
+                        alert('final!');
                     }
                 })
                 .catch(error => {
                     throw Error(error);
-                });*/
+                });
         },
         onAdditionalDetails: (state, dropin) => {
             console.log(state, dropin)
