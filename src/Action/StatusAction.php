@@ -4,9 +4,16 @@
 namespace BitBag\SyliusAdyenPlugin\Action;
 
 
+use BitBag\SyliusAdyenPlugin\Client\PaymentStatuses;
 use Payum\Core\Action\ActionInterface;
+use Payum\Core\ApiAwareInterface;
+use Payum\Core\ApiAwareTrait;
 use Payum\Core\Exception\RequestNotSupportedException;
+use Payum\Core\GatewayAwareInterface;
+use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\GetStatusInterface;
+use Payum\Core\Security\GenericTokenFactoryAwareInterface;
+use Payum\Core\Security\GenericTokenFactoryAwareTrait;
 use Sylius\Component\Core\Model\PaymentInterface;
 
 class StatusAction implements ActionInterface
@@ -21,13 +28,13 @@ class StatusAction implements ActionInterface
 
         $details = $payment->getDetails();
 
-        if (200 === $details['status']) {
-            $request->markCaptured();
+        if (PaymentStatuses::PAYMENT_AUTHORISED === $details['resultCode']) {
+            $payment->setState(PaymentInterface::STATE_COMPLETED);
 
             return;
         }
 
-        if (400 === $details['status']) {
+        if (400 === $details['resultCode']) {
             $request->markFailed();
 
             return;

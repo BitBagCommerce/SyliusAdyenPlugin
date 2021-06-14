@@ -15,12 +15,27 @@
       integrity="sha384-8EGo5meqBqlQ4MFf3nbQYD/onCuTfclYfNl3a5uQ1swwv0XXcTkda75dvjlYbZI8"
       crossorigin="anonymous">
 
+<style>
+    body #dropin-container .adyen-checkout__threeds2__challenge,
+    body #dropin-container .adyen-checkout__threeds2__challenge iframe
+    {
+        width: 100%;
+    }
+</style>
+
 <div id="dropin-container"></div>
 
 <script>
 
     const checkout = new AdyenCheckout({
         paymentMethodsResponse: {{ adyen_payment_methods(order)|json_encode|raw }},
+        paymentMethodsConfiguration: {
+            card: {
+                hasHolderName: true,
+                holderNameRequired: true,
+                enableStoreDetails: true,
+            }
+        },
         clientKey: "{{ payment_configuration['clientKey'] }}", // Web Drop-in versions before 3.10.1 use originKey instead of clientKey.
         locale: "{{ order.localeCode }}",
         environment: "{{ payment_configuration['environment'] }}",
@@ -38,10 +53,12 @@
             // Global configuration for onSubmit
             // Your function calling your server to make the `/payments` request
             fetch('{{ path('bitbag_adyen_payments', {orderId: order.id}) }}', options)
-                .then(response => {
-                    if (response.action) {
+                .then(response => response.json())
+                .then(data => {
+
+                    if (data.action) {
                         // Drop-in handles the action object from the /payments response
-                        dropin.handleAction(response.action);
+                        dropin.handleAction(data.action);
                     } else {
                         // Your function to show the final result to the shopper
                         alert('final!');

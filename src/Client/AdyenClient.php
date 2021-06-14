@@ -117,13 +117,29 @@ final class AdyenClient implements AdyenClientInterface
         return $paymentMethods;
     }
 
+    private function getOrigin(string $url): string
+    {
+        $components = parse_url($url);
+
+        $pattern = '%s://%s';
+        if(!empty($components['port'])){
+            $pattern .= ':%d';
+        }
+
+        return sprintf($pattern, $components['scheme'], $components['host'], $components['port']);
+    }
+
     public function submitPayment(
         int $amount,
         string $currencyCode,
         string $reference,
         string $redirectUrl,
-        array $paymentData
+        array $receivedPayload
     ) {
+        if(empty($receivedPayload['paymentMethod'])){
+            throw new \InvalidArgumentException();
+        }
+
         $payload = [
             'amount'=>[
                 'value'=>$amount,
@@ -132,8 +148,17 @@ final class AdyenClient implements AdyenClientInterface
             'reference' => $reference,
             'merchantAccount' => $this->options['merchantAccount'],
             'returnUrl' => $redirectUrl,
-            'paymentMethod'=>$paymentData
+            'paymentMethod'=>$receivedPayload['paymentMethod'],
+            'additionalData'=> [
+                'allow3DS2' => true
+            ],
+            'channel' => 'web',
+            'origin' => $this->getOrigin($redirectUrl)
         ];
+
+        if(!empty($receivedPayload['browserInfo'])){
+            $payload['browserInfo'] = $receivedPayload['browserInfo'];
+        }
 
         return $this->createClient($this->options)->payments($payload);
     }

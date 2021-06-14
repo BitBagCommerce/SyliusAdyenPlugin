@@ -2,6 +2,8 @@
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <defaults public="true"/>
+
         <service
             class="BitBag\SyliusAdyenPlugin\Form\Type\ConfigurationType"
             id="bit_bag.sylius_adyen_plugin.form.type.configuration_type"
@@ -13,7 +15,13 @@
         <service
             class="BitBag\SyliusAdyenPlugin\AdyenGatewayFactory"
             id="bit_bag.sylius_adyen_plugin.adyen_gateway_factory"
+        />
+
+        <service
+            id="bit_bag.sylius_adyen_plugin.adyen_gateway_factory.wrapper"
+            class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder"
         >
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.adyen_gateway_factory"/>
             <tag name="payum.gateway_factory_builder" factory="adyen"/>
         </service>
 
@@ -125,13 +133,13 @@
             <tag name="payum.action" factory="adyen" alias="payum.action.status"/>
         </service>
 
-        <service
+        <!--<service
             class="BitBag\SyliusAdyenPlugin\Action\ConvertPaymentAction"
             id="bit_bag.sylius_adyen_plugin.action.convert_payment_action"
             public="true"
         >
             <tag name="payum.action" factory="adyen" alias="payum.action.convert_payment"/>
-        </service>
+        </service>-->
 
     </services>
 </container>

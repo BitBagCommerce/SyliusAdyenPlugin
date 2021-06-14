@@ -28,6 +28,6 @@ interface AdyenClientInterface
         string $currencyCode,
         string $reference,
         string $redirectUrl,
-        array $paymentData
+        array $receivedPayload
     );
 }

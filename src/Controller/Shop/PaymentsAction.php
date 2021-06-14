@@ -82,7 +82,7 @@ class PaymentsAction
             throw new NotFoundHttpException();
         }
 
-        $payload = $request->request->get('paymentMethod');
+        $payload = $request->request->all();
         if(!$payload){
             throw new \InvalidArgumentException();
         }
