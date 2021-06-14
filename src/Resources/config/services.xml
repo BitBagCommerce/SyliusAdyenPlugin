@@ -110,8 +110,9 @@
         </service>
 
         <service
-            id="bitbag.sylius_adyent_plugin.action.capture"
+            id="bit_bag.sylius_adyent_plugin.action.capture"
             class="BitBag\SyliusAdyenPlugin\Action\CaptureAction"
+            public="true"
         >
             <tag name="payum.action" factory="adyen" alias="payum.action.capture"/>
         </service>
@@ -119,6 +120,7 @@
         <service
             class="BitBag\SyliusAdyenPlugin\Action\StatusAction"
             id="bit_bag.sylius_adyen_plugin.action.status_action"
+            public="true"
         >
             <tag name="payum.action" factory="adyen" alias="payum.action.status"/>
         </service>
@@ -126,6 +128,7 @@
         <service
             class="BitBag\SyliusAdyenPlugin\Action\ConvertPaymentAction"
             id="bit_bag.sylius_adyen_plugin.action.convert_payment_action"
+            public="true"
         >
             <tag name="payum.action" factory="adyen" alias="payum.action.convert_payment"/>
         </service>
