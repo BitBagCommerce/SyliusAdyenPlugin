@@ -82,6 +82,14 @@ class PaymentsAction
         $this->payum->getGateway($payment->getMethod()->getCode())->execute($status);
 
         if(!$status->isAuthorized()) {
+            $details['paymentDetailsUrl'] = $this->urlGenerator->generate(
+                'bitbag_adyen_payment_details',
+                ['orderId'=>$payment->getOrder()->getId()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            $payment->setDetails($details);
+
             return false;
         }
 

@@ -5,5 +5,5 @@ bitbag_adyen_payments:
   controller: bit_bag.sylius_adyen_plugin.controller.shop.payments_action
 
 bitbag_adyen_payment_details:
-  path: /payment/adyen/details
+  path: /payment/adyen/{orderId}/details
   controller: bit_bag.sylius_adyen_plugin.controller.shop.payment_details_action
