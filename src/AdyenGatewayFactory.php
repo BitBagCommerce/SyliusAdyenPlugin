@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin;
 
-use BitBag\SyliusAdyenPlugin\Action\CaptureAction;
-use BitBag\SyliusAdyenPlugin\Action\ConvertPaymentAction;
-use BitBag\SyliusAdyenPlugin\Action\StatusAction;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClient;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;

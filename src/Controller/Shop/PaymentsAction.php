@@ -5,99 +5,111 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
-use BitBag\SyliusAdyenPlugin\Resolver\Payment\AdyenActionResolver;
+use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Payum\Core\Payum;
-use Payum\Core\Request\Capture;
-use Payum\Core\Security\GenericTokenFactory;
-use Payum\Core\Security\GenericTokenFactoryAwareInterface;
-use Payum\Core\Security\GenericTokenFactoryAwareTrait;
 use SM\Factory\FactoryInterface;
+use Sylius\Bundle\PayumBundle\Request\GetStatus;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\Repository\OrderRepositoryInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Order\OrderTransitions;
+use Sylius\Component\Payment\Model\Payment;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaymentsAction
 {
+    public const ORDER_PAY_PATH = 'sylius_shop_order_pay';
+
     /** @var AdyenClientProvider */
     private $adyenClientProvider;
 
-    /** @var OrderRepositoryInterface */
-    private $orderRepository;
-
-    /** @var MessageBusInterface */
-    private $messageBus;
-
-    /** @var AdyenActionResolver */
-    private $adyenActionResolver;
-    /**
-     * @var Payum
-     */
+    /** @var Payum */
     private $payum;
-    /**
-     * @var FactoryInterface
-     */
+
+    /** @var FactoryInterface */
     private $stateMachineFactory;
-    /**
-     * @var UrlGeneratorInterface
-     */
+
+    /** @var UrlGeneratorInterface */
     private $urlGenerator;
-    /**
-     * @var EntityManagerInterface
-     */
+
+    /** @var EntityManagerInterface */
     private $paymentManager;
 
+    /** @var PaymentCheckoutOrderResolverInterface */
+    private $paymentCheckoutOrderResolver;
 
     public function __construct(
         AdyenClientProvider $adyenClientProvider,
-        OrderRepositoryInterface $orderRepository,
-        MessageBusInterface $messageBus,
-        AdyenActionResolver $adyenActionResolver,
         Payum $payum,
         FactoryInterface $stateMachineFactory,
         UrlGeneratorInterface $urlGenerator,
-        EntityManagerInterface $paymentManager
+        EntityManagerInterface $paymentManager,
+        PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
-        $this->orderRepository = $orderRepository;
-        $this->messageBus = $messageBus;
-        $this->adyenActionResolver = $adyenActionResolver;
         $this->payum = $payum;
         $this->stateMachineFactory = $stateMachineFactory;
         $this->urlGenerator = $urlGenerator;
         $this->paymentManager = $paymentManager;
+        $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;
     }
 
-    public function __invoke(int $orderId, Request $request)
+    private function prepareOrder(OrderInterface $order): void
     {
-        /**
-         * @var $order OrderInterface
-         */
-        $order = $this->orderRepository->find($orderId);
-        if (!$order) {
-            throw new NotFoundHttpException();
+        $sm = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
+        if($sm->can(OrderTransitions::TRANSITION_CREATE)){
+            $sm->apply(OrderTransitions::TRANSITION_CREATE);
+        }
+    }
+
+    private function rollbackOrderState(OrderInterface $order)
+    {
+        // todo: check if valid
+        $sm = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
+        if($sm->can(OrderTransitions::TRANSITION_FULFILL)){
+            $sm->apply(OrderTransitions::TRANSITION_FULFILL);
+        }
+    }
+
+    /**
+     * @param PaymentInterface|Payment $payment
+     */
+    private function triggerPayumAction(PaymentInterface $payment, string $url): bool
+    {
+        $status = new GetStatus($payment);
+        $this->payum->getGateway($payment->getMethod()->getCode())->execute($status);
+
+        if(!$status->isAuthorized()) {
+            return false;
         }
 
-        $payload = $request->request->all();
-        if(!$payload){
-            throw new \InvalidArgumentException();
-        }
+        $details = $payment->getDetails();
+        $details['redirect'] = $url;
+        $payment->setDetails($details);
 
-        $payment = $order->getLastPayment();
+        return true;
 
-        //$action = $this->adyenActionResolver->resolve($order, $result['resultCode'], $result);
-        $sm = $this->stateMachineFactory->get($order, 'sylius_order');
-        $sm->can('create') && $sm->apply('create');
+    }
 
-        $url = $this->urlGenerator->generate(
-            'sylius_shop_order_pay',
+    private function prepareTargetUrl(OrderInterface $order): string
+    {
+        return $this->urlGenerator->generate(
+            self::ORDER_PAY_PATH,
             ['tokenValue'=>$order->getTokenValue()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+    }
+
+    public function __invoke(Request $request): JsonResponse
+    {
+        $order = $this->paymentCheckoutOrderResolver->resolve();
+
+        $payload = $request->request->all();
+        $payment = $order->getLastPayment();
+        $this->prepareOrder($order);
+        $url = $this->prepareTargetUrl($order);
 
         $client = $this->adyenClientProvider->getForPaymentMethod($payment->getMethod());
         $result = $client->submitPayment(
@@ -109,15 +121,13 @@ class PaymentsAction
         );
         $payment->setDetails($result);
 
-        if(!empty($result['resultCode']) && $result['resultCode'] == 'Authorised'){
-            $sm = $this->stateMachineFactory->get($order, 'sylius_order_checkout');
-            $sm->can('complete') && $sm->apply('complete');
+        if(!$this->triggerPayumAction($payment, $url)){
+            $this->rollbackOrderState($order);
         }
 
         $this->paymentManager->persist($payment);
         $this->paymentManager->flush();
 
-        $result['redirect'] = $url;
-        return new JsonResponse($result);
+        return new JsonResponse($payment->getDetails());
     }
 }

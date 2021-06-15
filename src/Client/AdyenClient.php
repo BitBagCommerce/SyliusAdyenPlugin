@@ -122,11 +122,21 @@ final class AdyenClient implements AdyenClientInterface
         $components = parse_url($url);
 
         $pattern = '%s://%s';
-        if(!empty($components['port'])){
+        if (!empty($components['port'])) {
             $pattern .= ':%d';
         }
 
         return sprintf($pattern, $components['scheme'], $components['host'], $components['port']);
+    }
+
+    public function paymentDetails(
+        array $receivedPayload
+    ) {
+        if (empty($receivedPayload['details'])) {
+            throw new \InvalidArgumentException();
+        }
+
+        return $this->createClient($this->options)->paymentsDetails($receivedPayload);
     }
 
     public function submitPayment(
@@ -136,7 +146,7 @@ final class AdyenClient implements AdyenClientInterface
         string $redirectUrl,
         array $receivedPayload
     ) {
-        if(empty($receivedPayload['paymentMethod'])){
+        if (empty($receivedPayload['paymentMethod'])) {
             throw new \InvalidArgumentException();
         }
 
@@ -156,7 +166,7 @@ final class AdyenClient implements AdyenClientInterface
             'origin' => $this->getOrigin($redirectUrl)
         ];
 
-        if(!empty($receivedPayload['browserInfo'])){
+        if (!empty($receivedPayload['browserInfo'])) {
             $payload['browserInfo'] = $receivedPayload['browserInfo'];
         }
 

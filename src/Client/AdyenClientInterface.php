@@ -30,4 +30,6 @@ interface AdyenClientInterface
         string $redirectUrl,
         array $receivedPayload
     );
+
+    public function paymentDetails(array $receivedPayload);
 }
