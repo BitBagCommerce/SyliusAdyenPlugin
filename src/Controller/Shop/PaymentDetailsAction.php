@@ -48,6 +48,7 @@ class PaymentDetailsAction
 
     public function __invoke(Request $request)
     {
+        // todo: what about tokenValue passing
         $order = $this->paymentCheckoutOrderResolver->resolve();
 
         $payment = $order->getLastPayment();
