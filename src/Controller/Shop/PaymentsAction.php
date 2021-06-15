@@ -59,7 +59,7 @@ class PaymentsAction
     private function prepareOrder(OrderInterface $order): void
     {
         $sm = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
-        if($sm->can(OrderTransitions::TRANSITION_CREATE)){
+        if ($sm->can(OrderTransitions::TRANSITION_CREATE)) {
             $sm->apply(OrderTransitions::TRANSITION_CREATE);
         }
     }
@@ -68,7 +68,7 @@ class PaymentsAction
     {
         // todo: check if valid
         $sm = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
-        if($sm->can(OrderTransitions::TRANSITION_FULFILL)){
+        if ($sm->can(OrderTransitions::TRANSITION_FULFILL)) {
             $sm->apply(OrderTransitions::TRANSITION_FULFILL);
         }
     }
@@ -81,7 +81,7 @@ class PaymentsAction
         $status = new GetStatus($payment);
         $this->payum->getGateway($payment->getMethod()->getCode())->execute($status);
 
-        if(!$status->isAuthorized()) {
+        if (!$status->isAuthorized()) {
             $details['paymentDetailsUrl'] = $this->urlGenerator->generate(
                 'bitbag_adyen_payment_details',
                 ['orderId'=>$payment->getOrder()->getId()],
@@ -98,7 +98,6 @@ class PaymentsAction
         $payment->setDetails($details);
 
         return true;
-
     }
 
     private function prepareTargetUrl(OrderInterface $order): string
@@ -129,7 +128,7 @@ class PaymentsAction
         );
         $payment->setDetails($result);
 
-        if(!$this->triggerPayumAction($payment, $url)){
+        if (!$this->triggerPayumAction($payment, $url)) {
             $this->rollbackOrderState($order);
         }
 

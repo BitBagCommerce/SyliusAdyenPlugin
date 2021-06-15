@@ -38,7 +38,7 @@ class PaymentDetailsAction
         $request = new GetStatus($payment);
         $this->payum->getGateway($payment->getMethod()->getCode())->execute($request);
 
-        if($request->isAuthorized()) {
+        if ($request->isAuthorized()) {
             return;
         }
         $details = $payment->getDetails();
