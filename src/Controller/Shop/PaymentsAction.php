@@ -81,6 +81,8 @@ class PaymentsAction
         $status = new GetStatus($payment);
         $this->payum->getGateway($payment->getMethod()->getCode())->execute($status);
 
+        $details = $payment->getDetails();
+
         if (!$status->isAuthorized()) {
             $details['paymentDetailsUrl'] = $this->urlGenerator->generate(
                 'bitbag_adyen_payment_details',
@@ -93,7 +95,6 @@ class PaymentsAction
             return false;
         }
 
-        $details = $payment->getDetails();
         $details['redirect'] = $url;
         $payment->setDetails($details);
 
