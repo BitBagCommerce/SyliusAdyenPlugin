@@ -8,11 +8,10 @@ use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Payum\Core\Payum;
-use SM\Factory\FactoryInterface;
 use Sylius\Bundle\PayumBundle\Request\GetStatus;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
-use Sylius\Component\Order\OrderTransitions;
+use Sylius\Component\Core\TokenAssigner\OrderTokenAssignerInterface;
 use Sylius\Component\Payment\Model\Payment;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,9 +27,6 @@ class PaymentsAction
     /** @var Payum */
     private $payum;
 
-    /** @var FactoryInterface */
-    private $stateMachineFactory;
-
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
 
@@ -39,40 +35,31 @@ class PaymentsAction
 
     /** @var PaymentCheckoutOrderResolverInterface */
     private $paymentCheckoutOrderResolver;
+    /**
+     * @var OrderTokenAssignerInterface
+     */
+    private $orderTokenAssigner;
 
     public function __construct(
         AdyenClientProvider $adyenClientProvider,
         Payum $payum,
-        FactoryInterface $stateMachineFactory,
         UrlGeneratorInterface $urlGenerator,
         EntityManagerInterface $paymentManager,
-        PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver
+        PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver,
+        OrderTokenAssignerInterface $orderTokenAssigner
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->payum = $payum;
-        $this->stateMachineFactory = $stateMachineFactory;
         $this->urlGenerator = $urlGenerator;
         $this->paymentManager = $paymentManager;
         $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;
+        $this->orderTokenAssigner = $orderTokenAssigner;
     }
 
     private function prepareOrder(OrderInterface $order, Request $request): void
     {
-        $sm = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
-        if ($sm->can(OrderTransitions::TRANSITION_CREATE)) {
-            $sm->apply(OrderTransitions::TRANSITION_CREATE);
-        }
-
+        $this->orderTokenAssigner->assignTokenValueIfNotSet($order);
         $request->getSession()->set('sylius_order_id', $order->getId());
-    }
-
-    private function rollbackOrderState(OrderInterface $order)
-    {
-        // todo: check if valid
-        $sm = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
-        if ($sm->can(OrderTransitions::TRANSITION_FULFILL)) {
-            $sm->apply(OrderTransitions::TRANSITION_FULFILL);
-        }
     }
 
     /**
@@ -131,9 +118,7 @@ class PaymentsAction
         );
         $payment->setDetails($result);
 
-        if (!$this->triggerPayumAction($payment, $url)) {
-            //$this->rollbackOrderState($order); todo: what state should we rollback into
-        }
+        $this->triggerPayumAction($payment, $url);
 
         $this->paymentManager->persist($payment);
         $this->paymentManager->flush();

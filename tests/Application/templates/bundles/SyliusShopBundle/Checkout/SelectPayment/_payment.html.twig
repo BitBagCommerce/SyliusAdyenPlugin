@@ -62,7 +62,7 @@
 
         let init = () => {
             document.addEventListener('DOMContentLoaded', () => {
-                $paymentSubmit = $form.querySelector('#next-step')
+                $paymentSubmit = $form.querySelector('#next-step, #sylius-pay-link')
 
                 hideAdyen();
                 $paymentMethods.forEach(($paymentMethod) => {
