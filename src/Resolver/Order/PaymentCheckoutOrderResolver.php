@@ -35,11 +35,6 @@ final class PaymentCheckoutOrderResolver implements PaymentCheckoutOrderResolver
     {
         $order = null;
         $tokenValue = $this->requestStack->getCurrentRequest()->get('tokenValue');
-        $orderId = $this->requestStack->getCurrentRequest()->get('orderId');
-
-        if (null !== $orderId) {
-            $order = $this->orderRepository->find($orderId);
-        }
 
         if (!$order && null !== $tokenValue) {
             $order = $this->orderRepository->findOneBy(['tokenValue' => $tokenValue]);

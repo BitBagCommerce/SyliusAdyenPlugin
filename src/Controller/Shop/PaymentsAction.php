@@ -56,12 +56,14 @@ class PaymentsAction
         $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;
     }
 
-    private function prepareOrder(OrderInterface $order): void
+    private function prepareOrder(OrderInterface $order, Request $request): void
     {
         $sm = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
         if ($sm->can(OrderTransitions::TRANSITION_CREATE)) {
             $sm->apply(OrderTransitions::TRANSITION_CREATE);
         }
+
+        $request->getSession()->set('sylius_order_id', $order->getId());
     }
 
     private function rollbackOrderState(OrderInterface $order)
@@ -86,7 +88,7 @@ class PaymentsAction
         if (!$status->isAuthorized()) {
             $details['paymentDetailsUrl'] = $this->urlGenerator->generate(
                 'bitbag_adyen_payment_details',
-                ['orderId'=>$payment->getOrder()->getId()],
+                ['tokenValue'=>$payment->getOrder()->getTokenValue()],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
 
@@ -116,7 +118,7 @@ class PaymentsAction
 
         $payload = $request->request->all();
         $payment = $order->getLastPayment();
-        $this->prepareOrder($order);
+        $this->prepareOrder($order, $request);
         $url = $this->prepareTargetUrl($order);
 
         $client = $this->adyenClientProvider->getForPaymentMethod($payment->getMethod());
@@ -130,7 +132,7 @@ class PaymentsAction
         $payment->setDetails($result);
 
         if (!$this->triggerPayumAction($payment, $url)) {
-            $this->rollbackOrderState($order);
+            //$this->rollbackOrderState($order); todo: what state should we rollback into
         }
 
         $this->paymentManager->persist($payment);

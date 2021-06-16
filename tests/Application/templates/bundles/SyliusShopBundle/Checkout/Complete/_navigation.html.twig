@@ -86,7 +86,7 @@
             }
 
             // Your function calling your server to make a `/payments/details` request
-            fetch(additionalDetailsUrl, options)
+            fetch(paymentDetailsUrl, options)
                 .then(response => response.json())
                 .then(response => {
                     if (response.action) {
@@ -94,7 +94,7 @@
                         dropin.handleAction(response.action);
                     } else {
                         // Your function to show the final result to the shopper
-                        alert(response);
+                        window.location.replace('{{ path('sylius_shop_order_thank_you') }}')
                     }
                 })
                 .catch(error => {
