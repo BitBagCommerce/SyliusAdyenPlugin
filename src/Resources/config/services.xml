@@ -94,6 +94,9 @@
             <argument type="service" id="bit_bag.sylius_adyen_plugin.resolver.order.payment_checkout_order_resolver"/>
             <argument type="service" id="payum"/>
             <tag name="controller.service_arguments"/>
+            <argument type="service" id="sm.factory"/>
+            <argument type="service" id="api_platform.router"/>
+            <argument type="service" id="sylius.manager.payment"/>
         </service>
 
         <service
@@ -110,35 +113,10 @@
             <argument type="service" id="bit_bag.sylius_adyen_plugin.resolver.order.payment_checkout_order_resolver"/>
             <argument type="service" id="sylius.unique_id_based_order_token_assigner"/>
 
+            <argument type="service" id="sm.factory"/>
             <tag name="controller.service_arguments"/>
 
         </service>
-
-        <service
-            id="bit_bag.sylius_adyent_plugin.action.capture"
-            class="BitBag\SyliusAdyenPlugin\Payum\Action\CaptureAction"
-            public="true"
-        >
-            <tag name="payum.action" factory="adyen" alias="payum.action.capture"/>
-        </service>
-
-        <service
-            class="BitBag\SyliusAdyenPlugin\Payum\Action\StatusAction"
-            id="bit_bag.sylius_adyen_plugin.action.status_action"
-            public="true"
-        >
-            <argument type="service" id="sm.factory"/>
-            <argument type="service" id="router"/>
-            <tag name="payum.action" factory="adyen" alias="payum.action.status"/>
-        </service>
-
-        <!--<service
-            class="BitBag\SyliusAdyenPlugin\Action\ConvertPaymentAction"
-            id="bit_bag.sylius_adyen_plugin.action.convert_payment_action"
-            public="true"
-        >
-            <tag name="payum.action" factory="adyen" alias="payum.action.convert_payment"/>
-        </service>-->
 
     </services>
 </container>

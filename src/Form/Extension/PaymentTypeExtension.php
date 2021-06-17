@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Form\Extension;
 
+use BitBag\SyliusAdyenPlugin\Adapter\PaymentMethodsToChoiceAdapter;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
 use BitBag\SyliusAdyenPlugin\Form\Type\PaymentMethodChoiceType;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
@@ -14,9 +15,13 @@ use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 
 class PaymentTypeExtension extends AbstractTypeExtension
 {
+    private $paymentMethodsForCode = [];
+
     /** @var PaymentCheckoutOrderResolverInterface */
     private $paymentCheckoutOrderResolver;
 
@@ -51,7 +56,7 @@ class PaymentTypeExtension extends AbstractTypeExtension
         $paymentMethods = $this->paymentMethodRepository->findAllByChannel($this->channelContext->getChannel());
         foreach ($paymentMethods as $paymentMethod) {
             $client = $this->adyenClientProvider->getForPaymentMethod($paymentMethod);
-            $choices = $this->getChoicesForPaymentMethod($client);
+            $choices = $this->getChoicesForPaymentMethod($client, $paymentMethod->getCode());
             $adyen->add($paymentMethod->getCode(), PaymentMethodChoiceType::class, [
                 'choices'=>$choices,
                 'environment'=>$client->getEnvironment()
@@ -61,17 +66,28 @@ class PaymentTypeExtension extends AbstractTypeExtension
         $builder->add($adyen);
     }
 
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['payment_methods'] = $this->paymentMethodsForCode;
+    }
+
+
     private function getChoicesForPaymentMethod(
-        AdyenClientInterface $client
+        AdyenClientInterface $client,
+        string $code
     ): array {
         $order = $this->paymentCheckoutOrderResolver->resolve();
 
-        return $client->getAvailablePaymentMethodsForForm(
+        $result = $client->getAvailablePaymentMethods(
             $order->getLocaleCode(),
             $order->getBillingAddress()->getCountryCode(),
             $order->getTotal(),
             $order->getCurrencyCode()
         );
+
+        $this->paymentMethodsForCode[$code] = $result;
+
+        return (new PaymentMethodsToChoiceAdapter())($result);
     }
 
     public function getExtendedTypes()

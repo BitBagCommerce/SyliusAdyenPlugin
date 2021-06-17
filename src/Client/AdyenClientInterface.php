@@ -26,7 +26,7 @@ interface AdyenClientInterface
     public function submitPayment(
         int $amount,
         string $currencyCode,
-        string $reference,
+        $reference,
         string $redirectUrl,
         array $receivedPayload
     );

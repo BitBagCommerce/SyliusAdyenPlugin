@@ -21,9 +21,6 @@
 ></div>
 
 <script>
-
-    let paymentDetailsUrl = null;
-
     const checkout = new AdyenCheckout({
         paymentMethodsResponse: {{ adyen_payment_methods(order)|json_encode|raw }},
         paymentMethodsConfiguration: {
@@ -53,10 +50,6 @@
                 .then(response => response.json())
                 .then(data => {
 
-                    if(data.paymentDetailsUrl){
-                        paymentDetailsUrl = data.paymentDetailsUrl;
-                    }
-
                     if (data.action) {
                         // Drop-in handles the action object from the /payments response
                         dropin.handleAction(data.action);
@@ -81,7 +74,7 @@
             }
 
             // Your function calling your server to make a `/payments/details` request
-            fetch(paymentDetailsUrl, options)
+            fetch('{{ path('bitbag_adyen_payment_details') }}', options)
                 .then(response => response.json())
                 .then(response => {
                     if (response.action) {

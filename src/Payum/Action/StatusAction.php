@@ -42,16 +42,21 @@ class StatusAction implements ActionInterface
         $payment = $request->getFirstModel();
         $details = $payment->getDetails();
 
-        if(empty($details['resultCode'])){
+        $code = $details['resultCode'] ?? $details['eventCode'] ?? null;
+
+        if(!$code){
+            $request->markNew();
             return;
         }
 
-        if (PaymentStatuses::PAYMENT_AUTHORISED === $details['resultCode']) {
-            $this->markCompleted($payment);
+        if (strtolower(PaymentStatuses::PAYMENT_AUTHORISED) === strtolower($details['resultCode'])) {
+            //$this->markCompleted($payment);
             $request->markAuthorized();
 
             return;
         }
+
+        $request->markNew();
     }
 
     private function markCompleted(PaymentInterface $payment)

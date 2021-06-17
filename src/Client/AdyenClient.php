@@ -142,7 +142,7 @@ final class AdyenClient implements AdyenClientInterface
     public function submitPayment(
         int $amount,
         string $currencyCode,
-        string $reference,
+        $reference,
         string $redirectUrl,
         array $receivedPayload
     ) {
@@ -155,7 +155,7 @@ final class AdyenClient implements AdyenClientInterface
                 'value'=>$amount,
                 'currency'=> $currencyCode
             ],
-            'reference' => $reference,
+            'reference' => (string)$reference,
             'merchantAccount' => $this->options['merchantAccount'],
             'returnUrl' => $redirectUrl,
             'paymentMethod'=>$receivedPayload['paymentMethod'],
