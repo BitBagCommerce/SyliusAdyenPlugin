@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
+use BitBag\SyliusAdyenPlugin\Actions\AdyenAction;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Provider\SignatureValidatorProvider;
-use Doctrine\ORM\EntityManagerInterface;
-use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
-use Sylius\Component\Core\OrderPaymentTransitions;
+
 use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,27 +23,23 @@ class ProcessNotificationsAction
     /** @var PaymentRepositoryInterface */
     private $paymentRepository;
 
-    /** @var FactoryInterface */
-    private $stateMachineFactory;
-
     /** @var SignatureValidatorProvider */
     private $signatureValidatorProvider;
-
-    /** @var EntityManagerInterface */
-    private $orderManager;
+    /**
+     * @var ServiceLocator
+     */
+    private $actions;
 
     public function __construct(
         AdyenClientProvider $adyenClientProvider,
         PaymentRepositoryInterface $paymentRepository,
-        FactoryInterface $stateMachineFactory,
         SignatureValidatorProvider $signatureValidatorProvider,
-        EntityManagerInterface $orderManager
+        ServiceLocator $actions
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->paymentRepository = $paymentRepository;
-        $this->stateMachineFactory = $stateMachineFactory;
         $this->signatureValidatorProvider = $signatureValidatorProvider;
-        $this->orderManager = $orderManager;
+        $this->actions = $actions;
     }
 
     private function validateRequest(array $arguments): void
@@ -86,18 +83,17 @@ class ProcessNotificationsAction
                 continue;
             }
 
-            $payment->setState(PaymentInterface::STATE_COMPLETED);
-            $order = $payment->getOrder();
-
-            foreach ([
-                 OrderPaymentTransitions::GRAPH => OrderPaymentTransitions::TRANSITION_PAY
-             ] as $graph=>$state) {
-                $stateMachine = $this->stateMachineFactory->get($order, $graph);
-                $stateMachine->can($state) && $stateMachine->apply($state);
+            try {
+                /**
+                 * @var $action AdyenAction
+                 */
+                $action = $this->actions->get($notificationItem['eventName']);
+                if($action->accept($payment)){
+                    $action($payment, $notificationItem);
+                }
+            }catch(ServiceNotFoundException $ex){
+                continue;
             }
-
-            $this->orderManager->persist($order);
-            $this->orderManager->flush();
         }
 
         return new Response('[accepted]');
