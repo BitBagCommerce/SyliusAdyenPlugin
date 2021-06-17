@@ -11,7 +11,6 @@ use Payum\Core\Payum;
 use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
-use Sylius\Component\Order\OrderTransitions;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -28,17 +27,14 @@ class PaymentDetailsAction
 
     /** @var PaymentCheckoutOrderResolverInterface */
     private $paymentCheckoutOrderResolver;
-    /**
-     * @var FactoryInterface
-     */
+
+    /** @var FactoryInterface */
     private $stateMachineFactory;
-    /**
-     * @var UrlGeneratorInterface
-     */
+
+    /** @var UrlGeneratorInterface */
     private $urlGenerator;
-    /**
-     * @var EntityManagerInterface
-     */
+
+    /** @var EntityManagerInterface */
     private $paymentManager;
 
     public function __construct(
@@ -60,7 +56,7 @@ class PaymentDetailsAction
     private function markOrderAsWaitingForPayment(OrderInterface $order, Request $request): void
     {
         $sm = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
-        if($sm->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)){
+        if ($sm->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)) {
             $sm->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
         }
     }
@@ -76,7 +72,7 @@ class PaymentDetailsAction
         $client = $this->adyenClientProvider->getForPaymentMethod($payment->getMethod());
         $result = $client->paymentDetails($request->request->all());
 
-        if($result['resultCode'] == 'Authorised'){
+        if ($result['resultCode'] == 'Authorised') {
             $this->markOrderAsWaitingForPayment($order, $request);
             $result['redirect'] = $this->urlGenerator->generate(
                 self::THANKS_PATH,

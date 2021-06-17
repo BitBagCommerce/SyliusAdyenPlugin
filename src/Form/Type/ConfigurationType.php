@@ -32,15 +32,6 @@ class ConfigurationType extends AbstractType
                     ])
                 ],
             ])
-            ->add('clientKey', TextType::class, [
-                'label' => 'bitbag_sylius_adyen_plugin.ui.client_key',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'bitbag_sylius_adyen_plugin.merchant_account.not_blank',
-                        'groups' => ['sylius'],
-                    ])
-                ]
-            ])
             ->add('merchantAccount', TextType::class, [
                 'label' => 'bitbag_sylius_adyen_plugin.ui.merchant_account',
                 'constraints' => [
@@ -50,16 +41,25 @@ class ConfigurationType extends AbstractType
                     ])
                 ],
             ])
-            ->add('hmacKey', TextType::class, [
-                'label' => 'bitbag_sylius_adyen_plugin.ui.hmac_key',
+            ->add('apiKey', TextType::class, [
+                'label' => 'apiKey',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'bitbag_sylius_adyen_plugin.hmac_key.not_blank',
+                        'message' => 'bitbag_sylius_adyen_plugin.ws_user_password.not_blank',
                         'groups' => ['sylius'],
                     ])
                 ],
             ])
-            ->add('hmacNotification', TextType::class, [
+            ->add('clientKey', TextType::class, [
+                'label' => 'bitbag_sylius_adyen_plugin.ui.client_key',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'bitbag_sylius_adyen_plugin.merchant_account.not_blank',
+                        'groups' => ['sylius'],
+                    ])
+                ]
+            ])
+            ->add('hmacKey', TextType::class, [
                 'label' => 'bitbag_sylius_adyen_plugin.ui.hmac_notification',
                 'constraints' => [
                     new NotBlank([
@@ -68,16 +68,7 @@ class ConfigurationType extends AbstractType
                     ])
                 ],
             ])
-            ->add('skinCode', TextType::class, [
-                'label' => 'bitbag_sylius_adyen_plugin.ui.skin_code',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'bitbag_sylius_adyen_plugin.skin_code.not_blank',
-                        'groups' => ['sylius'],
-                    ])
-                ],
-            ])
-            ->add('wsUser', TextType::class, [
+            /*->add('wsUser', TextType::class, [
                 'label' => 'bitbag_sylius_adyen_plugin.ui.ws_user',
                 'constraints' => [
                     new NotBlank([
@@ -94,16 +85,8 @@ class ConfigurationType extends AbstractType
                         'groups' => ['sylius'],
                     ])
                 ],
-            ])
-            ->add('apiKey', TextType::class, [
-                'label' => 'apiKey',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'bitbag_sylius_adyen_plugin.ws_user_password.not_blank',
-                        'groups' => ['sylius'],
-                    ])
-                ],
-            ])
+            ])*/
+
             ->add('adyen', HiddenType::class, [
                 'data'=>true
             ]);

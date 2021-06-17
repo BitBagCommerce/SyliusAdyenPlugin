@@ -79,6 +79,13 @@
         </service>
 
         <service
+            class="BitBag\SyliusAdyenPlugin\Provider\SignatureValidatorProvider"
+            id="bit_bag.sylius_adyen_plugin.provider.signature_validator_provider"
+        >
+            <argument type="service" id="sylius.repository.payment_method"/>
+        </service>
+
+        <service
             class="BitBag\SyliusAdyenPlugin\Twig\Extension\PaymentMethodsForOrderExtension"
             id="bit_bag.sylius_adyen_plugin.twig.extension.payment_methods_for_order_extension"
         >
@@ -116,6 +123,19 @@
             <argument type="service" id="sm.factory"/>
             <tag name="controller.service_arguments"/>
 
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Controller\Shop\ProcessNotificationsAction"
+            id="bit_bag.sylius_adyen_plugin.controller.shop.process_notifications_action"
+        >
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
+            <argument type="service" id="sylius.repository.payment"/>
+            <argument type="service" id="sm.factory"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.signature_validator_provider"/>
+            <argument type="service" id="sylius.manager.order"/>
+
+            <tag name="controller.service_arguments"/>
         </service>
 
     </services>

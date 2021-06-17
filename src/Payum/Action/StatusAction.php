@@ -44,8 +44,9 @@ class StatusAction implements ActionInterface
 
         $code = $details['resultCode'] ?? $details['eventCode'] ?? null;
 
-        if(!$code){
+        if (!$code) {
             $request->markNew();
+
             return;
         }
 

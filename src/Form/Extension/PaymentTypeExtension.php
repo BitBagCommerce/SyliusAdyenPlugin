@@ -71,7 +71,6 @@ class PaymentTypeExtension extends AbstractTypeExtension
         $view->vars['payment_methods'] = $this->paymentMethodsForCode;
     }
 
-
     private function getChoicesForPaymentMethod(
         AdyenClientInterface $client,
         string $code

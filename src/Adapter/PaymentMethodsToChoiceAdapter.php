@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Adapter;
-
 
 class PaymentMethodsToChoiceAdapter
 {
     public function __invoke(array $paymentMethods)
     {
-        if(empty($paymentMethods['paymentMethods'])){
+        if (empty($paymentMethods['paymentMethods'])) {
             throw new \InvalidArgumentException(sprintf('Invalid Adyen paymentMethods response'));
         }
 
@@ -26,5 +26,4 @@ class PaymentMethodsToChoiceAdapter
 
         return $result;
     }
-
 }

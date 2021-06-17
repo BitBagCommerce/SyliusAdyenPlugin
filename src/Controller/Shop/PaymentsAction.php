@@ -8,18 +8,10 @@ use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Payum\Core\Payum;
-use Payum\Core\Reply\HttpRedirect;
-use Payum\Core\Request\Capture;
-use Payum\Core\Security\GenericTokenFactory;
-use Payum\Core\Security\GenericTokenFactoryInterface;
 use SM\Factory\FactoryInterface;
-use Sylius\Bundle\PayumBundle\Request\GetStatus;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Core\TokenAssigner\OrderTokenAssignerInterface;
-use Sylius\Component\Order\OrderTransitions;
-use Sylius\Component\Payment\Model\Payment;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -42,13 +34,11 @@ class PaymentsAction
 
     /** @var PaymentCheckoutOrderResolverInterface */
     private $paymentCheckoutOrderResolver;
-    /**
-     * @var OrderTokenAssignerInterface
-     */
+
+    /** @var OrderTokenAssignerInterface */
     private $orderTokenAssigner;
-    /**
-     * @var FactoryInterface
-     */
+
+    /** @var FactoryInterface */
     private $stateMachineFactory;
 
     public function __construct(
@@ -72,10 +62,9 @@ class PaymentsAction
     private function markOrderAsWaitingForPayment(OrderInterface $order, Request $request): void
     {
         $sm = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
-        if($sm->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)){
+        if ($sm->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)) {
             $sm->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
         }
-
     }
 
     private function prepareTargetUrl(OrderInterface $order): string
@@ -107,7 +96,7 @@ class PaymentsAction
             $payload
         );
 
-        if($result['resultCode'] == 'Authorised'){
+        if ($result['resultCode'] == 'Authorised') {
             $this->markOrderAsWaitingForPayment($order, $request);
             $result['redirect'] = $url;
         }

@@ -17,7 +17,7 @@ class PaymentMethodRepository extends BasePaymentMethodRepository implements Pay
         return $this->createQueryBuilder('o')
             ->innerJoin('o.gatewayConfig', 'gatewayConfig')
             ->where('gatewayConfig.factoryName = :factoryName')
-            ->andWhere('o.code != :code')
+            ->andWhere('o.code = :code')
             ->setParameter('factoryName', AdyenGatewayFactory::FACTORY_NAME)
             ->setParameter('code', $code)
             ->getQuery()

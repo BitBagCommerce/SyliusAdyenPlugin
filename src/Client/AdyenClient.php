@@ -155,7 +155,7 @@ final class AdyenClient implements AdyenClientInterface
                 'value'=>$amount,
                 'currency'=> $currencyCode
             ],
-            'reference' => (string)$reference,
+            'reference' => (string) $reference,
             'merchantAccount' => $this->options['merchantAccount'],
             'returnUrl' => $redirectUrl,
             'paymentMethod'=>$receivedPayload['paymentMethod'],
