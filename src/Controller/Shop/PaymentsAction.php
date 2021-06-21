@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
+use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
+use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Payum\Core\Payum;
-use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Core\TokenAssigner\OrderTokenAssignerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,19 +16,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaymentsAction
 {
-    public const THANKS_PATH = 'sylius_shop_order_thank_you';
+    public const REDIRECT_TARGET_ACTION = 'bitbag_adyen_thank_you';
 
     /** @var AdyenClientProvider */
     private $adyenClientProvider;
 
-    /** @var Payum */
-    private $payum;
-
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
-
-    /** @var EntityManagerInterface */
-    private $paymentManager;
 
     /** @var PaymentCheckoutOrderResolverInterface */
     private $paymentCheckoutOrderResolver;
@@ -38,52 +30,45 @@ class PaymentsAction
     /** @var OrderTokenAssignerInterface */
     private $orderTokenAssigner;
 
-    /** @var FactoryInterface */
-    private $stateMachineFactory;
+    /** @var Dispatcher */
+    private $dispatcher;
 
     public function __construct(
         AdyenClientProvider $adyenClientProvider,
-        Payum $payum,
         UrlGeneratorInterface $urlGenerator,
-        EntityManagerInterface $paymentManager,
         PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver,
         OrderTokenAssignerInterface $orderTokenAssigner,
-        FactoryInterface $stateMachineFactory
+        Dispatcher $dispatcher
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
-        $this->payum = $payum;
         $this->urlGenerator = $urlGenerator;
-        $this->paymentManager = $paymentManager;
         $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;
         $this->orderTokenAssigner = $orderTokenAssigner;
-        $this->stateMachineFactory = $stateMachineFactory;
-    }
-
-    private function markOrderAsWaitingForPayment(OrderInterface $order, Request $request): void
-    {
-        $sm = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
-        if ($sm->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)) {
-            $sm->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
-        }
+        $this->dispatcher = $dispatcher;
     }
 
     private function prepareTargetUrl(OrderInterface $order): string
     {
         return $this->urlGenerator->generate(
-            self::THANKS_PATH,
-            [],
+            self::REDIRECT_TARGET_ACTION,
+            [
+                'code'=>$order->getLastPayment()->getMethod()->getCode()
+            ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+    }
+
+    private function prepareOrder(Request $request, OrderInterface $order)
+    {
+        $request->getSession()->set('sylius_order_id', $order->getId());
+        $this->orderTokenAssigner->assignTokenValueIfNotSet($order);
     }
 
     public function __invoke(Request $request): JsonResponse
     {
         $order = $this->paymentCheckoutOrderResolver->resolve();
+        $this->prepareOrder($request, $order);
 
-        $request->getSession()->set('sylius_order_id', $order->getId());
-        $this->orderTokenAssigner->assignTokenValueIfNotSet($order);
-
-        $payload = $request->request->all();
         $payment = $order->getLastPayment();
         $url = $this->prepareTargetUrl($order);
 
@@ -93,19 +78,12 @@ class PaymentsAction
             $order->getCurrencyCode(),
             $payment->getId(),
             $url,
-            $payload
+            $request->request->all()
         );
 
-        if ($result['resultCode'] == 'Authorised') {
-            $this->markOrderAsWaitingForPayment($order, $request);
-            $result['redirect'] = $url;
-        }
-
         $payment->setDetails($result);
+        $this->dispatcher->dispatch(new PreparePayment($payment));
 
-        $this->paymentManager->persist($payment);
-        $this->paymentManager->flush();
-
-        return new JsonResponse($payment->getDetails());
+        return new JsonResponse($payment->getDetails() + ['redirect' => $url]);
     }
 }

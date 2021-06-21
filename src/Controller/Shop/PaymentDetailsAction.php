@@ -4,26 +4,22 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
+use BitBag\SyliusAdyenPlugin\Bus\Command\AuthorizePayment;
+use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Payum\Core\Payum;
 use SM\Factory\FactoryInterface;
-use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\OrderCheckoutTransitions;
+use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaymentDetailsAction
 {
-    public const THANKS_PATH = 'sylius_shop_order_thank_you';
+    public const REDIRECT_TARGET_ACTION = 'bitbag_adyen_thank_you';
 
     /** @var AdyenClientProvider */
     private $adyenClientProvider;
-
-    /** @var Payum */
-    private $payum;
 
     /** @var PaymentCheckoutOrderResolverInterface */
     private $paymentCheckoutOrderResolver;
@@ -34,37 +30,39 @@ class PaymentDetailsAction
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
 
-    /** @var EntityManagerInterface */
-    private $paymentManager;
+    /** @var Dispatcher */
+    private $dispatcher;
 
     public function __construct(
         AdyenClientProvider $adyenClientProvider,
         PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver,
-        Payum $payum,
         FactoryInterface $stateMachineFactory,
         UrlGeneratorInterface $urlGenerator,
-        EntityManagerInterface $paymentManager
+        Dispatcher $dispatcher
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
-        $this->payum = $payum;
         $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;
         $this->stateMachineFactory = $stateMachineFactory;
         $this->urlGenerator = $urlGenerator;
-        $this->paymentManager = $paymentManager;
+        $this->dispatcher = $dispatcher;
     }
 
-    private function markOrderAsWaitingForPayment(OrderInterface $order, Request $request): void
+    private function getTargetUrl(PaymentInterface $payment): ?string
     {
-        $sm = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
-        if ($sm->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)) {
-            $sm->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
+        if ($payment->getState() !== PaymentInterface::STATE_COMPLETED) {
+            return null;
         }
+
+        return $this->urlGenerator->generate(
+            self::REDIRECT_TARGET_ACTION,
+            [],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
     }
 
     public function __invoke(Request $request)
     {
         $order = $this->paymentCheckoutOrderResolver->resolve();
-
         $payment = $order->getLastPayment();
 
         $request->getSession()->set('sylius_order_id', $order->getId());
@@ -72,20 +70,9 @@ class PaymentDetailsAction
         $client = $this->adyenClientProvider->getForPaymentMethod($payment->getMethod());
         $result = $client->paymentDetails($request->request->all());
 
-        if ($result['resultCode'] == 'Authorised') {
-            $this->markOrderAsWaitingForPayment($order, $request);
-            $result['redirect'] = $this->urlGenerator->generate(
-                self::THANKS_PATH,
-                [],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-        }
-
         $payment->setDetails($result);
+        $this->dispatcher->dispatch(new AuthorizePayment($payment));
 
-        $this->paymentManager->persist($payment);
-        $this->paymentManager->flush();
-
-        return new JsonResponse($payment->getDetails());
+        return new JsonResponse($payment->getDetails() + ['redirect'=>$this->getTargetUrl($payment)]);
     }
 }

@@ -4,98 +4,81 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
-use BitBag\SyliusAdyenPlugin\Actions\AdyenAction;
+use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
-use BitBag\SyliusAdyenPlugin\Provider\SignatureValidatorProvider;
+use BitBag\SyliusAdyenPlugin\Resolver\Payment\PaymentNotificationResolver;
 use Sylius\Component\Core\Model\PaymentInterface;
-
 use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ProcessNotificationsAction
 {
+    public const EXPECTED_ADYEN_RESPONSE = '[accepted]';
+
     /** @var AdyenClientProvider */
     private $adyenClientProvider;
 
     /** @var PaymentRepositoryInterface */
     private $paymentRepository;
 
-    /** @var SignatureValidatorProvider */
-    private $signatureValidatorProvider;
-    /**
-     * @var ServiceLocator
-     */
-    private $actions;
+    /** @var Dispatcher */
+    private $dispatcher;
+
+    /** @var PaymentNotificationResolver */
+    private $paymentNotificationResolver;
 
     public function __construct(
         AdyenClientProvider $adyenClientProvider,
         PaymentRepositoryInterface $paymentRepository,
-        SignatureValidatorProvider $signatureValidatorProvider,
-        ServiceLocator $actions
+        Dispatcher $dispatcher,
+        PaymentNotificationResolver $paymentNotificationResolver
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->paymentRepository = $paymentRepository;
-        $this->signatureValidatorProvider = $signatureValidatorProvider;
-        $this->actions = $actions;
+
+        $this->dispatcher = $dispatcher;
+        $this->paymentNotificationResolver = $paymentNotificationResolver;
     }
 
-    private function validateRequest(array $arguments): void
+    private function validateRequest(string $code, array $arguments): void
     {
         // todo: prettify
         if (
             empty($arguments['notificationItems'])
             || !is_array($arguments['notificationItems'])
         ) {
-            throw new \HttpException(Response::HTTP_BAD_REQUEST);
+            throw new HttpException(Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    private function handleAction(PaymentInterface $payment, array $notificationItem)
+    {
+        try {
+            $command = $this->dispatcher->getCommandFactory()->createForEvent($notificationItem['eventCode'], $payment);
+            $this->dispatcher->dispatch($command);
+        } catch (\InvalidArgumentException $ex) {
         }
     }
 
     public function __invoke(string $code, Request $request): Response
     {
         $arguments = $request->request->all();
-        $this->validateRequest($arguments);
-
-        $signatureValidator = $this->signatureValidatorProvider->getValidatorForCode($code);
+        $this->validateRequest($code, $arguments);
 
         foreach ($arguments['notificationItems'] as $notificationItem) {
             $notificationItem = $notificationItem['NotificationRequestItem'];
 
-            if (!$signatureValidator->isValid($notificationItem)) {
-                continue;
-            }
-
-            // todo: check if order has been already paid
-            // todo: check if it's a payment authorization
-
-            /**
-             * @var $payment PaymentInterface
-             */
-            $payment = $this->paymentRepository->find($notificationItem['merchantReference']);
+            $payment = $this->paymentNotificationResolver->resolve($code, $notificationItem);
 
             if (!$payment) {
                 continue;
             }
 
-            if ($payment->getMethod()->getCode() != $code) {
-                continue;
-            }
-
-            try {
-                /**
-                 * @var $action AdyenAction
-                 */
-                $action = $this->actions->get($notificationItem['eventName']);
-                if($action->accept($payment)){
-                    $action($payment, $notificationItem);
-                }
-            }catch(ServiceNotFoundException $ex){
-                continue;
-            }
+            $this->handleAction($payment, $notificationItem);
         }
 
-        return new Response('[accepted]');
+        return new Response(self::EXPECTED_ADYEN_RESPONSE);
     }
 }

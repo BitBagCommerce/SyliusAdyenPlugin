@@ -1,150 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <imports>
+        <import resource="services/*.xml"/>
+    </imports>
+
     <services>
-        <defaults public="true"/>
 
         <service
-            class="BitBag\SyliusAdyenPlugin\Form\Type\ConfigurationType"
-            id="bit_bag.sylius_adyen_plugin.form.type.configuration_type"
+            class="BitBag\SyliusAdyenPlugin\Bus\Dispatcher"
+            id="bit_bag.sylius_adyen_plugin.bus.dispatcher"
         >
-            <tag name="form.type"/>
-            <tag name="sylius.gateway_configuration_type" type="adyen" label="bitbag_sylius_adyen_plugin.ui.ayden_gateway_label"/>
+            <argument type="service" id="messenger.routable_message_bus"/>
         </service>
-
-        <service
-            class="BitBag\SyliusAdyenPlugin\AdyenGatewayFactory"
-            id="bit_bag.sylius_adyen_plugin.adyen_gateway_factory"
-        />
-
-        <service
-            id="bit_bag.sylius_adyen_plugin.adyen_gateway_factory.wrapper"
-            class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder"
-        >
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.adyen_gateway_factory"/>
-            <tag name="payum.gateway_factory_builder" factory="adyen"/>
-        </service>
-
-        <service
-            class="BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider"
-            id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"
-        >
-
-            <argument type="service" id="sylius.repository.payment_method"/>
-            <argument type="service" id="sylius.context.shopper"/>
-            <argument type="service" id="psr18.http_client" />
-        </service>
-
-        <!--<service
-            class="BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepository"
-            id="bit_bag.sylius_adyen_plugin.repository.payment_method_repository"
-        >
-
-        </service>-->
-
-        <service
-            class="BitBag\SyliusAdyenPlugin\Client\AdyenClient"
-            id="bit_bag.sylius_adyen_plugin.client.adyen_client"
-        >
-            <factory service="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider" method="getDefaultClient"/>
-        </service>
-
-        <service
-            class="BitBag\SyliusAdyenPlugin\Validator\Constraint\AdyenCredentialsValidator"
-            id="bit_bag.sylius_adyen_plugin.validator.constraint.adyen_credentials_validator"
-        >
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.client.adyen_client"/>
-            <tag name="validator.constraint_validator" alias="bit_bag_sylius_adyen_plugin_credentials" />
-        </service>
-
-        <service
-            class="BitBag\SyliusAdyenPlugin\Form\Extension\PaymentTypeExtension"
-            id="bit_bag.sylius_adyen_plugin.form.extension.payment_type_extension"
-        >
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.resolver.order.payment_checkout_order_resolver"/>
-            <argument type="service" id="sylius.repository.payment_method"/>
-            <argument type="service" id="sylius.context.shopper"/>
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
-            <tag name="form.type_extension" />
-        </service>
-
-        <service
-            class="BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolver"
-            id="bit_bag.sylius_adyen_plugin.resolver.order.payment_checkout_order_resolver"
-        >
-
-            <argument type="service" id="request_stack"/>
-            <argument type="service" id="sylius.context.cart"/>
-            <argument type="service" id="sylius.repository.order"/>
-        </service>
-
-        <service
-            class="BitBag\SyliusAdyenPlugin\Provider\SignatureValidatorProvider"
-            id="bit_bag.sylius_adyen_plugin.provider.signature_validator_provider"
-        >
-            <argument type="service" id="sylius.repository.payment_method"/>
-        </service>
-
-        <service
-            class="BitBag\SyliusAdyenPlugin\Twig\Extension\PaymentMethodsForOrderExtension"
-            id="bit_bag.sylius_adyen_plugin.twig.extension.payment_methods_for_order_extension"
-        >
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
-            <tag name="twig.extension"/>
-        </service>
-
-        <service
-                class="BitBag\SyliusAdyenPlugin\Controller\Shop\PaymentDetailsAction"
-                id="bit_bag.sylius_adyen_plugin.controller.shop.payment_details_action"
-        >
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.resolver.order.payment_checkout_order_resolver"/>
-            <argument type="service" id="payum"/>
-            <tag name="controller.service_arguments"/>
-            <argument type="service" id="sm.factory"/>
-            <argument type="service" id="api_platform.router"/>
-            <argument type="service" id="sylius.manager.payment"/>
-        </service>
-
-        <service
-            class="BitBag\SyliusAdyenPlugin\Controller\Shop\PaymentsAction"
-            id="bit_bag.sylius_adyen_plugin.controller.shop.payments_action"
-        >
-
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
-            <argument type="service" id="payum"/>
-
-            <argument type="service" id="router.default"/>
-            <argument type="service" id="sylius.manager.payment"/>
-
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.resolver.order.payment_checkout_order_resolver"/>
-            <argument type="service" id="sylius.unique_id_based_order_token_assigner"/>
-
-            <argument type="service" id="sm.factory"/>
-            <tag name="controller.service_arguments"/>
-
-        </service>
-
-        <service
-            class="BitBag\SyliusAdyenPlugin\Controller\Shop\ProcessNotificationsAction"
-            id="bit_bag.sylius_adyen_plugin.controller.shop.process_notifications_action"
-        >
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
-            <argument type="service" id="sylius.repository.payment"/>
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.signature_validator_provider"/>
-            <argument type="tagged_locator" tag="bit_bag.sylius_adyen_plugin.action" default-index-method="getHandledEventName"/>
-
-            <tag name="controller.service_arguments"/>
-        </service>
-
-        <service
-            class="BitBag\SyliusAdyenPlugin\Actions\AuthorizeAction"
-            id="bit_bag.sylius_adyen_plugin.actions.authorize_action"
-        >
-            <argument type="service" id="sm.factory"/>
-            <argument type="service" id="sylius.manager.order"/>
-            <tag name="bit_bag.sylius_adyen_plugin.action"/>
-        </service>
-
     </services>
 </container>

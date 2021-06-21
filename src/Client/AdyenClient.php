@@ -9,6 +9,7 @@ use Adyen\Client;
 use Adyen\Config;
 use Adyen\Environment;
 use Adyen\Service\Checkout;
+use BitBag\SyliusAdyenPlugin\Adapter\PaymentMethodsToChoiceAdapter;
 use BitBag\SyliusAdyenPlugin\Exception\AuthenticationException;
 use BitBag\SyliusAdyenPlugin\Exception\InvalidApiKeyException;
 use BitBag\SyliusAdyenPlugin\Exception\InvalidMerchantAccountException;
@@ -76,19 +77,8 @@ final class AdyenClient implements AdyenClientInterface
         string $currencyCode
     ): array {
         $paymentMethods = $this->getAvailablePaymentMethods($locale, $countryCode, $amount, $currencyCode);
-        $result = [];
-        foreach ($paymentMethods['paymentMethods'] as $paymentMethod) {
-            if (!empty($paymentMethod['brands'])) {
-                foreach ($paymentMethod['brands'] as $brand) {
-                    $result[$brand] = $paymentMethod['name'];
-                }
 
-                continue;
-            }
-            $result[$paymentMethod['type']] = $paymentMethod['name'];
-        }
-
-        return $result;
+        return (new PaymentMethodsToChoiceAdapter())($paymentMethods);
     }
 
     public function getAvailablePaymentMethods(

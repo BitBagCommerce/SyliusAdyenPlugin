@@ -54,6 +54,7 @@ final class AdyenGatewayFactory extends GatewayFactory
 
                 return new AdyenClient(
                     [
+                        // todo: check if everything is passed here
                         'apiKey' => $config['apiKey'],
                         //'skinCode' => $config['skinCode'],
                         'merchantAccount' => $config['merchantAccount'],
