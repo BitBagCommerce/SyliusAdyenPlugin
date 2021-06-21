@@ -14,15 +14,22 @@ class CommandFactory
         'authorised' => AuthorizePayment::class
     ];
 
+    private $mapping = [];
+
+    public function __construct(array $mapping = [])
+    {
+        $this->mapping = array_merge_recursive(self::MAPPING, $mapping);
+    }
+
     public function createForEvent(string $event, PaymentInterface $payment): PaymentLifecycleCommand
     {
         $eventName = strtolower($event);
 
-        if (!isset(self::MAPPING[$eventName])) {
+        if (!isset($this->mapping[$eventName])) {
             throw new \InvalidArgumentException(sprintf('Event "%s" has no handler registered', $eventName));
         }
 
-        $class = self::MAPPING[$eventName];
+        $class = $this->mapping[$eventName];
 
         return new $class($payment);
     }

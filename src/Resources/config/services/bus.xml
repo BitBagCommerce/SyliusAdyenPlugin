@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service
+            class="BitBag\SyliusAdyenPlugin\Bus\Handler\AuthorizePaymentHandler"
+            id="bit_bag.sylius_adyen_plugin.bus.handler.authorize_payment_handler"
+        >
+            <argument type="service" id="sm.factory"/>
+            <argument type="service" id="sylius.manager.order"/>
+            <argument type="service" id="sylius.manager.payment"/>
+
+            <tag name="messenger.message_handler"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Bus\Handler\PreparePaymentHandler"
+            id="bit_bag.sylius_adyen_plugin.bus.handler.prepare_payment_handler"
+        >
+            <argument type="service" id="sm.factory"/>
+            <argument type="service" id="sylius.manager.payment"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Bus\CommandFactory"
+            id="bit_bag.sylius_adyen_plugin.bus.command_factory"/>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Bus\Dispatcher"
+            id="bit_bag.sylius_adyen_plugin.bus.dispatcher"
+        >
+            <argument type="service" id="messenger.routable_message_bus"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.bus.command_factory"/>
+        </service>
+    </services>
+</container>

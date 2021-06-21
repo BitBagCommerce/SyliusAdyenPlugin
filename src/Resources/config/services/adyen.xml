@@ -24,7 +24,7 @@
 
             <argument type="service" id="sylius.repository.payment_method"/>
             <argument type="service" id="sylius.context.shopper"/>
-            <argument type="service" id="psr18.http_client" />
+            <argument type="service" id="psr18.http_client"/>
         </service>
 
         <service
@@ -39,7 +39,7 @@
                 id="bit_bag.sylius_adyen_plugin.validator.constraint.adyen_credentials_validator"
         >
             <argument type="service" id="bit_bag.sylius_adyen_plugin.client.adyen_client"/>
-            <tag name="validator.constraint_validator" alias="bit_bag_sylius_adyen_plugin_credentials" />
+            <tag name="validator.constraint_validator" alias="bit_bag_sylius_adyen_plugin_credentials"/>
         </service>
 
         <service
