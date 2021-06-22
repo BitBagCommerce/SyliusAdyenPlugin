@@ -47,7 +47,7 @@
         >
             <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
             <argument type="service" id="router.default"/>
-            <argument type="tagged_locator" tag="bit_bag.sylius_adyen_plugin.action" default-index-method="getHandledEventName"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.bus.dispatcher"/>
             <argument type="service" id="sylius.repository.payment"/>
 
             <tag name="controller.service_arguments"/>
