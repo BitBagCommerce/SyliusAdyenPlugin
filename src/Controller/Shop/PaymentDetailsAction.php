@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
-use BitBag\SyliusAdyenPlugin\Bus\Command\AuthorizePayment;
+use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
@@ -55,7 +55,7 @@ class PaymentDetailsAction
 
         return $this->urlGenerator->generate(
             self::REDIRECT_TARGET_ACTION,
-            [],
+            ['code'=>$payment->getMethod()->getCode()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
     }
@@ -71,7 +71,9 @@ class PaymentDetailsAction
         $result = $client->paymentDetails($request->request->all());
 
         $payment->setDetails($result);
-        $this->dispatcher->dispatch(new AuthorizePayment($payment));
+        $this->dispatcher->dispatch(new PreparePayment($payment));
+
+        $request->getSession()->set('sylius_order_id', $order->getId());
 
         return new JsonResponse($payment->getDetails() + ['redirect'=>$this->getTargetUrl($payment)]);
     }

@@ -33,6 +33,15 @@ class AuthorizePaymentHandler implements MessageHandlerInterface
         $this->paymentManager = $paymentManager;
     }
 
+    private function updatePaymentAndOrder(PaymentInterface $payment)
+    {
+        $this->paymentManager->persist($payment);
+        $this->paymentManager->flush();
+
+        $this->orderManager->persist($payment->getOrder());
+        $this->orderManager->flush();
+    }
+
     private function processOrder(PaymentInterface $payment)
     {
         if (!$this->isAccepted($payment)) {
@@ -47,8 +56,7 @@ class AuthorizePaymentHandler implements MessageHandlerInterface
             $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
         }
 
-        $this->orderManager->persist($order);
-        $this->orderManager->flush();
+        $this->updatePaymentAndOrder($payment);
     }
 
     public function __invoke(AuthorizePayment $command)

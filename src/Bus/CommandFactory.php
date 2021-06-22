@@ -11,7 +11,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
 class CommandFactory
 {
     public const MAPPING = [
-        'authorised' => AuthorizePayment::class
+        'authorisation' => AuthorizePayment::class
     ];
 
     private $mapping = [];

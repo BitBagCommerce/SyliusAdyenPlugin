@@ -20,6 +20,8 @@
         >
             <argument type="service" id="sm.factory"/>
             <argument type="service" id="sylius.manager.payment"/>
+
+            <tag name="messenger.message_handler"/>
         </service>
 
         <service
@@ -30,7 +32,7 @@
             class="BitBag\SyliusAdyenPlugin\Bus\Dispatcher"
             id="bit_bag.sylius_adyen_plugin.bus.dispatcher"
         >
-            <argument type="service" id="messenger.routable_message_bus"/>
+            <argument type="service" id="messenger.default_bus"/>
             <argument type="service" id="bit_bag.sylius_adyen_plugin.bus.command_factory"/>
         </service>
     </services>

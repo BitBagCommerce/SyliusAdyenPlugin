@@ -9,8 +9,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class PreparePaymentHandler
+class PreparePaymentHandler implements MessageHandlerInterface
 {
     public const ALLOWED_EVENT_NAMES = ['Authorised', 'RedirectShopper'];
 
