@@ -68,24 +68,24 @@ class ConfigurationType extends AbstractType
                     ])
                 ],
             ])
-            /*->add('wsUser', TextType::class, [
-                'label' => 'bitbag_sylius_adyen_plugin.ui.ws_user',
+            ->add('authUser', TextType::class, [
+                'label' => 'bitbag_sylius_adyen_plugin.ui.auth_user',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'bitbag_sylius_adyen_plugin.ws_user.not_blank',
+                        'message' => 'bitbag_sylius_adyen_plugin.auth_user.not_blank',
                         'groups' => ['sylius'],
                     ])
                 ],
             ])
-            ->add('wsUserPassword', TextType::class, [
-                'label' => 'bitbag_sylius_adyen_plugin.ui.ws_user_password',
+            ->add('authPassword', TextType::class, [
+                'label' => 'bitbag_sylius_adyen_plugin.ui.auth_password',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'bitbag_sylius_adyen_plugin.ws_user_password.not_blank',
+                        'message' => 'bitbag_sylius_adyen_plugin.auth_password.not_blank',
                         'groups' => ['sylius'],
                     ])
                 ],
-            ])*/
+            ])
 
             ->add('adyen', HiddenType::class, [
                 'data'=>true

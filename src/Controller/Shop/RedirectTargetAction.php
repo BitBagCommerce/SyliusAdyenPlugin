@@ -18,6 +18,7 @@ class RedirectTargetAction
     public const THANKS_ROUTE_NAME = 'sylius_shop_order_thank_you';
 
     public const AUTHORIZATION_CODE = 'AUTHORISED';
+
     public const PREPARATION_CODE = 'PREPARE';
 
     /** @var AdyenClientProvider */

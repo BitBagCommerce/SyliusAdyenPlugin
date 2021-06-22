@@ -63,8 +63,7 @@ class AdyenClientProvider
 
     public function getClientForCode(string $code): AdyenClient
     {
-        $paymentMethod = $this->paymentMethodRepository->findAllForAdyenAndCode($code);
-        $paymentMethod = $paymentMethod ? array_pop($paymentMethod) : null;
+        $paymentMethod = $this->paymentMethodRepository->findOneForAdyenAndCode($code);
 
         if (!$paymentMethod) {
             throw new \InvalidArgumentException(sprintf('Adyen for "%s" code is not configured', $code));

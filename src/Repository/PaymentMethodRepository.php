@@ -12,7 +12,7 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 
 class PaymentMethodRepository extends BasePaymentMethodRepository implements PaymentMethodRepositoryInterface
 {
-    public function findAllForAdyenAndCode(string $code): array
+    public function findOneForAdyenAndCode(string $code): ?PaymentMethodInterface
     {
         return $this->createQueryBuilder('o')
             ->innerJoin('o.gatewayConfig', 'gatewayConfig')
@@ -21,7 +21,7 @@ class PaymentMethodRepository extends BasePaymentMethodRepository implements Pay
             ->setParameter('factoryName', AdyenGatewayFactory::FACTORY_NAME)
             ->setParameter('code', $code)
             ->getQuery()
-            ->getResult()
+            ->getSingleResult()
             ;
     }
 
