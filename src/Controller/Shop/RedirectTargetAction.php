@@ -15,6 +15,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RedirectTargetAction
 {
+    public const MY_ORDERS_ROUTE_NAME = 'sylius_shop_account_order_index';
+
     public const THANKS_ROUTE_NAME = 'sylius_shop_order_thank_you';
 
     public const AUTHORIZATION_CODE = 'AUTHORISED';
@@ -51,14 +53,16 @@ class RedirectTargetAction
         return $request->query->get('redirectResult');
     }
 
-    private function handleDetailsResponse(PaymentInterface $payment, array $result)
+    private function handleDetailsResponse(PaymentInterface $payment, array $result): bool
     {
-        if ($result['resultCode'] !== self::AUTHORIZATION_CODE) {
-            return;
+        if (strtoupper($result['resultCode']) !== self::AUTHORIZATION_CODE) {
+            return false;
         }
 
         $command = $this->dispatcher->getCommandFactory()->createForEvent(self::PREPARATION_CODE, $payment);
         $this->dispatcher->dispatch($command);
+
+        return true;
     }
 
     private function createPayloadForDetails(string $referenceId): array
@@ -70,23 +74,45 @@ class RedirectTargetAction
         ];
     }
 
-    private function processPayment(string $code, string $referenceId)
+    private function processPayment(string $code, string $referenceId): bool
     {
         $client = $this->adyenClientProvider->getClientForCode($code);
         $result = $client->paymentDetails($this->createPayloadForDetails($referenceId));
         $payment = $this->paymentRepository->find($result['merchantReference']);
-        $this->handleDetailsResponse($payment, $result);
+
+        return $this->handleDetailsResponse($payment, $result);
+    }
+
+    private function shouldTheAlternativeThanksPageBeShown(Request $request, bool $isPaid): bool
+    {
+        if (!$isPaid) {
+            return false;
+        }
+
+        if ($request->getSession()->get('sylius_order_id')) {
+            return false;
+        }
+
+        return true;
     }
 
     public function __invoke(Request $request, string $code): Response
     {
+        $targetRoute = self::THANKS_ROUTE_NAME;
+        $paid = false;
+
         $referenceId = $this->getReferenceId($request);
         if ($referenceId) {
-            $this->processPayment($code, $referenceId);
+            $paid = $this->processPayment($code, $referenceId);
+        }
+
+        if ($this->shouldTheAlternativeThanksPageBeShown($request, $paid)) {
+            $request->getSession()->getFlashbag()->add('info', 'sylius.payment.completed');
+            $targetRoute = self::MY_ORDERS_ROUTE_NAME;
         }
 
         return new RedirectResponse(
-            $this->urlGenerator->generate(self::THANKS_ROUTE_NAME)
+            $this->urlGenerator->generate($targetRoute)
         );
     }
 }

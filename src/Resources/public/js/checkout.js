@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
     let $form = document.querySelector('form[name=sylius_checkout_select_payment]');
     let $paymentMethods = $form.querySelectorAll(' input[type=radio]');
-    let $adyenLayers = $form.querySelectorAll('.adyen-method-grid');
+    let $adyenLayers = $form.querySelectorAll('.adyen-method-grid, .dropin-container');
     let $paymentSubmit = null;
     let isAdyenSelected = false;
 
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             isAdyenSelected = true;
             $paymentSubmit.disabled = true;
             $paymentSubmit.classList.remove('primary');
-            adyenMethod.querySelector('.adyen-method-grid').style.display = '';
+            adyenMethod.querySelector('.adyen-method-grid, .dropin-container').style.display = '';
         }
     }
 

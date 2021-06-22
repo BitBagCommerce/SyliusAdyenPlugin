@@ -1,8 +1,6 @@
 {% set factoryName = constant('BitBag\\SyliusAdyenPlugin\\AdyenGatewayFactory::FACTORY_NAME') %}
 
-<script src="{{ asset('/bundles/bitbagsyliusadyenplugin/js/checkout.js') }}"></script>
-<link rel="stylesheet"
-      href="{{ asset('/bundles/bitbagsyliusadyenplugin/css/adyen.css') }}">
+{% include 'BitBagSyliusAdyenPlugin:Shop:_assets.html.twig' %}
 
 <div class="ui segment">
     <div class="ui dividing header">{{ 'sylius.ui.payment'|trans }} #{{ loop.index }}</div>

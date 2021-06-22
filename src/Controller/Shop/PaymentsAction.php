@@ -49,18 +49,22 @@ class PaymentsAction
 
     private function prepareTargetUrl(OrderInterface $order): string
     {
+        $params = [
+            'code'=>$order->getLastPayment()->getMethod()->getCode()
+        ];
+
         return $this->urlGenerator->generate(
             self::REDIRECT_TARGET_ACTION,
-            [
-                'code'=>$order->getLastPayment()->getMethod()->getCode()
-            ],
+            $params,
             UrlGeneratorInterface::ABSOLUTE_URL
         );
     }
 
     private function prepareOrder(Request $request, OrderInterface $order)
     {
-        $request->getSession()->set('sylius_order_id', $order->getId());
+        if (!$request->get('tokenValue')) {
+            $request->getSession()->set('sylius_order_id', $order->getId());
+        }
         $this->orderTokenAssigner->assignTokenValueIfNotSet($order);
     }
 

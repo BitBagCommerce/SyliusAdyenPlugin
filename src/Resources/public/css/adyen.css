@@ -26,3 +26,8 @@ body #dropin-container .adyen-checkout__threeds2__challenge iframe
 {
     display: block;
 }
+
+.adyen-method .dropin-container
+{
+    margin: 1.5rem 0;
+}

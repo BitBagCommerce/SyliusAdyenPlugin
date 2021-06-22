@@ -7,6 +7,8 @@
                 id="bit_bag.sylius_adyen_plugin.twig.extension.payment_methods_for_order_extension"
         >
             <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
+            <argument type="service" id="sylius.repository.payment_method"/>
+
             <tag name="twig.extension"/>
         </service>
     </services>

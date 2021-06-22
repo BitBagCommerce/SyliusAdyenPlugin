@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Repository;
 
 use BitBag\SyliusAdyenPlugin\AdyenGatewayFactory;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentMethodRepository as BasePaymentMethodRepository;
 use Sylius\Component\Channel\Model\ChannelInterface;
@@ -14,15 +15,18 @@ class PaymentMethodRepository extends BasePaymentMethodRepository implements Pay
 {
     public function findOneForAdyenAndCode(string $code): ?PaymentMethodInterface
     {
-        return $this->createQueryBuilder('o')
-            ->innerJoin('o.gatewayConfig', 'gatewayConfig')
-            ->where('gatewayConfig.factoryName = :factoryName')
-            ->andWhere('o.code = :code')
-            ->setParameter('factoryName', AdyenGatewayFactory::FACTORY_NAME)
-            ->setParameter('code', $code)
-            ->getQuery()
-            ->getSingleResult()
-            ;
+        try {
+            return $this->createQueryBuilder('o')
+                ->innerJoin('o.gatewayConfig', 'gatewayConfig')
+                ->where('gatewayConfig.factoryName = :factoryName')
+                ->andWhere('o.code = :code')
+                ->setParameter('factoryName', AdyenGatewayFactory::FACTORY_NAME)
+                ->setParameter('code', $code)
+                ->getQuery()
+                ->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
     }
 
     private function getQueryForChannel(ChannelInterface $channel): QueryBuilder

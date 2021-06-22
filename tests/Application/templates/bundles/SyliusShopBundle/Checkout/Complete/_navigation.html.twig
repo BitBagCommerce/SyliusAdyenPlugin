@@ -5,5 +5,6 @@
         <i class="check icon"></i> {{ 'sylius.ui.place_order'|trans }}
     </button>
 {% else %}
+    {% include 'BitBagSyliusAdyenPlugin:Shop:_assets.html.twig' %}
     {% include '@BitBagSyliusAdyenPlugin/Shop/_dropin.html.twig' %}
 {% endif %}

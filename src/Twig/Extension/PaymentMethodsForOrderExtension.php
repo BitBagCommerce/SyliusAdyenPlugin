@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Twig\Extension;
 
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
+use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Twig\Extension\AbstractExtension;
@@ -12,22 +13,27 @@ use Twig\TwigFunction;
 
 class PaymentMethodsForOrderExtension extends AbstractExtension
 {
-    const CONFIGURATION_KEYS_WHITELIST = [
+    public const CONFIGURATION_KEYS_WHITELIST = [
         'environment', 'merchantAccount', 'clientKey'
     ];
 
     /** @var AdyenClientProvider */
     private $adyenClientProvider;
 
-    public function __construct(AdyenClientProvider $adyenClientProvider)
-    {
+    /** @var PaymentMethodRepositoryInterface */
+    private $paymentMethodRepository;
+
+    public function __construct(
+        AdyenClientProvider $adyenClientProvider,
+        PaymentMethodRepositoryInterface $paymentMethodRepository
+    ) {
         $this->adyenClientProvider = $adyenClientProvider;
+        $this->paymentMethodRepository = $paymentMethodRepository;
     }
 
     public function getFunctions()
     {
         return [
-            new TwigFunction('adyen_payment_methods', [$this, 'adyenPaymentMethods']),
             new TwigFunction('adyen_payment_configuration', [$this, 'adyenPaymentConfiguration'])
         ];
     }
@@ -37,27 +43,37 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         return array_intersect_key($array, array_flip(self::CONFIGURATION_KEYS_WHITELIST));
     }
 
-    public function adyenPaymentConfiguration(OrderInterface $order)
+    private function getPaymentMethod(OrderInterface $order, ?string $code = null): ?PaymentMethodInterface
     {
-        /**
-         * @var $payment PaymentMethodInterface
-         */
-        $payment = $order->getLastPayment();
+        if ($code) {
+            return $this->paymentMethodRepository->findOneForAdyenAndCode($code);
+        }
 
-        return $this->filterKeys(
-            $payment->getMethod()->getGatewayConfig()->getConfig()
-        );
+        return $order->getLastPayment()->getMethod();
     }
 
-    public function adyenPaymentMethods(OrderInterface $order)
+    public function adyenPaymentConfiguration(OrderInterface $order, ?string $code = null)
     {
-        /**
-         * @var $payment PaymentMethodInterface
-         */
-        $payment = $order->getLastPayment();
+        $paymentMethod = $this->getPaymentMethod($order, $code);
+
+        if (!$paymentMethod) {
+            return null;
+        }
+
+        $result = $this->filterKeys(
+            $paymentMethod->getGatewayConfig()->getConfig()
+        );
+        $result['paymentMethods'] = $this->adyenPaymentMethods($order, $code);
+
+        return $result;
+    }
+
+    private function adyenPaymentMethods(OrderInterface $order, ?string $code = null)
+    {
+        $method = $this->getPaymentMethod($order, $code);
 
         try {
-            $client = $this->adyenClientProvider->getForPaymentMethod($payment->getMethod());
+            $client = $this->adyenClientProvider->getClientForCode($method->getCode());
         } catch (\InvalidArgumentException $ex) {
             return false;
         }
