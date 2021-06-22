@@ -12,6 +12,10 @@ use Twig\TwigFunction;
 
 class PaymentMethodsForOrderExtension extends AbstractExtension
 {
+    const CONFIGURATION_KEYS_WHITELIST = [
+        'environment', 'merchantAccount', 'clientKey'
+    ];
+
     /** @var AdyenClientProvider */
     private $adyenClientProvider;
 
@@ -28,6 +32,11 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         ];
     }
 
+    private function filterKeys(array $array): array
+    {
+        return array_intersect_key($array, array_flip(self::CONFIGURATION_KEYS_WHITELIST));
+    }
+
     public function adyenPaymentConfiguration(OrderInterface $order)
     {
         /**
@@ -35,7 +44,9 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
          */
         $payment = $order->getLastPayment();
 
-        return $payment->getMethod()->getGatewayConfig()->getConfig();
+        return $this->filterKeys(
+            $payment->getMethod()->getGatewayConfig()->getConfig()
+        );
     }
 
     public function adyenPaymentMethods(OrderInterface $order)
