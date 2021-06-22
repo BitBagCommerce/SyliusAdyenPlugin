@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Exception\UnmappedAdyenActionException;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Payment\PaymentNotificationResolver;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -58,7 +59,7 @@ class ProcessNotificationsAction
         try {
             $command = $this->dispatcher->getCommandFactory()->createForEvent($notificationItem['eventCode'], $payment);
             $this->dispatcher->dispatch($command);
-        } catch (\InvalidArgumentException $ex) {
+        } catch (UnmappedAdyenActionException $ex) {
         }
     }
 

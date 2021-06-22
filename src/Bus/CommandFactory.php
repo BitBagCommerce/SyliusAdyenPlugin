@@ -7,6 +7,7 @@ namespace BitBag\SyliusAdyenPlugin\Bus;
 use BitBag\SyliusAdyenPlugin\Bus\Command\AuthorizePayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentLifecycleCommand;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
+use BitBag\SyliusAdyenPlugin\Exception\UnmappedAdyenActionException;
 use Sylius\Component\Core\Model\PaymentInterface;
 
 class CommandFactory
@@ -28,7 +29,7 @@ class CommandFactory
         $eventName = strtolower($event);
 
         if (!isset($this->mapping[$eventName])) {
-            throw new \InvalidArgumentException(sprintf('Event "%s" has no handler registered', $eventName));
+            throw new UnmappedAdyenActionException(sprintf('Event "%s" has no handler registered', $eventName));
         }
 
         $class = $this->mapping[$eventName];
