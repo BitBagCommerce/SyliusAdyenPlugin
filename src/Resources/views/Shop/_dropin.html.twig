@@ -28,6 +28,9 @@
                 hasHolderName: true,
                 holderNameRequired: true,
                 enableStoreDetails: true,
+                data: {
+                    holderName: '{{ order.billingAddress.firstName }} {{ order.billingAddress.lastName }}'
+                }
             }
         },
         clientKey: "{{ payment_configuration['clientKey'] }}", // Web Drop-in versions before 3.10.1 use originKey instead of clientKey.
