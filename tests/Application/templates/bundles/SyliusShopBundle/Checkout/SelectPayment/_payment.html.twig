@@ -1,5 +1,9 @@
 {% set factoryName = constant('BitBag\\SyliusAdyenPlugin\\AdyenGatewayFactory::FACTORY_NAME') %}
 
+<script src="{{ asset('/bundles/bitbagsyliusadyenplugin/js/checkout.js') }}"></script>
+<link rel="stylesheet"
+      href="{{ asset('/bundles/bitbagsyliusadyenplugin/css/adyen.css') }}">
+
 <div class="ui segment">
     <div class="ui dividing header">{{ 'sylius.ui.payment'|trans }} #{{ loop.index }}</div>
     <div class="ui fluid stackable items">
@@ -23,81 +27,4 @@
         {% endfor %}
     </div>
 
-    <script>
-
-        let $form = document.querySelector('form[name=sylius_checkout_select_payment]');
-        let $paymentMethods = $form.querySelectorAll(' input[type=radio]');
-        let $adyenLayers = $form.querySelectorAll('.adyen-method-grid');
-        let $paymentSubmit = null;
-        let isAdyenSelected = false;
-
-        let showAdyenGrid = (code) => {
-            let adyenMethod = $form.querySelector('[data-code='+code+']');
-
-            if(adyenMethod) {
-                isAdyenSelected = true;
-                $paymentSubmit.disabled = true;
-                $paymentSubmit.classList.remove('primary');
-                adyenMethod.querySelector('.adyen-method-grid').style.display = '';
-            }
-        }
-
-        let hideAdyen = () => {
-            isAdyenSelected = false;
-
-            $paymentSubmit.disabled = false;
-            $paymentSubmit.classList.add('primary')
-
-            $adyenLayers.forEach((adyenLayer) => {
-                adyenLayer.style.display = 'none';
-            });
-        }
-
-        $paymentMethods.forEach(($paymentMethod) => {
-            $paymentMethod.addEventListener('change', (e) => {
-                hideAdyen();
-                showAdyenGrid(e.currentTarget.value);
-            });
-        });
-
-        let init = () => {
-            document.addEventListener('DOMContentLoaded', () => {
-                $paymentSubmit = $form.querySelector('#next-step, #sylius-pay-link')
-
-                hideAdyen();
-                $paymentMethods.forEach(($paymentMethod) => {
-                    if($paymentMethod.checked){
-                        showAdyenGrid($paymentMethod.value);
-                    }
-                });
-            });
-        }
-
-        init();
-    </script>
-
-    <style>
-        .adyen-method-grid {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .adyen-method-grid button[type=submit]
-        {
-            border: 2px solid rgba(34, 36, 38, 0.15);
-            background: transparent;
-            padding: 0.2em;
-            margin: 0.5em;
-            cursor: pointer;
-        }
-        .adyen-method-grid button[type=submit]:hover
-        {
-            border-color: #AAAAAA;
-        }
-
-        .adyen-method-grid button[type=submit] img
-        {
-            display: block;
-        }
-    </style>
 </div>

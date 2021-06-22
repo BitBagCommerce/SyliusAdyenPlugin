@@ -1,27 +1,50 @@
 document.addEventListener('DOMContentLoaded', (e) => {
 
-    const $ = document.querySelector.bind(document);
+    let $form = document.querySelector('form[name=sylius_checkout_select_payment]');
+    let $paymentMethods = $form.querySelectorAll(' input[type=radio]');
+    let $adyenLayers = $form.querySelectorAll('.adyen-method-grid');
+    let $paymentSubmit = null;
+    let isAdyenSelected = false;
 
-    let isAdyenChosen = false;
+    let showAdyenGrid = (code) => {
+        let adyenMethod = $form.querySelector('[data-code=' + code + ']');
 
-    const $paymentMethodRadio = $('form[name=sylius_checkout_select_payment] input[type=radio][value=adyen]');
-    const $paymentMethodsLayer = $('.adyen-payment-container');
-
-    const $paymentMethodRadioChangeHandler = (e) => {
-        isAdyenChosen = e.currentTarget.getAttribute('checked');
-        if(isAdyenChosen){
-            $paymentMethodsLayer.style.display = '';
-        }else{
-            $paymentMethodsLayer.style.display = 'none';
+        if (adyenMethod) {
+            isAdyenSelected = true;
+            $paymentSubmit.disabled = true;
+            $paymentSubmit.classList.remove('primary');
+            adyenMethod.querySelector('.adyen-method-grid').style.display = '';
         }
     }
 
-    const initialize = () => {
-        $paymentMethodRadio.addEventListener('change', $paymentMethodRadioChangeHandler)
-        $paymentMethodRadio.dispatchEvent(
-            new Event('change')
-        );
+    let hideAdyen = () => {
+        isAdyenSelected = false;
+
+        $paymentSubmit.disabled = false;
+        $paymentSubmit.classList.add('primary')
+
+        $adyenLayers.forEach((adyenLayer) => {
+            adyenLayer.style.display = 'none';
+        });
     }
 
-    initialize();
+    $paymentMethods.forEach(($paymentMethod) => {
+        $paymentMethod.addEventListener('change', (e) => {
+            hideAdyen();
+            showAdyenGrid(e.currentTarget.value);
+        });
+    });
+
+    let init = () => {
+        $paymentSubmit = $form.querySelector('#next-step, #sylius-pay-link')
+
+        hideAdyen();
+        $paymentMethods.forEach(($paymentMethod) => {
+            if ($paymentMethod.checked) {
+                showAdyenGrid($paymentMethod.value);
+            }
+        });
+    }
+
+    init();
 });
