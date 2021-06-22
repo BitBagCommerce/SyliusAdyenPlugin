@@ -6,12 +6,14 @@ namespace BitBag\SyliusAdyenPlugin\Bus;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\AuthorizePayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentLifecycleCommand;
+use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
 use Sylius\Component\Core\Model\PaymentInterface;
 
 class CommandFactory
 {
     public const MAPPING = [
-        'authorisation' => AuthorizePayment::class
+        'authorisation' => AuthorizePayment::class,
+        'prepare' => PreparePayment::class
     ];
 
     private $mapping = [];

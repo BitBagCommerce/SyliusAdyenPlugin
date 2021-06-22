@@ -18,6 +18,7 @@ class RedirectTargetAction
     public const THANKS_ROUTE_NAME = 'sylius_shop_order_thank_you';
 
     public const AUTHORIZATION_CODE = 'AUTHORISED';
+    public const PREPARATION_CODE = 'PREPARE';
 
     /** @var AdyenClientProvider */
     private $adyenClientProvider;
@@ -46,20 +47,16 @@ class RedirectTargetAction
 
     private function getReferenceId(Request $request): ?string
     {
-        if ($request->attributes->get('_route') !== self::THANKS_ROUTE_NAME) {
-            return null;
-        }
-
         return $request->query->get('redirectResult');
     }
 
     private function handleDetailsResponse(PaymentInterface $payment, array $result)
     {
-        if ($result['eventCode'] !== self::AUTHORIZATION_CODE) {
+        if ($result['resultCode'] !== self::AUTHORIZATION_CODE) {
             return;
         }
 
-        $command = $this->dispatcher->getCommandFactory()->createForEvent(self::AUTHORIZATION_CODE, $payment);
+        $command = $this->dispatcher->getCommandFactory()->createForEvent(self::PREPARATION_CODE, $payment);
         $this->dispatcher->dispatch($command);
     }
 
