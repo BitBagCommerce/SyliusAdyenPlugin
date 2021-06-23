@@ -11,7 +11,7 @@
         "php": "^7.3",
         "adyen/php-api-library": "^10.1",
         "nyholm/psr7": "^1.4",
-        "sylius/sylius": "~1.8.0",
+        "sylius/sylius": "^1.8.0",
         "symfony/messenger": "~4.4"
     },
     "require-dev": {
