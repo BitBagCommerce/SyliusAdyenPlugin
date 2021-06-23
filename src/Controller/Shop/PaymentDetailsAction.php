@@ -47,15 +47,14 @@ class PaymentDetailsAction
         $this->dispatcher = $dispatcher;
     }
 
-    private function getTargetUrl(PaymentInterface $payment): ?string
+    private function getTargetUrl(PaymentInterface $payment, ?string $tokenValue = null): ?string
     {
-        if ($payment->getState() !== PaymentInterface::STATE_COMPLETED) {
-            return null;
-        }
-
         return $this->urlGenerator->generate(
             self::REDIRECT_TARGET_ACTION,
-            ['code'=>$payment->getMethod()->getCode()],
+            [
+                'code'=>$payment->getMethod()->getCode(),
+                'tokenValue'=>$tokenValue
+            ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
     }
@@ -65,7 +64,10 @@ class PaymentDetailsAction
         $order = $this->paymentCheckoutOrderResolver->resolve();
         $payment = $order->getLastPayment();
 
-        $request->getSession()->set('sylius_order_id', $order->getId());
+        $tokenValue = $request->query->get('tokenValue');
+        if ($tokenValue === null) {
+            $request->getSession()->set('sylius_order_id', $order->getId());
+        }
 
         $client = $this->adyenClientProvider->getForPaymentMethod($payment->getMethod());
         $result = $client->paymentDetails($request->request->all());
@@ -75,6 +77,6 @@ class PaymentDetailsAction
 
         $request->getSession()->set('sylius_order_id', $order->getId());
 
-        return new JsonResponse($payment->getDetails() + ['redirect'=>$this->getTargetUrl($payment)]);
+        return new JsonResponse($payment->getDetails() + ['redirect'=>$this->getTargetUrl($payment, $tokenValue)]);
     }
 }

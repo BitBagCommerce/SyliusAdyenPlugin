@@ -4,6 +4,15 @@
         let checkout = null;
         let configuration = {}
 
+        let _successfulFetchCallback = (dropin, data) => {
+            if (data.action) {
+                dropin.handleAction(data.action);
+                return;
+            }
+
+            window.location.replace(data.redirect)
+        }
+
         let onSubmitHandler = (state, dropin) => {
             const options = {
                 method: 'POST',
@@ -16,11 +25,7 @@
             fetch(configuration.path.payments, options)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.action) {
-                        dropin.handleAction(data.action);
-                    } else if (data.redirect) {
-                        window.location.replace(data.redirect);
-                    }
+                    _successfulFetchCallback(dropin, data);
                 })
                 .catch(error => {
                     throw Error(error);
@@ -39,12 +44,8 @@
 
             fetch(configuration.path.paymentDetails, options)
                 .then(response => response.json())
-                .then(response => {
-                    if (response.action) {
-                        dropin.handleAction(response.action);
-                    } else {
-                        window.location.replace(configuration.path.thankYou)
-                    }
+                .then(data => {
+                    _successfulFetchCallback(dropin, data);
                 })
                 .catch(error => {
                     throw Error(error);
@@ -62,6 +63,7 @@
                         enableStoreDetails: true,
                         data: {
                             holderName: `${configuration.billingAddress.firstName} ${configuration.billingAddress.lastName}`,
+                            // todo: move this off to the back-end call
                             billingAddress: {
                                 street: configuration.billingAddress.street,
                                 postalCode: configuration.billingAddress.postCode,

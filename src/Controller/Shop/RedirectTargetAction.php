@@ -85,6 +85,10 @@ class RedirectTargetAction
 
     private function shouldTheAlternativeThanksPageBeShown(Request $request, bool $isPaid): bool
     {
+        if ($request->query->get('tokenValue') !== null) {
+            return true;
+        }
+
         if (!$isPaid) {
             return false;
         }
@@ -98,10 +102,10 @@ class RedirectTargetAction
 
     public function __invoke(Request $request, string $code): Response
     {
-        $targetRoute = self::THANKS_ROUTE_NAME;
         $paid = false;
-
+        $targetRoute = self::THANKS_ROUTE_NAME;
         $referenceId = $this->getReferenceId($request);
+
         if ($referenceId) {
             $paid = $this->processPayment($code, $referenceId);
         }
