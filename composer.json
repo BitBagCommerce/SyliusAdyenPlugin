@@ -1,5 +1,5 @@
 {
-    "name": "sylius/plugin-skeleton",
+    "name": "bitbag/sylius-adyen-plugin",
     "type": "sylius-plugin",
     "description": "BitBag example plugin for Sylius.",
     "keywords": [
