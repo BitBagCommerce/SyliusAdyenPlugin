@@ -15,7 +15,8 @@
     environment: payment_configuration['environment'],
     path: {
         payments: path('bitbag_adyen_payments', path_params),
-        paymentDetails: path('bitbag_adyen_payment_details', path_params)
+        paymentDetails: path('bitbag_adyen_payment_details', path_params),
+        thankYou: path('bitbag_adyen_thank_you', {code: method.code})
     }
 } %}
 
