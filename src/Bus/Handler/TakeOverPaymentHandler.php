@@ -6,13 +6,17 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\TakeOverPayment;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
+use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Payment\Factory\PaymentFactoryInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class TakeOverPaymentHandler implements MessageHandlerInterface
 {
+    use PayableOrderPaymentTrait;
+
     private $paymentMethodRepository;
 
     /** @var PaymentFactoryInterface */
@@ -36,26 +40,35 @@ class TakeOverPaymentHandler implements MessageHandlerInterface
         $this->orderManager = $orderManager;
     }
 
+    private function getPaymentMethod(string $paymentCode): PaymentMethodInterface
+    {
+        $paymentMethod = $this->paymentMethodRepository->findOneForAdyenAndCode($paymentCode);
+
+        if ($paymentMethod === null) {
+            throw new \InvalidArgumentException(
+                sprintf('Cannot get PaymentMethod with code "%s"', $paymentCode)
+            );
+        }
+
+        return $paymentMethod;
+    }
+
+    private function persistPayment(PaymentInterface $payment): void
+    {
+        $this->paymentManager->persist($payment);
+        $this->paymentManager->flush();
+    }
+
     public function __invoke(TakeOverPayment $command)
     {
-        $order = $command->getOrder();
-
-        $payment = $order->getLastPayment(PaymentInterface::STATE_NEW);
+        $payment = $this->getPayablePayment($command->getOrder());
         if ($payment->getMethod()->getCode() === $command->getPaymentCode()) {
             return;
         }
 
-        $paymentMethod = $this->paymentMethodRepository->findOneForAdyenAndCode($command->getPaymentCode());
-
-        if ($paymentMethod === null) {
-            throw new \InvalidArgumentException(
-                sprintf('Cannot get PaymentMethod with code "%s"', $command->getPaymentCode())
-            );
-        }
-
+        $paymentMethod = $this->getPaymentMethod($command->getPaymentCode());
         $payment->setMethod($paymentMethod);
 
-        $this->paymentManager->persist($payment);
-        $this->paymentManager->flush();
+        $this->persistPayment($payment);
     }
 }

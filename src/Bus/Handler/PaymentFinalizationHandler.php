@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
-use BitBag\SyliusAdyenPlugin\Bus\Command\AuthorizePayment;
+use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentFinalizationCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface;
+use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\OrderPaymentTransitions;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class AuthorizePaymentHandler implements MessageHandlerInterface
+class PaymentFinalizationHandler implements MessageHandlerInterface
 {
     /** @var FactoryInterface */
     private $stateMachineFactory;
@@ -33,7 +34,7 @@ class AuthorizePaymentHandler implements MessageHandlerInterface
         $this->paymentManager = $paymentManager;
     }
 
-    private function updatePaymentAndOrder(PaymentInterface $payment)
+    private function persistPaymentAndOrder(PaymentInterface $payment)
     {
         $this->paymentManager->persist($payment);
         $this->paymentManager->flush();
@@ -42,26 +43,29 @@ class AuthorizePaymentHandler implements MessageHandlerInterface
         $this->orderManager->flush();
     }
 
-    private function processOrder(PaymentInterface $payment)
+    private function updateOrderState(OrderInterface $order, string $transition): void
     {
+        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+
+        if (!$stateMachine->can($transition)) {
+            return;
+        }
+
+        $stateMachine->apply($transition);
+    }
+
+    public function __invoke(PaymentFinalizationCommand $command)
+    {
+        $payment = $command->getPayment();
+
         if (!$this->isAccepted($payment)) {
             return;
         }
 
-        $payment->setState(PaymentInterface::STATE_COMPLETED);
-        $order = $payment->getOrder();
+        $payment->setState($command->getTargetPaymentState());
+        $this->updateOrderState($payment->getOrder(), $command->getOrderTransition());
 
-        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-        if ($stateMachine->can(OrderPaymentTransitions::TRANSITION_PAY)) {
-            $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
-        }
-
-        $this->updatePaymentAndOrder($payment);
-    }
-
-    public function __invoke(AuthorizePayment $command)
-    {
-        $this->processOrder($command->getPayment());
+        $this->persistPaymentAndOrder($payment);
     }
 
     private function isAccepted(PaymentInterface $payment): bool

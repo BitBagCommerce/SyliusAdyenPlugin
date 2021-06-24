@@ -7,6 +7,7 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
 use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface;
+use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -29,14 +30,8 @@ class PreparePaymentHandler implements MessageHandlerInterface
         $this->paymentManager = $paymentManager;
     }
 
-    private function modifyPayment(PaymentInterface $payment)
+    private function updateOrderState(OrderInterface $order): void
     {
-        if (!$this->isAccepted($payment)) {
-            return;
-        }
-
-        $order = $payment->getOrder();
-
         $sm = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
         if (!$sm->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)) {
             return;
@@ -45,13 +40,20 @@ class PreparePaymentHandler implements MessageHandlerInterface
         $sm->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
     }
 
+    private function persistPayment(PaymentInterface $payment): void
+    {
+        $this->paymentManager->persist($payment);
+        $this->paymentManager->flush();
+    }
+
     public function __invoke(PreparePayment $command)
     {
         $payment = $command->getPayment();
-        $this->modifyPayment($payment);
+        if ($this->isAccepted($payment)) {
+            $this->updateOrderState($payment->getOrder());
+        }
 
-        $this->paymentManager->persist($payment);
-        $this->paymentManager->flush();
+        $this->persistPayment($payment);
     }
 
     private function isAccepted(PaymentInterface $payment): bool

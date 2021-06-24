@@ -7,7 +7,7 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Command;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderPaymentTransitions;
 
-class AuthorizePayment implements PaymentFinalizationCommand
+class CapturePayment implements PaymentFinalizationCommand
 {
     /** @var PaymentInterface */
     private $payment;
@@ -17,18 +17,18 @@ class AuthorizePayment implements PaymentFinalizationCommand
         $this->payment = $payment;
     }
 
-    public function getPayment(): PaymentInterface
-    {
-        return $this->payment;
-    }
-
     public function getTargetPaymentState(): string
     {
-        return PaymentInterface::STATE_AUTHORIZED;
+        return PaymentInterface::STATE_COMPLETED;
     }
 
     public function getOrderTransition(): string
     {
-        return OrderPaymentTransitions::TRANSITION_AUTHORIZE;
+        return OrderPaymentTransitions::TRANSITION_PAY;
+    }
+
+    public function getPayment(): PaymentInterface
+    {
+        return $this->payment;
     }
 }
