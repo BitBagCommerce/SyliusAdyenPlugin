@@ -1,2 +1,3 @@
 imports:
-  - { resource: "@BitBagSyliusAdyenPlugin/Resources/config/payment_method.yml" }
+  - { resource: "@BitBagSyliusAdyenPlugin/Resources/config/sylius/payment_method.yml" }
+  - { resource: "@BitBagSyliusAdyenPlugin/Resources/config/sylius/blocks.yml" }

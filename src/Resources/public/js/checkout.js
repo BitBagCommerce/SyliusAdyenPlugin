@@ -9,19 +9,19 @@ document.addEventListener('DOMContentLoaded', (e) => {
     let showAdyenGrid = (code) => {
         let adyenMethod = $form.querySelector('[data-code=' + code + ']');
 
-        if (adyenMethod) {
-            isAdyenSelected = true;
-            $paymentSubmit.disabled = true;
-            $paymentSubmit.classList.remove('primary');
-            adyenMethod.querySelector('.adyen-method-grid, .dropin-container').style.display = '';
+        if (!adyenMethod) {
+            return;
         }
+
+        isAdyenSelected = true;
+        $paymentSubmit.classList.add('adyen');
+        adyenMethod.querySelector('.adyen-method-grid, .dropin-container').style.display = '';
     }
 
     let hideAdyen = () => {
         isAdyenSelected = false;
 
-        $paymentSubmit.disabled = false;
-        $paymentSubmit.classList.add('primary')
+        $paymentSubmit.classList.remove('adyen')
 
         $adyenLayers.forEach((adyenLayer) => {
             adyenLayer.style.display = 'none';
@@ -44,6 +44,10 @@ document.addEventListener('DOMContentLoaded', (e) => {
                 showAdyenGrid($paymentMethod.value);
             }
         });
+    }
+
+    if(!$form){
+        return;
     }
 
     init();
