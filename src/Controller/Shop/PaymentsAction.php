@@ -11,7 +11,6 @@ use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\TokenAssigner\OrderTokenAssignerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,7 +77,7 @@ class PaymentsAction
         $order = $this->paymentCheckoutOrderResolver->resolve();
         $this->prepareOrder($request, $order);
 
-        if($code !== null){
+        if ($code !== null) {
             $this->dispatcher->dispatch(new TakeOverPayment($order, $code));
         }
 
