@@ -1,17 +1,9 @@
-# Delete these routes and define your own shop routes here
-
-bitbag_adyen_payments:
-  path: /payment/adyen
-  controller: bit_bag.sylius_adyen_plugin.controller.shop.payments_action
-
-bitbag_adyen_payment_details:
-  path: /payment/adyen/details
-  controller: bit_bag.sylius_adyen_plugin.controller.shop.payment_details_action
-
 bitbag_adyen_process_notifications:
   path: /payment/adyen/{code}/notifications
   controller: bit_bag.sylius_adyen_plugin.controller.shop.process_notifications_action
 
-bitbag_adyen_thank_you:
-  path: /payment/adyen/{code}/thanks
-  controller: bit_bag.sylius_adyen_plugin.controller.shop.redirect_target_action
+bitbag_adyen_localized:
+  resource: "@BitBagSyliusAdyenPlugin/Resources/config/routing/shop_routing_localized.yml"
+  prefix: /{_locale}
+  requirements:
+    _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
