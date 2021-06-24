@@ -8,6 +8,7 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
+use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
 use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,6 +17,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaymentDetailsAction
 {
+    use PayableOrderPaymentTrait;
+
     public const REDIRECT_TARGET_ACTION = 'bitbag_adyen_thank_you';
 
     /** @var AdyenClientProvider */
@@ -62,7 +65,7 @@ class PaymentDetailsAction
     public function __invoke(Request $request)
     {
         $order = $this->paymentCheckoutOrderResolver->resolve();
-        $payment = $order->getLastPayment();
+        $payment = $this->getPayablePayment($order);
 
         $tokenValue = $request->query->get('tokenValue');
         if ($tokenValue === null) {
@@ -74,8 +77,6 @@ class PaymentDetailsAction
 
         $payment->setDetails($result);
         $this->dispatcher->dispatch(new PreparePayment($payment));
-
-        $request->getSession()->set('sylius_order_id', $order->getId());
 
         return new JsonResponse($payment->getDetails() + ['redirect'=>$this->getTargetUrl($payment, $tokenValue)]);
     }

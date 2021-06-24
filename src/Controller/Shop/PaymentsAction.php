@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
+use BitBag\SyliusAdyenPlugin\Bus\Command\TakeOverPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
+use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
 use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\TokenAssigner\OrderTokenAssignerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +19,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaymentsAction
 {
+    use PayableOrderPaymentTrait;
+
     public const REDIRECT_TARGET_ACTION = 'bitbag_adyen_thank_you';
 
     /** @var AdyenClientProvider */
@@ -68,12 +73,16 @@ class PaymentsAction
         $this->orderTokenAssigner->assignTokenValueIfNotSet($order);
     }
 
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request, ?string $code = null): JsonResponse
     {
         $order = $this->paymentCheckoutOrderResolver->resolve();
         $this->prepareOrder($request, $order);
 
-        $payment = $order->getLastPayment();
+        if($code !== null){
+            $this->dispatcher->dispatch(new TakeOverPayment($order, $code));
+        }
+
+        $payment = $this->getPayablePayment($order);
         $url = $this->prepareTargetUrl($order);
 
         $client = $this->adyenClientProvider->getForPaymentMethod($payment->getMethod());

@@ -1,5 +1,9 @@
 {% set path_params = order.tokenValue ? {tokenValue: order.tokenValue} : {} %}
 
+{% if method.code is defined %}
+    {% set path_params = path_params|merge({code: method.code}) %}
+{% endif %}
+
 {% set dropin_configuration = {
     billingAddress: {
         firstName: order.billingAddress.firstName,
