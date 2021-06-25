@@ -28,7 +28,7 @@
                     _successfulFetchCallback(dropin, data);
                 })
                 .catch(error => {
-                    throw Error(error);
+                    alert(error);
                 })
             ;
         };
@@ -48,7 +48,7 @@
                     _successfulFetchCallback(dropin, data);
                 })
                 .catch(error => {
-                    throw Error(error);
+                    alert(error);
                 })
             ;
         };
