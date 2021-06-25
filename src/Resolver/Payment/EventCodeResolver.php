@@ -21,6 +21,6 @@ class EventCodeResolver
             throw new \InvalidArgumentException('eventCode is not supplied');
         }
 
-        return self::PAYMENT_METHOD_TYPES[strtolower($notificationData['eventCode'])] ?? self::AUTHORIZATION;
+        return self::PAYMENT_METHOD_TYPES[strtolower($notificationData['paymentMethod'])] ?? self::AUTHORIZATION;
     }
 }

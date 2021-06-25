@@ -31,22 +31,17 @@ class ProcessNotificationsAction
     /** @var PaymentNotificationResolver */
     private $paymentNotificationResolver;
 
-    /** @var EventCodeResolver */
-    private $eventCodeResolver;
-
     public function __construct(
         AdyenClientProvider $adyenClientProvider,
         PaymentRepositoryInterface $paymentRepository,
         Dispatcher $dispatcher,
-        PaymentNotificationResolver $paymentNotificationResolver,
-        EventCodeResolver $eventCodeResolver
+        PaymentNotificationResolver $paymentNotificationResolver
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->paymentRepository = $paymentRepository;
 
         $this->dispatcher = $dispatcher;
         $this->paymentNotificationResolver = $paymentNotificationResolver;
-        $this->eventCodeResolver = $eventCodeResolver;
     }
 
     private function validateRequest(string $code, array $arguments): void

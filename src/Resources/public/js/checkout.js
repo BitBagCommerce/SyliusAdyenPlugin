@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', (e) => {
 
     let $form = document.querySelector('form[name=sylius_checkout_select_payment]');
+    if(!$form){
+        return;
+    }
+
     let $paymentMethods = $form.querySelectorAll(' input[type=radio]');
     let $adyenLayers = $form.querySelectorAll('.adyen-method-grid, .dropin-container');
     let $paymentSubmit = null;
@@ -44,10 +48,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
                 showAdyenGrid($paymentMethod.value);
             }
         });
-    }
-
-    if(!$form){
-        return;
     }
 
     init();
