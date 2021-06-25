@@ -8,3 +8,9 @@ sylius_ui:
       blocks:
         adyen:
           template: '@BitBagSyliusAdyenPlugin/Shop/_javascripts.html.twig'
+
+    sylius.admin.update:
+      blocks:
+        blah:
+          priority: 11
+          template: '@BitBagSyliusAdyenPlugin/Admin/_description.html.twig'

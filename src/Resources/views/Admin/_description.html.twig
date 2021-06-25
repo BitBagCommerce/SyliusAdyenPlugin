@@ -1,0 +1,20 @@
+{% set factory = constant('BitBag\\SyliusAdyenPlugin\\AdyenGatewayFactory::FACTORY_NAME') %}
+
+{% if payment_method is defined and payment_method.gatewayConfig.factoryName == factory %}
+    <div class="ui segment">
+
+        <p>In order to configure Adyen payment, head to merchant panel and use following URL as target:</p>
+
+        <div class="ui form">
+            <div class="required field">
+                <label for="notifications-endpoint">Notifications endpoint</label>
+                <input type="text"
+                       id="notifications-endpoint"
+                       value="{{ url('bitbag_adyen_process_notifications', {code: payment_method.code}) }}"
+                       readonly="readonly"
+                >
+            </div>
+        </div>
+
+    </div>
+{% endif %}
