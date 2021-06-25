@@ -5,4 +5,14 @@
         <import resource="services/*.xml"/>
     </imports>
 
+    <services>
+        <service
+            class="BitBag\SyliusAdyenPlugin\Callback\RequestCaptureOnShipCallback"
+            id="bit_bag.sylius_adyen_plugin.callback.request_capture_on_ship_callback"
+            public="true"
+        >
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.bus.dispatcher"/>
+        </service>
+    </services>
+
 </container>

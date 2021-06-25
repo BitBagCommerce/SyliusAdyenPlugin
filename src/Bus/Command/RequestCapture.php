@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Bus\Command;
 
-use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Core\Model\OrderInterface;
 
 class RequestCapture
 {
-    /** @var PaymentInterface */
+    /** @var OrderInterface */
     private $payment;
 
-    public function __construct(PaymentInterface $payment)
+    public function __construct(OrderInterface $payment)
     {
         $this->payment = $payment;
     }
 
-    public function getPayment(): PaymentInterface
+    public function getOrder(): OrderInterface
     {
         return $this->payment;
     }

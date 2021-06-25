@@ -9,6 +9,7 @@ use Adyen\Client;
 use Adyen\Config;
 use Adyen\Environment;
 use Adyen\Service\Checkout;
+use Adyen\Service\Modification;
 use BitBag\SyliusAdyenPlugin\Adapter\PaymentMethodsToChoiceAdapter;
 use BitBag\SyliusAdyenPlugin\Exception\AuthenticationException;
 use BitBag\SyliusAdyenPlugin\Exception\InvalidApiKeyException;
@@ -19,18 +20,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class AdyenClient implements AdyenClientInterface
 {
-    private $options = [
+    public const DEFAULT_OPTIONS = [
         'apiKey' => null,
-        'skinCode' => null,
         'merchantAccount' => null,
         'hmacKey' => null,
         'environment' => 'test',
-        'notification_method' => null,
-        'notification_hmac' => null,
-        'default_payment_fields' => [],
-        'ws_user' => null,
-        'ws_user_password' => null,
+        'authUser' => null,
+        'authPassword' => null,
+        'clientKey' => null
     ];
+
+    /** @var ArrayObject */
+    private $options;
 
     /** @var ClientInterface */
     private $httpClient;
@@ -40,22 +41,35 @@ final class AdyenClient implements AdyenClientInterface
         ClientInterface $httpClient
     ) {
         $options = ArrayObject::ensureArrayObject($options);
-        $options->defaults($this->options);
+        $options->defaults(self::DEFAULT_OPTIONS);
         $options->validateNotEmpty([
             'apiKey',
-            /*'skinCode',*/
             'merchantAccount',
-            /*'hmacKey',
-            'notification_hmac',
-            'ws_user',
-            'ws_user_password',*/
+            'hmacKey',
+            'authUser',
+            'authPassword',
+            'clientKey'
         ]);
 
         $this->options = $options;
         $this->httpClient = $httpClient;
     }
 
-    private function createClient($options): Checkout
+    private function getCheckout($options): Checkout
+    {
+        return new Checkout(
+            $this->createClient($options)
+        );
+    }
+
+    private function getModification($options): Modification
+    {
+        return new Modification(
+            $this->createClient($options)
+        );
+    }
+
+    private function createClient($options): Client
     {
         $client = new Client(new Config([
             'httpClient'=>$this->httpClient
@@ -67,7 +81,7 @@ final class AdyenClient implements AdyenClientInterface
         );
         $client->setTimeout(30);
 
-        return new Checkout($client);
+        return $client;
     }
 
     public function getAvailablePaymentMethodsForForm(
@@ -98,7 +112,7 @@ final class AdyenClient implements AdyenClientInterface
             'shopperLocale' => $locale
         ];
 
-        $paymentMethods = $this->createClient($this->options)->paymentMethods($payload);
+        $paymentMethods = $this->getCheckout($this->options)->paymentMethods($payload);
 
         if (!isset($paymentMethods['paymentMethods'])) {
             throw new \RuntimeException(sprintf('Adyen API failed to return any payment methods'));
@@ -126,7 +140,7 @@ final class AdyenClient implements AdyenClientInterface
             throw new \InvalidArgumentException();
         }
 
-        return $this->createClient($this->options)->paymentsDetails($receivedPayload);
+        return $this->getCheckout($this->options)->paymentsDetails($receivedPayload);
     }
 
     public function submitPayment(
@@ -160,7 +174,7 @@ final class AdyenClient implements AdyenClientInterface
             $payload['browserInfo'] = $receivedPayload['browserInfo'];
         }
 
-        return $this->createClient($this->options)->payments($payload);
+        return $this->getCheckout($this->options)->payments($payload);
     }
 
     private function dispatchException(AdyenException $exception)
@@ -202,12 +216,29 @@ final class AdyenClient implements AdyenClientInterface
         ];
 
         try {
-            $this->createClient($options)->paymentMethods($payload);
+            $this->getCheckout($options)->paymentMethods($payload);
         } catch (AdyenException $exception) {
             $this->dispatchException($exception);
         }
 
         return true;
+    }
+
+    public function requestCapture(
+        string $pspReference,
+        int $amount,
+        string $currencyCode
+    ): array {
+        $params = [
+            'merchantAccount' => $this->options['merchantAccount'],
+            'modificationAmount' => [
+                'value'=>$amount,
+                'currency'=>$currencyCode
+            ],
+            'originalReference' => $pspReference
+        ];
+
+        return $this->getModification($this->options)->capture($params);
     }
 
     public function getEnvironment(): string

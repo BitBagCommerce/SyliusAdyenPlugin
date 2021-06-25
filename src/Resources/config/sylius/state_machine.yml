@@ -1,0 +1,8 @@
+winzou_state_machine:
+  sylius_shipment:
+    callbacks:
+      before:
+        bitbag_capture_payment:
+          on: ["ship"]
+          do: ["@bit_bag.sylius_adyen_plugin.callback.request_capture_on_ship_callback", "__invoke"]
+          args: ["object.getOrder()"]
