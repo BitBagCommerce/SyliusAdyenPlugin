@@ -5,14 +5,12 @@ bitbag_sylius_adyen_plugin:
     not_blank: Merchant account cannot be blank.
   hmac_key:
     not_blank: HMAC Key cannot be blank.
-  hmac_notification:
-    not_blank: HMAC Key notification cannot be blank.
-  skin_code:
-    not_blank: Skin code cannot be blank.
-  ws_user:
-    not_blank: WS user cannot be blank.
-  ws_user_password:
-    not_blank: WS user password cannot be blank.
+  auth_user:
+    not_blank: Notification user cannot be blank.
+  auth_password:
+    not_blank: Notification passwqord password cannot be blank.
+  api_key:
+    not_blank: API key cannot be blank.
   credentials:
-    invalid_api_key: Provided API key is invalid
-    invalid_merchant_account: Provided Merchant Account name is invalid (it's case-sensitive)
+    invalid_api_key: Provided API key is invalid.
+    invalid_merchant_account: Provided Merchant Account name is invalid (it's case-sensitive).

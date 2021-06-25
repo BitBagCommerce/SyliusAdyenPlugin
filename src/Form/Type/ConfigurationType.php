@@ -42,10 +42,10 @@ class ConfigurationType extends AbstractType
                 ],
             ])
             ->add('apiKey', TextType::class, [
-                'label' => 'apiKey',
+                'label' => 'bitbag_sylius_adyen_plugin.ui.api_key',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'bitbag_sylius_adyen_plugin.ws_user_password.not_blank',
+                        'message' => 'bitbag_sylius_adyen_plugin.api_key.not_blank',
                         'groups' => ['sylius'],
                     ])
                 ],
@@ -60,10 +60,10 @@ class ConfigurationType extends AbstractType
                 ]
             ])
             ->add('hmacKey', TextType::class, [
-                'label' => 'bitbag_sylius_adyen_plugin.ui.hmac_notification',
+                'label' => 'bitbag_sylius_adyen_plugin.ui.hmac_key',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'bitbag_sylius_adyen_plugin.hmac_notification.not_blank',
+                        'message' => 'bitbag_sylius_adyen_plugin.hmac_key.not_blank',
                         'groups' => ['sylius'],
                     ])
                 ],
