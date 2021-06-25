@@ -18,7 +18,7 @@
             window.location.replace(data.redirect)
         }
 
-        let onSubmitHandler = (state, dropin) => {
+        let submitHandler = (state, dropin, url) => {
             const options = {
                 method: 'POST',
                 body: JSON.stringify(state.data),
@@ -27,27 +27,7 @@
                 }
             }
 
-            fetch(configuration.path.payments, options)
-                .then(response => response.json())
-                .then(data => {
-                    _successfulFetchCallback(dropin, data);
-                })
-                .catch(error => {
-                    alert(error);
-                })
-            ;
-        };
-
-        let onAdditionalDetailsHandler = (state, dropin) => {
-            const options = {
-                method: 'POST',
-                body: JSON.stringify(state.data),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            };
-
-            fetch(configuration.path.paymentDetails, options)
+            fetch(url, options)
                 .then(response => response.json())
                 .then(data => {
                     _successfulFetchCallback(dropin, data);
@@ -74,8 +54,8 @@
                 clientKey: configuration.clientKey,
                 locale: configuration.locale,
                 environment: configuration.environment,
-                onSubmit: onSubmitHandler,
-                onAdditionalDetails: onAdditionalDetailsHandler
+                onSubmit: (state, dropin) => { submitHandler(state, dropin, configuration.path.payments) },
+                onAdditionalDetails: (state, dropin) => { submitHandler(state, dropin, configuration.path.paymentDetails) }
             });
         };
 
