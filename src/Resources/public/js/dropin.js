@@ -10,6 +10,11 @@
                 return;
             }
 
+            const $form = container.closest('form');
+            if ($form) {
+                $form.classList.add('loading');
+            }
+
             window.location.replace(data.redirect)
         }
 
