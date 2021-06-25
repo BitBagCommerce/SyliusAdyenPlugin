@@ -22,6 +22,10 @@ class AdyenCredentialsValidator extends ConstraintValidator
 
     public function validate($value, Constraint $constraint)
     {
+        if (!isset($value['merchantAccount'][0])) {
+            return;
+        }
+
         try {
             $this->adyenClient->isApiKeyValid($value['environment'], $value['merchantAccount'], $value['apiKey']);
         } catch (InvalidApiKeyException $ex) {
