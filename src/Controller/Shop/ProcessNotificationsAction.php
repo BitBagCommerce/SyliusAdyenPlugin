@@ -7,7 +7,6 @@ namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Exception\UnmappedAdyenActionException;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
-use BitBag\SyliusAdyenPlugin\Resolver\Payment\EventCodeResolver;
 use BitBag\SyliusAdyenPlugin\Resolver\Payment\PaymentNotificationResolver;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
