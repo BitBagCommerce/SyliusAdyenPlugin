@@ -1,5 +1,5 @@
-body #dropin-container .adyen-checkout__threeds2__challenge,
-body #dropin-container .adyen-checkout__threeds2__challenge iframe
+body .dropin-container .adyen-checkout__threeds2__challenge,
+body .dropin-container .adyen-checkout__threeds2__challenge iframe
 {
     width: 100%;
 }
