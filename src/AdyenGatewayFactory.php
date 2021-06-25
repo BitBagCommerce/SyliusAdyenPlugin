@@ -33,38 +33,24 @@ final class AdyenGatewayFactory extends GatewayFactory
 
         if (false === (bool) $config['payum.api']) {
             $config['payum.default_options'] = [
-                'skinCode' => '',
-                'merchantAccount' => '',
-                'hmacKey' => '',
                 'environment' => AdyenClientInterface::TEST_ENVIRONMENT,
-                'notification_method' => 'basic',
-                'default_payment_fields' => [],
-                'ws_user' => '',
-                'ws_user_password' => '',
-            ];
+            ] + AdyenClient::DEFAULT_OPTIONS;
+
             $config->defaults($config['payum.default_options']);
-            $config['payum.required_options'] = [
-                'skinCode',
-                'merchantAccount',
-                'hmacKey',
-            ];
+            $config['payum.required_options'] = array_keys($config['payum.default_options']);
 
             $config['payum.api'] = function (ArrayObject $config) {
                 $config->validateNotEmpty($config['payum.required_options']);
 
                 return new AdyenClient(
                     [
-                        // todo: check if everything is passed here
                         'apiKey' => $config['apiKey'],
-                        //'skinCode' => $config['skinCode'],
                         'merchantAccount' => $config['merchantAccount'],
-                        //'hmacKey' => $config['hmacKey'],
-                        //'notification_hmac' => $config['hmacNotification'],
+                        'hmacKey' => $config['hmacKey'],
                         'environment' => $config['environment'],
-                        //'notification_method' => $config['notification_method'],
-                        //'default_payment_fields' => $config['default_payment_fields'],
-                        //'ws_user' => $config['wsUser'],
-                        //'ws_user_password' => $config['wsUserPassword'],
+                        'clientKey' => $config['clientKey'],
+                        'authUser' => $config['authUser'],
+                        'authPassword' => $config['authPassword'],
                     ],
                     $config['httplug.client']
                 );
