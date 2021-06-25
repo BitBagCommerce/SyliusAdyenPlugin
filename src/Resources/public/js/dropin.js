@@ -63,14 +63,6 @@
                         enableStoreDetails: true,
                         data: {
                             holderName: `${configuration.billingAddress.firstName} ${configuration.billingAddress.lastName}`,
-                            // todo: move this off to the back-end call
-                            billingAddress: {
-                                street: configuration.billingAddress.street,
-                                postalCode: configuration.billingAddress.postCode,
-                                city: configuration.billingAddress.city,
-                                country: configuration.billingAddress.countryCode,
-                                stateOrProvince: configuration.billingAddress.province
-                            }
                         }
                     }
                 },

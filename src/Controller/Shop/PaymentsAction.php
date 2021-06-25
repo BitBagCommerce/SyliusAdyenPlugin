@@ -22,6 +22,8 @@ class PaymentsAction
 
     public const REDIRECT_TARGET_ACTION = 'bitbag_adyen_thank_you';
 
+    public const NO_COUNTRY_AVAILABLE_PLACEHOLDER = 'ZZ';
+
     /** @var AdyenClientProvider */
     private $adyenClientProvider;
 
@@ -72,6 +74,29 @@ class PaymentsAction
         $this->orderTokenAssigner->assignTokenValueIfNotSet($order);
     }
 
+    private function createFraudDetectionData(OrderInterface $order): array
+    {
+        $billingAddress = $order->getBillingAddress();
+
+        return [
+            'street' => $billingAddress->getStreet(),
+            'postalCode' => $billingAddress->getPostcode(),
+            'city' => $billingAddress->getCity(),
+            'country' => $billingAddress->getCountryCode() ?? self::NO_COUNTRY_AVAILABLE_PLACEHOLDER,
+            'stateOrProvince' => $billingAddress->getProvinceName()
+        ];
+    }
+
+    private function createPaymentPayload(Request $request, OrderInterface $order): array
+    {
+        $result = $request->request->all();
+        if (isset($result['paymentMethod']['brand'])) {
+            $result['paymentMethod']['billingAddress'] = $this->createFraudDetectionData($order);
+        }
+
+        return $result;
+    }
+
     public function __invoke(Request $request, ?string $code = null): JsonResponse
     {
         $order = $this->paymentCheckoutOrderResolver->resolve();
@@ -90,7 +115,7 @@ class PaymentsAction
             $order->getCurrencyCode(),
             $payment->getId(),
             $url,
-            $request->request->all()
+            $this->createPaymentPayload($request, $order)
         );
 
         $payment->setDetails($result);
