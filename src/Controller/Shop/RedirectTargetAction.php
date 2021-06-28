@@ -11,6 +11,7 @@ use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RedirectTargetAction
@@ -93,7 +94,7 @@ class RedirectTargetAction
             return false;
         }
 
-        if ($request->getSession()->get('sylius_order_id')) {
+        if ($request->getSession()->get('sylius_order_id') !== null) {
             return false;
         }
 
@@ -106,12 +107,16 @@ class RedirectTargetAction
         $targetRoute = self::THANKS_ROUTE_NAME;
         $referenceId = $this->getReferenceId($request);
 
-        if ($referenceId) {
+        if ($referenceId !== null) {
             $paid = $this->processPayment($code, $referenceId);
         }
 
         if ($this->shouldTheAlternativeThanksPageBeShown($request, $paid)) {
-            $request->getSession()->getFlashbag()->add('info', 'sylius.payment.completed');
+            /**
+             * @var Session $session
+             */
+            $session = $request->getSession();
+            $session->getFlashBag()->add('info', 'sylius.payment.completed');
             $targetRoute = self::MY_ORDERS_ROUTE_NAME;
         }
 

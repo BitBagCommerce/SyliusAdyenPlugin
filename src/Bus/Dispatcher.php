@@ -30,6 +30,10 @@ class Dispatcher
         return $this->commandFactory;
     }
 
+    /**
+     * @param mixed $action
+     * @return mixed
+     */
     public function dispatch($action)
     {
         return $this->handle($action);

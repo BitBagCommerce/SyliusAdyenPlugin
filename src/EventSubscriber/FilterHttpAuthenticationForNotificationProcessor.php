@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\EventSubscriber;
 
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
+use Payum\Core\Model\GatewayConfigInterface;
+use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,19 +34,31 @@ class FilterHttpAuthenticationForNotificationProcessor implements EventSubscribe
         ];
     }
 
+    private function getGatewayConfig(PaymentMethodInterface $paymentMethod): GatewayConfigInterface
+    {
+        $result = $paymentMethod->getGatewayConfig();
+        if($result === null){
+            throw new \InvalidArgumentException(
+                sprintf('PaymentMethod %d has no gateway config', $paymentMethod->getId())
+            );
+        }
+
+        return $result;
+    }
+
     private function getConfiguration(string $code): array
     {
         $paymentMethod = $this->paymentMethodRepository->findOneForAdyenAndCode($code);
-        if (!$paymentMethod) {
+        if ($paymentMethod === null) {
             throw new NotFoundHttpException();
         }
 
-        return $paymentMethod->getGatewayConfig()->getConfig();
+        return $this->getGatewayConfig($paymentMethod)->getConfig();
     }
 
     private function isAuthenticated(Request $request, array $configuration): bool
     {
-        if (empty($configuration['authUser']) && empty($configuration['authPassword'])) {
+        if (!isset($configuration['authUser']) && !isset($configuration['authPassword'])) {
             return true;
         }
 
@@ -58,7 +72,7 @@ class FilterHttpAuthenticationForNotificationProcessor implements EventSubscribe
         return false;
     }
 
-    public function filterAuthentication(RequestEvent $requestEvent)
+    public function filterAuthentication(RequestEvent $requestEvent): void
     {
         $request = $requestEvent->getRequest();
         if ($request->attributes->get('_route') !== self::ROUTE_NAME) {

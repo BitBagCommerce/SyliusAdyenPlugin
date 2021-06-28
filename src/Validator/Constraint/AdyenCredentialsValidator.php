@@ -9,6 +9,7 @@ use BitBag\SyliusAdyenPlugin\Exception\InvalidApiKeyException;
 use BitBag\SyliusAdyenPlugin\Exception\InvalidMerchantAccountException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Webmozart\Assert\Assert;
 
 class AdyenCredentialsValidator extends ConstraintValidator
 {
@@ -20,8 +21,10 @@ class AdyenCredentialsValidator extends ConstraintValidator
         $this->adyenClient = $adyenClient;
     }
 
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
+        Assert::isInstanceOf($constraint, AdyenCredentials::class);
+
         if (!isset($value['merchantAccount'][0])) {
             return;
         }

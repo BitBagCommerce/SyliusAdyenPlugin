@@ -12,17 +12,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PaymentMethodChoiceType extends ChoiceType
 {
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefault('environment', AdyenClientInterface::TEST_ENVIRONMENT);
     }
 
-    public function getParent()
+    public function getParent(): string
     {
         return ChoiceType::class;
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
         $view->vars['environment'] = $options['environment'];

@@ -34,7 +34,7 @@ class PaymentFinalizationHandler implements MessageHandlerInterface
         $this->paymentManager = $paymentManager;
     }
 
-    private function persistPaymentAndOrder(PaymentInterface $payment)
+    private function persistPaymentAndOrder(PaymentInterface $payment): void
     {
         $this->paymentManager->persist($payment);
         $this->paymentManager->flush();
@@ -54,7 +54,7 @@ class PaymentFinalizationHandler implements MessageHandlerInterface
         $stateMachine->apply($transition);
     }
 
-    public function __invoke(PaymentFinalizationCommand $command)
+    public function __invoke(PaymentFinalizationCommand $command): void
     {
         $payment = $command->getPayment();
 

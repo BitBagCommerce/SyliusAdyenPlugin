@@ -60,6 +60,6 @@ class PreparePaymentHandler implements MessageHandlerInterface
     {
         $details = $payment->getDetails();
 
-        return in_array($details['resultCode'], self::ALLOWED_EVENT_NAMES);
+        return in_array($details['resultCode'], self::ALLOWED_EVENT_NAMES, true);
     }
 }

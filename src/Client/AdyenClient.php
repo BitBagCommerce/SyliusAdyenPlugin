@@ -126,7 +126,7 @@ final class AdyenClient implements AdyenClientInterface
         $components = parse_url($url);
 
         $pattern = '%s://%s';
-        if (!empty($components['port'])) {
+        if (isset($components['port'])) {
             $pattern .= ':%d';
         }
 
@@ -135,8 +135,8 @@ final class AdyenClient implements AdyenClientInterface
 
     public function paymentDetails(
         array $receivedPayload
-    ) {
-        if (empty($receivedPayload['details'])) {
+    ): array {
+        if (!isset($receivedPayload['details'])) {
             throw new \InvalidArgumentException();
         }
 
@@ -149,8 +149,8 @@ final class AdyenClient implements AdyenClientInterface
         $reference,
         string $redirectUrl,
         array $receivedPayload
-    ) {
-        if (empty($receivedPayload['paymentMethod'])) {
+    ): array {
+        if (!isset($receivedPayload['paymentMethod'])) {
             throw new \InvalidArgumentException();
         }
 
@@ -170,7 +170,7 @@ final class AdyenClient implements AdyenClientInterface
             'origin' => $this->getOrigin($redirectUrl)
         ];
 
-        if (!empty($receivedPayload['browserInfo'])) {
+        if (isset($receivedPayload['browserInfo'])) {
             $payload['browserInfo'] = $receivedPayload['browserInfo'];
         }
 
@@ -192,10 +192,10 @@ final class AdyenClient implements AdyenClientInterface
 
     private function validateArguments(?string $merchantAccount, ?string $apiKey)
     {
-        if (!$merchantAccount) {
+        if ($merchantAccount === null || $merchantAccount === '') {
             throw new InvalidMerchantAccountException();
         }
-        if (!$apiKey) {
+        if ($apiKey === null || $apiKey === '') {
             throw new InvalidApiKeyException();
         }
     }

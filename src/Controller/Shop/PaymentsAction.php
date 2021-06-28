@@ -68,7 +68,7 @@ class PaymentsAction
 
     private function prepareOrder(Request $request, OrderInterface $order)
     {
-        if (!$request->get('tokenValue')) {
+        if ($request->get('tokenValue') === null) {
             $request->getSession()->set('sylius_order_id', $order->getId());
         }
         $this->orderTokenAssigner->assignTokenValueIfNotSet($order);

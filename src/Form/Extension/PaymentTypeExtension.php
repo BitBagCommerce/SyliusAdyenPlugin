@@ -20,6 +20,9 @@ use Symfony\Component\Form\FormView;
 
 class PaymentTypeExtension extends AbstractTypeExtension
 {
+    /**
+     * @var array
+     */
     private $paymentMethodsForCode = [];
 
     /** @var PaymentCheckoutOrderResolverInterface */
@@ -46,7 +49,7 @@ class PaymentTypeExtension extends AbstractTypeExtension
         $this->adyenClientProvider = $adyenClientProvider;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $adyen = $builder->create('channels', FormType::class, [
             'compound'=>true,
@@ -56,8 +59,8 @@ class PaymentTypeExtension extends AbstractTypeExtension
         $paymentMethods = $this->paymentMethodRepository->findAllByChannel($this->channelContext->getChannel());
         foreach ($paymentMethods as $paymentMethod) {
             $client = $this->adyenClientProvider->getForPaymentMethod($paymentMethod);
-            $choices = $this->getChoicesForPaymentMethod($client, $paymentMethod->getCode());
-            $adyen->add($paymentMethod->getCode(), PaymentMethodChoiceType::class, [
+            $choices = $this->getChoicesForPaymentMethod($client, (string)$paymentMethod->getCode());
+            $adyen->add((string)$paymentMethod->getCode(), PaymentMethodChoiceType::class, [
                 'choices'=>$choices,
                 'environment'=>$client->getEnvironment()
             ]);
@@ -66,7 +69,7 @@ class PaymentTypeExtension extends AbstractTypeExtension
         $builder->add($adyen);
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['payment_methods'] = $this->paymentMethodsForCode;
     }
@@ -77,11 +80,13 @@ class PaymentTypeExtension extends AbstractTypeExtension
     ): array {
         $order = $this->paymentCheckoutOrderResolver->resolve();
 
+        $countryCode = $order->getBillingAddress()!==null ? (string)$order->getBillingAddress()->getCountryCode() : '';
+
         $result = $client->getAvailablePaymentMethods(
-            $order->getLocaleCode(),
-            $order->getBillingAddress()->getCountryCode(),
+            (string)$order->getLocaleCode(),
+            $countryCode,
             $order->getTotal(),
-            $order->getCurrencyCode()
+            (string)$order->getCurrencyCode()
         );
 
         $this->paymentMethodsForCode[$code] = $result;
@@ -89,7 +94,7 @@ class PaymentTypeExtension extends AbstractTypeExtension
         return (new PaymentMethodsToChoiceAdapter())($result);
     }
 
-    public function getExtendedTypes()
+    public function getExtendedTypes(): array
     {
         return [PaymentType::class];
     }

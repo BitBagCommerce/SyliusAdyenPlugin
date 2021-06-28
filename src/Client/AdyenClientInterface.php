@@ -23,13 +23,16 @@ interface AdyenClientInterface
 
     public function getAvailablePaymentMethodsForForm(string $locale, string $countryCode, int $amount, string $currencyCode): array;
 
+    /**
+     * @param mixed $reference
+     */
     public function submitPayment(
         int $amount,
         string $currencyCode,
         $reference,
         string $redirectUrl,
         array $receivedPayload
-    );
+    ): array;
 
-    public function paymentDetails(array $receivedPayload);
+    public function paymentDetails(array $receivedPayload): array;
 }

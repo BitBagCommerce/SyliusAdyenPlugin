@@ -17,6 +17,9 @@ class TakeOverPaymentHandler implements MessageHandlerInterface
 {
     use PayableOrderPaymentTrait;
 
+    /**
+     * @var PaymentMethodRepositoryInterface
+     */
     private $paymentMethodRepository;
 
     /** @var PaymentFactoryInterface */
@@ -59,10 +62,13 @@ class TakeOverPaymentHandler implements MessageHandlerInterface
         $this->paymentManager->flush();
     }
 
-    public function __invoke(TakeOverPayment $command)
+    public function __invoke(TakeOverPayment $command): void
     {
         $payment = $this->getPayablePayment($command->getOrder());
-        if ($payment->getMethod()->getCode() === $command->getPaymentCode()) {
+        if (
+            $payment->getMethod() !== null
+            && $payment->getMethod()->getCode() === $command->getPaymentCode()
+        ) {
             return;
         }
 

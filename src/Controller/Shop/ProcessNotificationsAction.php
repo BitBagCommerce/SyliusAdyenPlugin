@@ -54,7 +54,7 @@ class ProcessNotificationsAction
         }
     }
 
-    private function handleAction(PaymentInterface $payment, array $notificationItem)
+    private function handleAction(PaymentInterface $payment, array $notificationItem): void
     {
         try {
             $command = $this->dispatcher->getCommandFactory()->createForEvent(
@@ -77,7 +77,7 @@ class ProcessNotificationsAction
 
             $payment = $this->paymentNotificationResolver->resolve($code, $notificationItem);
 
-            if (!$payment) {
+            if ($payment === null) {
                 continue;
             }
 

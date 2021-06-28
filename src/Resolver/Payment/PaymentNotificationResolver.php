@@ -7,6 +7,7 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Payment;
 use BitBag\SyliusAdyenPlugin\Provider\SignatureValidatorProvider;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentRepository;
 use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Payment\Model\PaymentMethodInterface;
 
 class PaymentNotificationResolver
 {
@@ -24,6 +25,18 @@ class PaymentNotificationResolver
         $this->paymentRepository = $paymentRepository;
     }
 
+    private function getMethodFromPayment(PaymentInterface $payment): PaymentMethodInterface
+    {
+        $result = $payment->getMethod();
+        if($result === null){
+            throw new \InvalidArgumentException(
+                sprintf('Payment #%d has no method associated', $payment->getId())
+            );
+        }
+
+        return $result;
+    }
+
     public function resolve(string $gatewayCode, array $notificationItem): ?PaymentInterface
     {
         $signatureValidator = $this->signatureValidatorProvider->getValidatorForCode($gatewayCode);
@@ -33,15 +46,15 @@ class PaymentNotificationResolver
         }
 
         /**
-         * @var $payment PaymentInterface
+         * @var PaymentInterface|null $payment
          */
         $payment = $this->paymentRepository->find($notificationItem['merchantReference']);
 
-        if (!$payment) {
+        if ($payment === null) {
             return null;
         }
 
-        if ($payment->getMethod()->getCode() != $gatewayCode) {
+        if ($this->getMethodFromPayment($payment)->getCode() != $gatewayCode) {
             return null;
         }
 

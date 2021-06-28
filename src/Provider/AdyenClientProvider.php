@@ -6,13 +6,18 @@ namespace BitBag\SyliusAdyenPlugin\Provider;
 
 use BitBag\SyliusAdyenPlugin\Client\AdyenClient;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
+use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
+use Payum\Core\Model\GatewayConfigInterface;
 use Psr\Http\Client\ClientInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
-use Sylius\Component\Core\Model\PaymentMethodInterface;
+use Sylius\Component\Payment\Model\PaymentMethodInterface;
 use Sylius\Component\Resource\Exception\UpdateHandlingException;
+use Webmozart\Assert\Assert;
 
 class AdyenClientProvider
 {
+    use GatewayConfigFromPaymentTrait;
+
     /** @var PaymentMethodRepositoryInterface */
     private $paymentMethodRepository;
 
@@ -42,15 +47,17 @@ class AdyenClientProvider
             throw new UpdateHandlingException(sprintf('No Adyen provider is configured'));
         }
 
-        $gateway = $paymentMethod->getGatewayConfig();
-        $config = $gateway->getConfig();
+        $config = $this->getGatewayConfig($paymentMethod)->getConfig();
 
         return new AdyenClient($config, $this->httpClient);
     }
 
     public function getForPaymentMethod(PaymentMethodInterface $paymentMethod): AdyenClient
     {
-        $isAdyen = $paymentMethod->getGatewayConfig()->getConfig()['adyen'] ?? null;
+        Assert::isInstanceOf($paymentMethod, \Sylius\Component\Core\Model\PaymentMethodInterface::class);
+
+        $gatewayConfig = $this->getGatewayConfig($paymentMethod);
+        $isAdyen = $gatewayConfig->getConfig()['adyen'] ?? null;
         if (!$isAdyen) {
             throw new \InvalidArgumentException(sprintf(
                 'Provided PaymentMethod #%d is not an Adyen instance',
@@ -58,14 +65,14 @@ class AdyenClientProvider
             ));
         }
 
-        return new AdyenClient($paymentMethod->getGatewayConfig()->getConfig(), $this->httpClient);
+        return new AdyenClient($gatewayConfig->getConfig(), $this->httpClient);
     }
 
     public function getClientForCode(string $code): AdyenClient
     {
         $paymentMethod = $this->paymentMethodRepository->findOneForAdyenAndCode($code);
 
-        if (!$paymentMethod) {
+        if ($paymentMethod === null) {
             throw new \InvalidArgumentException(sprintf('Adyen for "%s" code is not configured', $code));
         }
 

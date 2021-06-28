@@ -20,6 +20,9 @@ class CommandFactory
         'capture' => CapturePayment::class
     ];
 
+    /**
+     * @var array
+     */
     private $mapping = [];
 
     /** @var EventCodeResolver */

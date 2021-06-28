@@ -18,7 +18,7 @@ class RequestCaptureOnShipCallback
         $this->dispatcher = $dispatcher;
     }
 
-    public function __invoke(OrderInterface $order)
+    public function __invoke(OrderInterface $order): void
     {
         $this->dispatcher->dispatch(
             new RequestCapture($order)

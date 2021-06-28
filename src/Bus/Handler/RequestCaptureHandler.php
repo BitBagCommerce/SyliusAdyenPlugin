@@ -30,11 +30,12 @@ class RequestCaptureHandler implements MessageHandlerInterface
     private function isAdyenPayment(PaymentInterface $payment): bool
     {
         /**
-         * @var $method PaymentMethodInterface
+         * @var ?PaymentMethodInterface $method
          */
         $method = $payment->getMethod();
         if (
             $method === null
+            || $method->getGatewayConfig() === null
             || !isset($method->getGatewayConfig()->getConfig()[AdyenGatewayFactory::FACTORY_NAME])
         ) {
             return false;
@@ -57,7 +58,7 @@ class RequestCaptureHandler implements MessageHandlerInterface
         return $payment;
     }
 
-    public function __invoke(RequestCapture $requestCapture)
+    public function __invoke(RequestCapture $requestCapture): void
     {
         $payment = $this->getPayment($requestCapture->getOrder());
 
@@ -74,7 +75,7 @@ class RequestCaptureHandler implements MessageHandlerInterface
         $client->requestCapture(
             $details['pspReference'],
             $requestCapture->getOrder()->getTotal(),
-            $requestCapture->getOrder()->getCurrencyCode()
+            (string)$requestCapture->getOrder()->getCurrencyCode()
         );
     }
 }

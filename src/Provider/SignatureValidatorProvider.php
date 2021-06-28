@@ -22,12 +22,16 @@ class SignatureValidatorProvider
     {
         $paymentMethod = $this->paymentMethodRepository->findOneForAdyenAndCode($code);
 
-        if (!$paymentMethod) {
+        if ($paymentMethod === null) {
             throw new \InvalidArgumentException(sprintf('Adyen for "%s" code is not configured', $code));
         }
 
+        $gatewayConfig =
+            $paymentMethod->getGatewayConfig() !== null ? $paymentMethod->getGatewayConfig()->getConfig() : []
+        ;
+
         return new SignatureValidator(
-            $paymentMethod->getGatewayConfig()->getConfig()['hmacKey']
+            $gatewayConfig['hmacKey']
         );
     }
 }
