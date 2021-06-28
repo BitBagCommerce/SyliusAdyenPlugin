@@ -13,6 +13,7 @@ use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaymentDetailsAction
@@ -50,7 +51,7 @@ class PaymentDetailsAction
         $this->dispatcher = $dispatcher;
     }
 
-    private function getTargetUrl(PaymentInterface $payment, ?string $tokenValue = null): ?string
+    private function getTargetUrl(PaymentInterface $payment, ?string $tokenValue = null): string
     {
         return $this->urlGenerator->generate(
             self::REDIRECT_TARGET_ACTION,
@@ -62,7 +63,7 @@ class PaymentDetailsAction
         );
     }
 
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): Response
     {
         $order = $this->paymentCheckoutOrderResolver->resolve();
         $payment = $this->getPayablePayment($order);

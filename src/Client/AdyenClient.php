@@ -55,22 +55,25 @@ final class AdyenClient implements AdyenClientInterface
         $this->httpClient = $httpClient;
     }
 
-    private function getCheckout($options): Checkout
+    private function getCheckout(ArrayObject $options): Checkout
     {
         return new Checkout(
             $this->createClient($options)
         );
     }
 
-    private function getModification($options): Modification
+    private function getModification(ArrayObject $options): Modification
     {
         return new Modification(
             $this->createClient($options)
         );
     }
 
-    private function createClient($options): Client
+    private function createClient(ArrayObject $options): Client
     {
+        /**
+         * @phpstan-ignore-next-line
+         */
         $client = new Client(new Config([
             'httpClient'=>$this->httpClient
         ]));
@@ -177,7 +180,7 @@ final class AdyenClient implements AdyenClientInterface
         return $this->getCheckout($this->options)->payments($payload);
     }
 
-    private function dispatchException(AdyenException $exception)
+    private function dispatchException(AdyenException $exception): void
     {
         if ($exception->getCode() === Response::HTTP_UNAUTHORIZED) {
             throw new InvalidApiKeyException();
@@ -190,7 +193,7 @@ final class AdyenClient implements AdyenClientInterface
         throw $exception;
     }
 
-    private function validateArguments(?string $merchantAccount, ?string $apiKey)
+    private function validateArguments(?string $merchantAccount, ?string $apiKey): void
     {
         if ($merchantAccount === null || $merchantAccount === '') {
             throw new InvalidMerchantAccountException();
@@ -210,10 +213,10 @@ final class AdyenClient implements AdyenClientInterface
         $payload = [
             'merchantAccount' => $merchantAccount
         ];
-        $options = [
+        $options = ArrayObject::ensureArrayObject([
             'environment'=>$environment,
             'apiKey'=>$apiKey
-        ];
+        ]);
 
         try {
             $this->getCheckout($options)->paymentMethods($payload);

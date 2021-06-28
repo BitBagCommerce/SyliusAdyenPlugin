@@ -66,7 +66,7 @@ class PaymentsAction
         );
     }
 
-    private function prepareOrder(Request $request, OrderInterface $order)
+    private function prepareOrder(Request $request, OrderInterface $order): void
     {
         if ($request->get('tokenValue') === null) {
             $request->getSession()->set('sylius_order_id', $order->getId());

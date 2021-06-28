@@ -16,8 +16,9 @@ class PaymentMethodsToChoiceAdapter
         foreach ($paymentMethods['paymentMethods'] as $paymentMethod) {
             $subResult = $this->adjustCardPaymentMethodResult($paymentMethod);
 
-            if(count($subResult) > 0){
+            if (count($subResult) > 0) {
                 $result = array_merge($result, $subResult);
+
                 continue;
             }
 
@@ -36,7 +37,7 @@ class PaymentMethodsToChoiceAdapter
         $result = [];
 
         foreach ($payload['brands'] as $brand) {
-            if(!isset($payload['name'])){
+            if (!isset($payload['name'])) {
                 continue;
             }
 

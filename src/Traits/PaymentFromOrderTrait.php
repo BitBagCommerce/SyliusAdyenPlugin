@@ -1,23 +1,20 @@
 <?php
 
+declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Traits;
 
-
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Payment\Model\PaymentInterface;
-use Sylius\Component\Payment\Model\PaymentMethodInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Core\Model\PaymentMethodInterface;
+use Webmozart\Assert\Assert;
 
 trait PaymentFromOrderTrait
 {
     private function getMethod(PaymentInterface $payment): PaymentMethodInterface
     {
         $method = $payment->getMethod();
-        if($method === null){
-            throw new \InvalidArgumentException(
-                sprintf('No PaymentMethod assigned to Payment #%d', $payment->getId())
-            );
-        }
+        Assert::isInstanceOf($method, PaymentMethodInterface::class);
 
         return $method;
     }
@@ -26,7 +23,7 @@ trait PaymentFromOrderTrait
     {
         $payment = $order->getLastPayment();
 
-        if($payment === null){
+        if ($payment === null) {
             throw new \InvalidArgumentException(
                 sprintf('No payment associated with Order #%d', $order->getId())
             );
@@ -34,5 +31,4 @@ trait PaymentFromOrderTrait
 
         return $payment;
     }
-
 }

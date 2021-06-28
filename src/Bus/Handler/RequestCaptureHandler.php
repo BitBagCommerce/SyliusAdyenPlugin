@@ -75,7 +75,7 @@ class RequestCaptureHandler implements MessageHandlerInterface
         $client->requestCapture(
             $details['pspReference'],
             $requestCapture->getOrder()->getTotal(),
-            (string)$requestCapture->getOrder()->getCurrencyCode()
+            (string) $requestCapture->getOrder()->getCurrencyCode()
         );
     }
 }

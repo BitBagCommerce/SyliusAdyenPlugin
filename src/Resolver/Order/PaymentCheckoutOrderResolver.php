@@ -35,9 +35,10 @@ final class PaymentCheckoutOrderResolver implements PaymentCheckoutOrderResolver
     private function getCurrentRequest(): Request
     {
         $result = $this->requestStack->getCurrentRequest();
-        if($result === null){
+        if ($result === null) {
             throw new \InvalidArgumentException('No request available in stack');
         }
+
         return $result;
     }
 

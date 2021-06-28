@@ -37,7 +37,7 @@ class FilterHttpAuthenticationForNotificationProcessor implements EventSubscribe
     private function getGatewayConfig(PaymentMethodInterface $paymentMethod): GatewayConfigInterface
     {
         $result = $paymentMethod->getGatewayConfig();
-        if($result === null){
+        if ($result === null) {
             throw new \InvalidArgumentException(
                 sprintf('PaymentMethod %d has no gateway config', $paymentMethod->getId())
             );

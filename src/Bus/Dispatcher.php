@@ -32,6 +32,7 @@ class Dispatcher
 
     /**
      * @param mixed $action
+     *
      * @return mixed
      */
     public function dispatch($action)

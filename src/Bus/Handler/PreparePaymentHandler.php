@@ -46,7 +46,7 @@ class PreparePaymentHandler implements MessageHandlerInterface
         $this->paymentManager->flush();
     }
 
-    public function __invoke(PreparePayment $command)
+    public function __invoke(PreparePayment $command): void
     {
         $payment = $command->getPayment();
         if ($this->isAccepted($payment)) {

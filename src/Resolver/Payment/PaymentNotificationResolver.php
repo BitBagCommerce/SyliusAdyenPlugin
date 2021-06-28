@@ -28,7 +28,7 @@ class PaymentNotificationResolver
     private function getMethodFromPayment(PaymentInterface $payment): PaymentMethodInterface
     {
         $result = $payment->getMethod();
-        if($result === null){
+        if ($result === null) {
             throw new \InvalidArgumentException(
                 sprintf('Payment #%d has no method associated', $payment->getId())
             );

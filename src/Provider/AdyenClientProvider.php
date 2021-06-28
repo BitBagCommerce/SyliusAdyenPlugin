@@ -7,7 +7,6 @@ namespace BitBag\SyliusAdyenPlugin\Provider;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClient;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
-use Payum\Core\Model\GatewayConfigInterface;
 use Psr\Http\Client\ClientInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Payment\Model\PaymentMethodInterface;

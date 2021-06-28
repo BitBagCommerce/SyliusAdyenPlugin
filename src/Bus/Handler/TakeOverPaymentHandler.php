@@ -17,9 +17,7 @@ class TakeOverPaymentHandler implements MessageHandlerInterface
 {
     use PayableOrderPaymentTrait;
 
-    /**
-     * @var PaymentMethodRepositoryInterface
-     */
+    /** @var PaymentMethodRepositoryInterface */
     private $paymentMethodRepository;
 
     /** @var PaymentFactoryInterface */

@@ -20,9 +20,7 @@ use Symfony\Component\Form\FormView;
 
 class PaymentTypeExtension extends AbstractTypeExtension
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     private $paymentMethodsForCode = [];
 
     /** @var PaymentCheckoutOrderResolverInterface */
@@ -59,8 +57,8 @@ class PaymentTypeExtension extends AbstractTypeExtension
         $paymentMethods = $this->paymentMethodRepository->findAllByChannel($this->channelContext->getChannel());
         foreach ($paymentMethods as $paymentMethod) {
             $client = $this->adyenClientProvider->getForPaymentMethod($paymentMethod);
-            $choices = $this->getChoicesForPaymentMethod($client, (string)$paymentMethod->getCode());
-            $adyen->add((string)$paymentMethod->getCode(), PaymentMethodChoiceType::class, [
+            $choices = $this->getChoicesForPaymentMethod($client, (string) $paymentMethod->getCode());
+            $adyen->add((string) $paymentMethod->getCode(), PaymentMethodChoiceType::class, [
                 'choices'=>$choices,
                 'environment'=>$client->getEnvironment()
             ]);
@@ -80,13 +78,13 @@ class PaymentTypeExtension extends AbstractTypeExtension
     ): array {
         $order = $this->paymentCheckoutOrderResolver->resolve();
 
-        $countryCode = $order->getBillingAddress()!==null ? (string)$order->getBillingAddress()->getCountryCode() : '';
+        $countryCode = $order->getBillingAddress()!==null ? (string) $order->getBillingAddress()->getCountryCode() : '';
 
         $result = $client->getAvailablePaymentMethods(
-            (string)$order->getLocaleCode(),
+            (string) $order->getLocaleCode(),
             $countryCode,
             $order->getTotal(),
-            (string)$order->getCurrencyCode()
+            (string) $order->getCurrencyCode()
         );
 
         $this->paymentMethodsForCode[$code] = $result;

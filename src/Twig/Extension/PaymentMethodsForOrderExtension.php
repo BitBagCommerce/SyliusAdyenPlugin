@@ -9,7 +9,7 @@ use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Payment\Model\PaymentMethodInterface;
+use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -74,7 +74,7 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         $method = $this->getPaymentMethod($order, $code);
 
         try {
-            $client = $this->adyenClientProvider->getClientForCode((string)$method->getCode());
+            $client = $this->adyenClientProvider->getClientForCode((string) $method->getCode());
         } catch (\InvalidArgumentException $ex) {
             return [];
         }
@@ -82,10 +82,10 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         $countryCode = $order->getBillingAddress() !== null ? $order->getBillingAddress()->getCountryCode() : '';
 
         return $client->getAvailablePaymentMethods(
-            (string)$order->getLocaleCode(),
-            (string)$countryCode,
+            (string) $order->getLocaleCode(),
+            (string) $countryCode,
             $order->getTotal(),
-            (string)$order->getCurrencyCode()
+            (string) $order->getCurrencyCode()
         );
     }
 }
