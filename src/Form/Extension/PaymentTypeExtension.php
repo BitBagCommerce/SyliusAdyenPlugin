@@ -92,7 +92,7 @@ class PaymentTypeExtension extends AbstractTypeExtension
         return (new PaymentMethodsToChoiceAdapter())($result);
     }
 
-    public function getExtendedTypes(): array
+    public static function getExtendedTypes(): array
     {
         return [PaymentType::class];
     }
