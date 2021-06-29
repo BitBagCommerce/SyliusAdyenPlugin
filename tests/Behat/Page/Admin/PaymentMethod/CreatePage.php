@@ -45,7 +45,7 @@ final class CreatePage extends BaseCreatePage implements CreatePageInterface
      */
     public function setAuthUser(string $authUser): void
     {
-        $this->getDocument()->fillField('authUser', $authUser);
+        $this->getDocument()->fillField('sylius_payment_method_gatewayConfig_config_authUser', $authUser);
     }
 
     /**
@@ -53,6 +53,6 @@ final class CreatePage extends BaseCreatePage implements CreatePageInterface
      */
     public function setAuthPassword(string $authPassword): void
     {
-        $this->getDocument()->fillField('authPassword', $authPassword);
+        $this->getDocument()->fillField('sylius_payment_method_gatewayConfig_config_authPassword', $authPassword);
     }
 }
