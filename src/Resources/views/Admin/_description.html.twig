@@ -1,4 +1,4 @@
-{% set factory = constant('BitBag\\SyliusAdyenPlugin\\AdyenGatewayFactory::FACTORY_NAME') %}
+{% set factory = constant('BitBag\\SyliusAdyenPlugin\\Provider\\AdyenClientProvider::FACTORY_NAME') %}
 
 {% if payment_method is defined and payment_method.gatewayConfig.factoryName == factory %}
     <div class="ui segment">
