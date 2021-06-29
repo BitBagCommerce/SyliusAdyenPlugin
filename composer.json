@@ -11,7 +11,7 @@
         "php": "^7.3",
         "adyen/php-api-library": "^10.1",
         "nyholm/psr7": "^1.4",
-        "sylius/sylius": "^1.8.0",
+        "sylius/sylius": "^1.9.0",
         "symfony/messenger": "~4.4"
     },
     "require-dev": {
@@ -26,7 +26,7 @@
         "friends-of-behat/suite-settings-extension": "^1.0",
         "friends-of-behat/symfony-extension": "^2.1",
         "friends-of-behat/variadic-extension": "^1.3",
-        "friendsofsymfony/oauth-server-bundle": ">2.0.0-alpha.0 ^2.0@dev",
+
         "lakion/mink-debug-extension": "^2.0.0",
         "phpspec/phpspec": "^7.0",
         "phpstan/extension-installer": "^1.0",
