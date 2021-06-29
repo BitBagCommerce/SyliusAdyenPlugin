@@ -17,6 +17,7 @@ class AdyenCredentialsValidatorTest extends ConstraintValidatorTestCase
     protected function setUp(): void
     {
         $this->client = $this->createMock(AdyenClientInterface::class);
+        parent::setUp();
     }
 
     protected function createValidator(): AdyenCredentialsValidator
