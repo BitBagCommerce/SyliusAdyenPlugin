@@ -9,6 +9,7 @@ use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
+use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
 use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,6 +20,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class PaymentDetailsAction
 {
     use PayableOrderPaymentTrait;
+    use PaymentFromOrderTrait;
 
     public const REDIRECT_TARGET_ACTION = 'bitbag_adyen_thank_you';
 
@@ -53,11 +55,13 @@ class PaymentDetailsAction
 
     private function getTargetUrl(PaymentInterface $payment, ?string $tokenValue = null): string
     {
+        $method = $this->getMethod($payment);
+
         return $this->urlGenerator->generate(
             self::REDIRECT_TARGET_ACTION,
             [
-                'code'=>$payment->getMethod()->getCode(),
-                'tokenValue'=>$tokenValue
+                'code' => $method->getCode(),
+                'tokenValue' => $tokenValue
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
@@ -73,12 +77,19 @@ class PaymentDetailsAction
             $request->getSession()->set('sylius_order_id', $order->getId());
         }
 
-        $client = $this->adyenClientProvider->getForPaymentMethod($payment->getMethod());
+        $client = $this->adyenClientProvider->getForPaymentMethod(
+            $this->getMethod($payment)
+        );
         $result = $client->paymentDetails($request->request->all());
 
         $payment->setDetails($result);
         $this->dispatcher->dispatch(new PreparePayment($payment));
 
-        return new JsonResponse($payment->getDetails() + ['redirect'=>$this->getTargetUrl($payment, $tokenValue)]);
+        return new JsonResponse(
+            $payment->getDetails()
+            + [
+                'redirect' => $this->getTargetUrl($payment, $tokenValue === null ? null : (string) $tokenValue)
+            ]
+        );
     }
 }

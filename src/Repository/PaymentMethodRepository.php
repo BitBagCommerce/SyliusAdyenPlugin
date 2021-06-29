@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Repository;
 
-use BitBag\SyliusAdyenPlugin\AdyenGatewayFactory;
+use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentMethodRepository as BasePaymentMethodRepository;
@@ -13,17 +13,27 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 
 class PaymentMethodRepository extends BasePaymentMethodRepository implements PaymentMethodRepositoryInterface
 {
+    /**
+     * @psalm-suppress MixedReturnStatement
+     * @psalm-suppress MixedInferredReturnType
+     */
+    public function getOneForAdyenAndCode(string $code): PaymentMethodInterface
+    {
+        return $this->createQueryBuilder('o')
+            ->innerJoin('o.gatewayConfig', 'gatewayConfig')
+            ->where('gatewayConfig.factoryName = :factoryName')
+            ->andWhere('o.code = :code')
+            ->setParameter('factoryName', AdyenClientProvider::FACTORY_NAME)
+            ->setParameter('code', $code)
+            ->getQuery()
+            ->getSingleResult()
+        ;
+    }
+
     public function findOneForAdyenAndCode(string $code): ?PaymentMethodInterface
     {
         try {
-            return $this->createQueryBuilder('o')
-                ->innerJoin('o.gatewayConfig', 'gatewayConfig')
-                ->where('gatewayConfig.factoryName = :factoryName')
-                ->andWhere('o.code = :code')
-                ->setParameter('factoryName', AdyenGatewayFactory::FACTORY_NAME)
-                ->setParameter('code', $code)
-                ->getQuery()
-                ->getSingleResult();
+            return $this->getOneForAdyenAndCode($code);
         } catch (NoResultException $ex) {
             return null;
         }
@@ -36,12 +46,16 @@ class PaymentMethodRepository extends BasePaymentMethodRepository implements Pay
             ->andWhere('o.enabled = true')
             ->andWhere(':channel MEMBER OF o.channels')
             ->andWhere('gatewayConfig.factoryName = :factoryName')
-            ->setParameter('channel', $channel)
-            ->setParameter('factoryName', AdyenGatewayFactory::FACTORY_NAME)
+            ->setParameter('channel', $channel, ChannelInterface::class)
+            ->setParameter('factoryName', AdyenClientProvider::FACTORY_NAME)
             ->addOrderBy('o.position')
         ;
     }
 
+    /**
+     * @psalm-suppress MixedReturnStatement
+     * @psalm-suppress MixedInferredReturnType
+     */
     public function findOneByChannel(ChannelInterface $channel): ?PaymentMethodInterface
     {
         return $this
@@ -53,7 +67,9 @@ class PaymentMethodRepository extends BasePaymentMethodRepository implements Pay
     }
 
     /**
-     * @return PaymentMethodInterface[]
+     * @return array<int, PaymentMethodInterface>
+     * @psalm-suppress MixedInferredReturnType
+     * @psalm-suppress MixedReturnStatement
      */
     public function findAllByChannel(ChannelInterface $channel): array
     {

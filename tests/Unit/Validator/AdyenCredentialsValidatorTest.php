@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Validator;
-
 
 use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
 use BitBag\SyliusAdyenPlugin\Validator\Constraint\AdyenCredentials;
@@ -11,9 +11,7 @@ use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class AdyenCredentialsValidatorTest extends ConstraintValidatorTestCase
 {
-    /**
-     * @var AdyenClientInterface
-     */
+    /** @var AdyenClientInterface */
     private $client;
 
     protected function setUp(): void

@@ -13,6 +13,9 @@ class PaymentMethodsToChoiceAdapter
         }
 
         $result = [];
+        /**
+         * @var array $paymentMethod
+         */
         foreach ($paymentMethods['paymentMethods'] as $paymentMethod) {
             $subResult = $this->adjustCardPaymentMethodResult($paymentMethod);
 
@@ -22,7 +25,7 @@ class PaymentMethodsToChoiceAdapter
                 continue;
             }
 
-            $result[$paymentMethod['type']] = $paymentMethod['name'];
+            $result[(string) $paymentMethod['type']] = (string) $paymentMethod['name'];
         }
 
         return $result;
@@ -36,12 +39,15 @@ class PaymentMethodsToChoiceAdapter
 
         $result = [];
 
+        /**
+         * @var string $brand
+         */
         foreach ($payload['brands'] as $brand) {
             if (!isset($payload['name'])) {
                 continue;
             }
 
-            $result[$brand] = $payload['name'];
+            $result[$brand] = (string) $payload['name'];
         }
 
         return $result;

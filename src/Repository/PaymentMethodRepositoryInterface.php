@@ -12,13 +12,12 @@ interface PaymentMethodRepositoryInterface extends BasePaymentMethodRepositoryIn
 {
     public function findOneByChannel(ChannelInterface $channel): ?PaymentMethodInterface;
 
-    /**
-     * @return PaymentMethodInterface
-     */
     public function findOneForAdyenAndCode(string $code): ?PaymentMethodInterface;
 
     /**
      * @return PaymentMethodInterface[]
      */
     public function findAllByChannel(ChannelInterface $channel): array;
+
+    public function getOneForAdyenAndCode(string $code): PaymentMethodInterface;
 }

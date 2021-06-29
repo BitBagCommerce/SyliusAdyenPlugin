@@ -45,8 +45,8 @@
         "symfony/intl": "^4.4 || ^5.0",
         "symfony/web-profiler-bundle": "^4.4 || ^5.0",
         "symfony/web-server-bundle": "^4.4 || ^5.0",
-        "vimeo/psalm": "4.4.1",
-        "friendsofsymfony/oauth-server-bundle": ">2.0.0-alpha.0 ^2.0@dev"
+        "vimeo/psalm": "^4.4.1",
+        "symplify/easy-coding-standard": "^9.3, !=9.3.27"
     },
     "config": {
         "sort-packages": true

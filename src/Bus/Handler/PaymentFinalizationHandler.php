@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentFinalizationCommand;
+use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -15,6 +16,8 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class PaymentFinalizationHandler implements MessageHandlerInterface
 {
+    use OrderFromPaymentTrait;
+
     /** @var FactoryInterface */
     private $stateMachineFactory;
 
@@ -39,7 +42,7 @@ class PaymentFinalizationHandler implements MessageHandlerInterface
         $this->paymentManager->persist($payment);
         $this->paymentManager->flush();
 
-        $this->orderManager->persist($payment->getOrder());
+        $this->orderManager->persist($this->getOrderFromPayment($payment));
         $this->orderManager->flush();
     }
 
@@ -63,13 +66,13 @@ class PaymentFinalizationHandler implements MessageHandlerInterface
         }
 
         $payment->setState($command->getTargetPaymentState());
-        $this->updateOrderState($payment->getOrder(), $command->getOrderTransition());
+        $this->updateOrderState($this->getOrderFromPayment($payment), $command->getOrderTransition());
 
         $this->persistPaymentAndOrder($payment);
     }
 
     private function isAccepted(PaymentInterface $payment): bool
     {
-        return $payment->getOrder()->getPaymentState() !== OrderPaymentStates::STATE_PAID;
+        return $this->getOrderFromPayment($payment)->getPaymentState() !== OrderPaymentStates::STATE_PAID;
     }
 }

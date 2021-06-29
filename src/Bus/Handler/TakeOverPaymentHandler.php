@@ -7,6 +7,7 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 use BitBag\SyliusAdyenPlugin\Bus\Command\TakeOverPayment;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
+use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
@@ -16,6 +17,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class TakeOverPaymentHandler implements MessageHandlerInterface
 {
     use PayableOrderPaymentTrait;
+    use PaymentFromOrderTrait;
 
     /** @var PaymentMethodRepositoryInterface */
     private $paymentMethodRepository;
@@ -63,10 +65,9 @@ class TakeOverPaymentHandler implements MessageHandlerInterface
     public function __invoke(TakeOverPayment $command): void
     {
         $payment = $this->getPayablePayment($command->getOrder());
-        if (
-            $payment->getMethod() !== null
-            && $payment->getMethod()->getCode() === $command->getPaymentCode()
-        ) {
+        $method = $this->getMethod($payment);
+
+        if ($method->getCode() === $command->getPaymentCode()) {
             return;
         }
 

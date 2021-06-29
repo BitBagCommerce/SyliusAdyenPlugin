@@ -43,7 +43,7 @@ class ProcessNotificationsAction
         $this->paymentNotificationResolver = $paymentNotificationResolver;
     }
 
-    private function validateRequest(string $code, array $arguments): void
+    private function validateRequest(array $arguments): void
     {
         // todo: prettify
         if (
@@ -58,7 +58,7 @@ class ProcessNotificationsAction
     {
         try {
             $command = $this->dispatcher->getCommandFactory()->createForEvent(
-                $notificationItem['eventCode'],
+                (string) $notificationItem['eventCode'],
                 $payment,
                 $notificationItem
             );
@@ -70,8 +70,11 @@ class ProcessNotificationsAction
     public function __invoke(string $code, Request $request): Response
     {
         $arguments = $request->request->all();
-        $this->validateRequest($code, $arguments);
+        $this->validateRequest($arguments);
 
+        /**
+         * @var array<string, array> $notificationItem
+         */
         foreach ($arguments['notificationItems'] as $notificationItem) {
             $notificationItem = $notificationItem['NotificationRequestItem'];
 

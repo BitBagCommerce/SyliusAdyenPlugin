@@ -73,9 +73,10 @@ final class AdyenClient implements AdyenClientInterface
     {
         /**
          * @phpstan-ignore-next-line
+         * @psalm-suppress InvalidArgument
          */
         $client = new Client(new Config([
-            'httpClient'=>$this->httpClient
+            'httpClient' => $this->httpClient
         ]));
 
         $client->setXApiKey($options['apiKey']);
@@ -105,9 +106,9 @@ final class AdyenClient implements AdyenClientInterface
         string $currencyCode
     ): array {
         $payload = [
-            'amount'=>[
-                'value'=>$amount,
-                'currency'=> $currencyCode
+            'amount' => [
+                'value' => $amount,
+                'currency' => $currencyCode
             ],
             'reference' => 'payment-test',
             'merchantAccount' => $this->options['merchantAccount'],
@@ -115,7 +116,7 @@ final class AdyenClient implements AdyenClientInterface
             'shopperLocale' => $locale
         ];
 
-        $paymentMethods = $this->getCheckout($this->options)->paymentMethods($payload);
+        $paymentMethods = (array) $this->getCheckout($this->options)->paymentMethods($payload);
 
         if (!isset($paymentMethods['paymentMethods'])) {
             throw new \RuntimeException(sprintf('Adyen API failed to return any payment methods'));
@@ -133,7 +134,12 @@ final class AdyenClient implements AdyenClientInterface
             $pattern .= ':%d';
         }
 
-        return sprintf($pattern, $components['scheme'], $components['host'], $components['port']);
+        return sprintf(
+            $pattern,
+            $components['scheme'] ?? '',
+            $components['host'] ?? '',
+            $components['port'] ?? 0
+        );
     }
 
     public function paymentDetails(
@@ -143,7 +149,7 @@ final class AdyenClient implements AdyenClientInterface
             throw new \InvalidArgumentException();
         }
 
-        return $this->getCheckout($this->options)->paymentsDetails($receivedPayload);
+        return (array) $this->getCheckout($this->options)->paymentsDetails($receivedPayload);
     }
 
     public function submitPayment(
@@ -158,15 +164,15 @@ final class AdyenClient implements AdyenClientInterface
         }
 
         $payload = [
-            'amount'=>[
-                'value'=>$amount,
-                'currency'=> $currencyCode
+            'amount' => [
+                'value' => $amount,
+                'currency' => $currencyCode
             ],
             'reference' => (string) $reference,
             'merchantAccount' => $this->options['merchantAccount'],
             'returnUrl' => $redirectUrl,
-            'paymentMethod'=>$receivedPayload['paymentMethod'],
-            'additionalData'=> [
+            'paymentMethod' => $receivedPayload['paymentMethod'],
+            'additionalData' => [
                 'allow3DS2' => true
             ],
             'channel' => 'web',
@@ -174,10 +180,10 @@ final class AdyenClient implements AdyenClientInterface
         ];
 
         if (isset($receivedPayload['browserInfo'])) {
-            $payload['browserInfo'] = $receivedPayload['browserInfo'];
+            $payload['browserInfo'] = (array) $receivedPayload['browserInfo'];
         }
 
-        return $this->getCheckout($this->options)->payments($payload);
+        return (array) $this->getCheckout($this->options)->payments($payload);
     }
 
     private function dispatchException(AdyenException $exception): void
@@ -214,8 +220,8 @@ final class AdyenClient implements AdyenClientInterface
             'merchantAccount' => $merchantAccount
         ];
         $options = ArrayObject::ensureArrayObject([
-            'environment'=>$environment,
-            'apiKey'=>$apiKey
+            'environment' => $environment,
+            'apiKey' => $apiKey
         ]);
 
         try {
@@ -235,17 +241,17 @@ final class AdyenClient implements AdyenClientInterface
         $params = [
             'merchantAccount' => $this->options['merchantAccount'],
             'modificationAmount' => [
-                'value'=>$amount,
-                'currency'=>$currencyCode
+                'value' => $amount,
+                'currency' => $currencyCode
             ],
             'originalReference' => $pspReference
         ];
 
-        return $this->getModification($this->options)->capture($params);
+        return (array) $this->getModification($this->options)->capture($params);
     }
 
     public function getEnvironment(): string
     {
-        return $this->options['environment'];
+        return (string) $this->options['environment'];
     }
 }

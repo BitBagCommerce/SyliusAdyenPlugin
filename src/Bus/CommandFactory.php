@@ -11,6 +11,7 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
 use BitBag\SyliusAdyenPlugin\Exception\UnmappedAdyenActionException;
 use BitBag\SyliusAdyenPlugin\Resolver\Payment\EventCodeResolver;
 use Sylius\Component\Core\Model\PaymentInterface;
+use Webmozart\Assert\Assert;
 
 class CommandFactory
 {
@@ -34,6 +35,16 @@ class CommandFactory
         $this->eventCodeResolver = $eventCodeResolver;
     }
 
+    private function createObject(string $eventName, PaymentInterface $payment): PaymentLifecycleCommand
+    {
+        $class = (string) $this->mapping[$eventName];
+
+        $result = $class($payment);
+        Assert::isInstanceOf($result, PaymentLifecycleCommand::class);
+
+        return $result;
+    }
+
     public function createForEvent(
         string $event,
         PaymentInterface $payment,
@@ -49,8 +60,6 @@ class CommandFactory
             throw new UnmappedAdyenActionException(sprintf('Event "%s" has no handler registered', $eventName));
         }
 
-        $class = $this->mapping[$eventName];
-
-        return new $class($payment);
+        return $this->createObject($eventName, $payment);
     }
 }

@@ -42,14 +42,28 @@ final class PaymentCheckoutOrderResolver implements PaymentCheckoutOrderResolver
         return $result;
     }
 
-    public function resolve(): OrderInterface
+    /**
+     * @psalm-suppress MixedInferredReturnType
+     */
+    private function getCurrentOrder(): ?OrderInterface
     {
-        $order = null;
+        /**
+         * @var string|null $tokenValue
+         */
         $tokenValue = $this->getCurrentRequest()->get('tokenValue');
 
-        if (null !== $tokenValue) {
-            $order = $this->orderRepository->findOneBy(['tokenValue' => $tokenValue]);
+        if (null === $tokenValue) {
+            return null;
         }
+        /**
+         * @psalm-suppress MixedReturnStatement
+         */
+        return $this->orderRepository->findOneBy(['tokenValue' => $tokenValue]);
+    }
+
+    public function resolve(): OrderInterface
+    {
+        $order = $this->getCurrentOrder();
 
         if (!$order instanceof OrderInterface) {
             $order = $this->cartContext->getCart();

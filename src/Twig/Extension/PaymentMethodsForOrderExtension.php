@@ -51,7 +51,7 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
     private function getPaymentMethod(OrderInterface $order, ?string $code = null): PaymentMethodInterface
     {
         if ($code !== null) {
-            return $this->paymentMethodRepository->findOneForAdyenAndCode($code);
+            return $this->paymentMethodRepository->getOneForAdyenAndCode($code);
         }
 
         return $this->getMethod($this->getPayment($order));
@@ -69,6 +69,16 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         return $result;
     }
 
+    private function getCountryCode(OrderInterface $order): string
+    {
+        $address = $order->getBillingAddress();
+        if ($address === null) {
+            return '';
+        }
+
+        return (string) $address->getCountryCode();
+    }
+
     private function adyenPaymentMethods(OrderInterface $order, ?string $code = null): array
     {
         $method = $this->getPaymentMethod($order, $code);
@@ -79,11 +89,9 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
             return [];
         }
 
-        $countryCode = $order->getBillingAddress() !== null ? $order->getBillingAddress()->getCountryCode() : '';
-
         return $client->getAvailablePaymentMethods(
             (string) $order->getLocaleCode(),
-            (string) $countryCode,
+            $this->getCountryCode($order),
             $order->getTotal(),
             (string) $order->getCurrencyCode()
         );

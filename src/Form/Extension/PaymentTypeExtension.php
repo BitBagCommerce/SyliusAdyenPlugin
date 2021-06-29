@@ -50,8 +50,8 @@ class PaymentTypeExtension extends AbstractTypeExtension
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $adyen = $builder->create('channels', FormType::class, [
-            'compound'=>true,
-            'mapped'=>false
+            'compound' => true,
+            'mapped' => false
         ]);
 
         $paymentMethods = $this->paymentMethodRepository->findAllByChannel($this->channelContext->getChannel());
@@ -59,8 +59,8 @@ class PaymentTypeExtension extends AbstractTypeExtension
             $client = $this->adyenClientProvider->getForPaymentMethod($paymentMethod);
             $choices = $this->getChoicesForPaymentMethod($client, (string) $paymentMethod->getCode());
             $adyen->add((string) $paymentMethod->getCode(), PaymentMethodChoiceType::class, [
-                'choices'=>$choices,
-                'environment'=>$client->getEnvironment()
+                'choices' => $choices,
+                'environment' => $client->getEnvironment()
             ]);
         }
 
@@ -78,7 +78,8 @@ class PaymentTypeExtension extends AbstractTypeExtension
     ): array {
         $order = $this->paymentCheckoutOrderResolver->resolve();
 
-        $countryCode = $order->getBillingAddress()!==null ? (string) $order->getBillingAddress()->getCountryCode() : '';
+        $address = $order->getBillingAddress();
+        $countryCode = $address !== null ? (string) $address->getCountryCode() : '';
 
         $result = $client->getAvailablePaymentMethods(
             (string) $order->getLocaleCode(),

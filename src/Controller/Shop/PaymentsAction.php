@@ -10,6 +10,7 @@ use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
+use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\TokenAssigner\OrderTokenAssignerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,6 +20,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class PaymentsAction
 {
     use PayableOrderPaymentTrait;
+    use PaymentFromOrderTrait;
 
     public const REDIRECT_TARGET_ACTION = 'bitbag_adyen_thank_you';
 
@@ -55,8 +57,12 @@ class PaymentsAction
 
     private function prepareTargetUrl(OrderInterface $order): string
     {
+        $method = $this->getMethod(
+            $this->getPayment($order)
+        );
+
         $params = [
-            'code'=>$order->getLastPayment()->getMethod()->getCode()
+            'code' => $method->getCode()
         ];
 
         return $this->urlGenerator->generate(
@@ -78,12 +84,16 @@ class PaymentsAction
     {
         $billingAddress = $order->getBillingAddress();
 
+        if ($billingAddress === null) {
+            throw new \InvalidArgumentException('Unbound billing address for order #%d', (int) $order->getId());
+        }
+
         return [
-            'street' => $billingAddress->getStreet(),
-            'postalCode' => $billingAddress->getPostcode(),
-            'city' => $billingAddress->getCity(),
+            'street' => (string) $billingAddress->getStreet(),
+            'postalCode' => (string) $billingAddress->getPostcode(),
+            'city' => (string) $billingAddress->getCity(),
             'country' => $billingAddress->getCountryCode() ?? self::NO_COUNTRY_AVAILABLE_PLACEHOLDER,
-            'stateOrProvince' => $billingAddress->getProvinceName()
+            'stateOrProvince' => (string) $billingAddress->getProvinceName()
         ];
     }
 
@@ -109,10 +119,10 @@ class PaymentsAction
         $payment = $this->getPayablePayment($order);
         $url = $this->prepareTargetUrl($order);
 
-        $client = $this->adyenClientProvider->getForPaymentMethod($payment->getMethod());
+        $client = $this->adyenClientProvider->getForPaymentMethod($this->getMethod($payment));
         $result = $client->submitPayment(
             $order->getTotal(),
-            $order->getCurrencyCode(),
+            (string) $order->getCurrencyCode(),
             $payment->getId(),
             $url,
             $this->createPaymentPayload($request, $order)

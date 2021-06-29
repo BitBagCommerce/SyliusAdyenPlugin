@@ -25,7 +25,7 @@ trait PaymentFromOrderTrait
 
         if ($payment === null) {
             throw new \InvalidArgumentException(
-                sprintf('No payment associated with Order #%d', $order->getId())
+                sprintf('No payment associated with Order #%d', (int) $order->getId())
             );
         }
 

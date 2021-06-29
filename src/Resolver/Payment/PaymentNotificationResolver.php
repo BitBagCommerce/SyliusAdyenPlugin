@@ -30,7 +30,7 @@ class PaymentNotificationResolver
         $result = $payment->getMethod();
         if ($result === null) {
             throw new \InvalidArgumentException(
-                sprintf('Payment #%d has no method associated', $payment->getId())
+                sprintf('Payment #%d has no method associated', (int) $payment->getId())
             );
         }
 

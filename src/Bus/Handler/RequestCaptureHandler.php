@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
-use BitBag\SyliusAdyenPlugin\AdyenGatewayFactory;
 use BitBag\SyliusAdyenPlugin\Bus\Command\RequestCapture;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
+use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Webmozart\Assert\Assert;
 
 class RequestCaptureHandler implements MessageHandlerInterface
 {
+    use GatewayConfigFromPaymentTrait;
+
     /** @var AdyenClientProvider */
     private $adyenClientProvider;
 
@@ -36,7 +39,7 @@ class RequestCaptureHandler implements MessageHandlerInterface
         if (
             $method === null
             || $method->getGatewayConfig() === null
-            || !isset($method->getGatewayConfig()->getConfig()[AdyenGatewayFactory::FACTORY_NAME])
+            || !isset($this->getGatewayConfig($method)->getConfig()[AdyenClientProvider::FACTORY_NAME])
         ) {
             return false;
         }
@@ -71,9 +74,12 @@ class RequestCaptureHandler implements MessageHandlerInterface
             return;
         }
 
-        $client = $this->adyenClientProvider->getForPaymentMethod($payment->getMethod());
+        $method = $payment->getMethod();
+        Assert::isInstanceOf($method, PaymentMethodInterface::class);
+
+        $client = $this->adyenClientProvider->getForPaymentMethod($method);
         $client->requestCapture(
-            $details['pspReference'],
+            (string) $details['pspReference'],
             $requestCapture->getOrder()->getTotal(),
             (string) $requestCapture->getOrder()->getCurrencyCode()
         );

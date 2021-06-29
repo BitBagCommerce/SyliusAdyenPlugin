@@ -4,18 +4,18 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
 
-        <service
+        <!--<service
                 class="BitBag\SyliusAdyenPlugin\AdyenGatewayFactory"
                 id="bit_bag.sylius_adyen_plugin.adyen_gateway_factory"
-        />
+        />-->
 
-        <service
+        <!--<service
                 id="bit_bag.sylius_adyen_plugin.adyen_gateway_factory.wrapper"
                 class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder"
         >
             <argument type="service" id="bit_bag.sylius_adyen_plugin.adyen_gateway_factory"/>
             <tag name="payum.gateway_factory_builder" factory="adyen"/>
-        </service>
+        </service>-->
 
         <service
                 class="BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider"

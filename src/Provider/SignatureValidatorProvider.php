@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Provider;
 
 use BitBag\SyliusAdyenPlugin\Client\SignatureValidator;
+use BitBag\SyliusAdyenPlugin\Exception\AdyenNotConfigured;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
+use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 
 class SignatureValidatorProvider
 {
+    use GatewayConfigFromPaymentTrait;
+
     /** @var PaymentMethodRepositoryInterface */
     private $paymentMethodRepository;
 
@@ -23,15 +27,12 @@ class SignatureValidatorProvider
         $paymentMethod = $this->paymentMethodRepository->findOneForAdyenAndCode($code);
 
         if ($paymentMethod === null) {
-            throw new \InvalidArgumentException(sprintf('Adyen for "%s" code is not configured', $code));
+            throw new AdyenNotConfigured($code);
         }
-
-        $gatewayConfig =
-            $paymentMethod->getGatewayConfig() !== null ? $paymentMethod->getGatewayConfig()->getConfig() : []
-        ;
+        $gatewayConfig = $this->getGatewayConfig($paymentMethod);
 
         return new SignatureValidator(
-            $gatewayConfig['hmacKey']
+            (string) $gatewayConfig->getConfig()['hmacKey']
         );
     }
 }

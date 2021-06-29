@@ -22,9 +22,11 @@ class EventCodeResolver
         }
 
         if ($notificationData['eventCode'] !== self::AUTHORIZATION) {
-            return $notificationData['eventCode'];
+            return (string) $notificationData['eventCode'];
         }
 
-        return self::PAYMENT_METHOD_TYPES[strtolower($notificationData['paymentMethod'])] ?? self::AUTHORIZATION;
+        $paymentMethodKey = strtolower((string) $notificationData['paymentMethod']);
+
+        return self::PAYMENT_METHOD_TYPES[$paymentMethodKey] ?? self::AUTHORIZATION;
     }
 }

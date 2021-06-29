@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\EventSubscriber;
 
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
-use Payum\Core\Model\GatewayConfigInterface;
-use Sylius\Component\Core\Model\PaymentMethodInterface;
+use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +16,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class FilterHttpAuthenticationForNotificationProcessor implements EventSubscriberInterface
 {
+    use GatewayConfigFromPaymentTrait;
+
     public const ROUTE_NAME = 'bitbag_adyen_process_notifications';
 
     /** @var PaymentMethodRepositoryInterface */
@@ -32,18 +33,6 @@ class FilterHttpAuthenticationForNotificationProcessor implements EventSubscribe
         return [
             KernelEvents::REQUEST => 'filterAuthentication'
         ];
-    }
-
-    private function getGatewayConfig(PaymentMethodInterface $paymentMethod): GatewayConfigInterface
-    {
-        $result = $paymentMethod->getGatewayConfig();
-        if ($result === null) {
-            throw new \InvalidArgumentException(
-                sprintf('PaymentMethod %d has no gateway config', $paymentMethod->getId())
-            );
-        }
-
-        return $result;
     }
 
     private function getConfiguration(string $code): array
@@ -79,7 +68,7 @@ class FilterHttpAuthenticationForNotificationProcessor implements EventSubscribe
             return;
         }
 
-        $code = $request->attributes->get('code');
+        $code = (string) $request->attributes->get('code');
         $configuration = $this->getConfiguration($code);
 
         if ($this->isAuthenticated($request, $configuration)) {

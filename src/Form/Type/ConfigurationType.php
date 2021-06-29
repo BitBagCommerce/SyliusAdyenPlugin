@@ -88,7 +88,7 @@ class ConfigurationType extends AbstractType
             ])
 
             ->add('adyen', HiddenType::class, [
-                'data'=>true
+                'data' => true
             ]);
     }
 
@@ -96,7 +96,7 @@ class ConfigurationType extends AbstractType
     {
         $resolver->setDefault('constraints', [
             new AdyenCredentials([
-                'groups'=>['sylius']
+                'groups' => ['sylius']
             ])
         ]);
     }

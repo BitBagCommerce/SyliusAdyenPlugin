@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
+use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -14,6 +15,8 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class PreparePaymentHandler implements MessageHandlerInterface
 {
+    use OrderFromPaymentTrait;
+
     public const ALLOWED_EVENT_NAMES = ['Authorised', 'RedirectShopper'];
 
     /** @var FactoryInterface */
@@ -50,7 +53,7 @@ class PreparePaymentHandler implements MessageHandlerInterface
     {
         $payment = $command->getPayment();
         if ($this->isAccepted($payment)) {
-            $this->updateOrderState($payment->getOrder());
+            $this->updateOrderState($this->getOrderFromPayment($payment));
         }
 
         $this->persistPayment($payment);

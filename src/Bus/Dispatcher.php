@@ -31,11 +31,9 @@ class Dispatcher
     }
 
     /**
-     * @param mixed $action
-     *
      * @return mixed
      */
-    public function dispatch($action)
+    public function dispatch(object $action)
     {
         return $this->handle($action);
     }

@@ -51,12 +51,12 @@ class RedirectTargetAction
 
     private function getReferenceId(Request $request): ?string
     {
-        return $request->query->get('redirectResult');
+        return $request->query->has('redirectResult') ? (string) $request->query->get('redirectResult') : null;
     }
 
     private function handleDetailsResponse(PaymentInterface $payment, array $result): bool
     {
-        if (strtoupper($result['resultCode']) !== self::AUTHORIZATION_CODE) {
+        if (strtoupper((string) $result['resultCode']) !== self::AUTHORIZATION_CODE) {
             return false;
         }
 
@@ -69,17 +69,29 @@ class RedirectTargetAction
     private function createPayloadForDetails(string $referenceId): array
     {
         return [
-            'details'=>[
-                'redirectResult'=>$referenceId
+            'details' => [
+                'redirectResult' => $referenceId
             ]
         ];
+    }
+
+    private function getPaymentForReference(string $reference): PaymentInterface
+    {
+        $payment = $this->paymentRepository->find($reference);
+        if (!$payment instanceof PaymentInterface) {
+            throw new \InvalidArgumentException(
+                sprintf('Payment not found for reference "%s"', $reference)
+            );
+        }
+
+        return $payment;
     }
 
     private function processPayment(string $code, string $referenceId): bool
     {
         $client = $this->adyenClientProvider->getClientForCode($code);
         $result = $client->paymentDetails($this->createPayloadForDetails($referenceId));
-        $payment = $this->paymentRepository->find($result['merchantReference']);
+        $payment = $this->getPaymentForReference((string) $result['merchantReference']);
 
         return $this->handleDetailsResponse($payment, $result);
     }

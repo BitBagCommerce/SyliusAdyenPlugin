@@ -9,12 +9,13 @@ use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 use Psr\Http\Client\ClientInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
-use Sylius\Component\Payment\Model\PaymentMethodInterface;
+use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Resource\Exception\UpdateHandlingException;
-use Webmozart\Assert\Assert;
 
 class AdyenClientProvider
 {
+    public const FACTORY_NAME = 'adyen';
+
     use GatewayConfigFromPaymentTrait;
 
     /** @var PaymentMethodRepositoryInterface */
@@ -53,14 +54,12 @@ class AdyenClientProvider
 
     public function getForPaymentMethod(PaymentMethodInterface $paymentMethod): AdyenClient
     {
-        Assert::isInstanceOf($paymentMethod, \Sylius\Component\Core\Model\PaymentMethodInterface::class);
-
         $gatewayConfig = $this->getGatewayConfig($paymentMethod);
-        $isAdyen = $gatewayConfig->getConfig()['adyen'] ?? null;
+        $isAdyen = isset($gatewayConfig->getConfig()['adyen']);
         if (!$isAdyen) {
             throw new \InvalidArgumentException(sprintf(
                 'Provided PaymentMethod #%d is not an Adyen instance',
-                $paymentMethod->getId()
+                (int) $paymentMethod->getId()
             ));
         }
 
