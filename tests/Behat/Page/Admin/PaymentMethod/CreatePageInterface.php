@@ -22,11 +22,7 @@ interface CreatePageInterface extends BaseCreatePageInterface
 
     public function setAdyenHmacKey(string $hmacKey): void;
 
-    public function setAdyenSkinCode(string $skinCode): void;
+    public function setAuthUser(string $authUser): void;
 
-    public function setAdyenHmacNotification(string $hmacNotification): void;
-
-    public function setWsUser(string $wsUser): void;
-
-    public function setWsUserPassword(string $wsUserPassword): void;
+    public function setAuthPassword(string $authPassword): void;
 }

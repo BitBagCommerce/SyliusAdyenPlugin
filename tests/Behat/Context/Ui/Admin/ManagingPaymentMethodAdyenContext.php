@@ -50,11 +50,9 @@ final class ManagingPaymentMethodAdyenContext implements Context
     {
         $this->resolveCurrentPage()->setAdyenPlatform('test');
         $this->resolveCurrentPage()->setAdyenMerchantAccount('test');
-        $this->resolveCurrentPage()->setAdyenSkinCode('test');
         $this->resolveCurrentPage()->setAdyenHmacKey('test');
-        $this->resolveCurrentPage()->setAdyenHmacNotification('test');
-        $this->resolveCurrentPage()->setWsUser('test');
-        $this->resolveCurrentPage()->setWsUserPassword('test');
+        $this->resolveCurrentPage()->setAuthUser('test');
+        $this->resolveCurrentPage()->setAuthPassword('test');
     }
 
     /**

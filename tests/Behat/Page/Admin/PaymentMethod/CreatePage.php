@@ -43,32 +43,16 @@ final class CreatePage extends BaseCreatePage implements CreatePageInterface
     /**
      * {@inheritdoc}
      */
-    public function setAdyenSkinCode(string $skinCode): void
+    public function setAuthUser(string $authUser): void
     {
-        $this->getDocument()->fillField('Skin code', $skinCode);
+        $this->getDocument()->fillField('authUser', $authUser);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setAdyenHmacNotification(string $hmacNotification): void
+    public function setAuthPassword(string $authPassword): void
     {
-        $this->getDocument()->fillField('HMAC Key notification', $hmacNotification);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setWsUser(string $wsUser): void
-    {
-        $this->getDocument()->fillField('WS user', $wsUser);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setWsUserPassword(string $wsUserPassword): void
-    {
-        $this->getDocument()->fillField('WS user password', $wsUserPassword);
+        $this->getDocument()->fillField('authPassword', $authPassword);
     }
 }
