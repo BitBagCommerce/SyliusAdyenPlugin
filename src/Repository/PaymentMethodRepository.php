@@ -39,6 +39,9 @@ class PaymentMethodRepository extends BasePaymentMethodRepository implements Pay
         }
     }
 
+    /**
+     * @psalm-suppress QueryBuilderSetParameter
+     */
     private function getQueryForChannel(ChannelInterface $channel): QueryBuilder
     {
         return $this->createQueryBuilder('o')
@@ -46,7 +49,7 @@ class PaymentMethodRepository extends BasePaymentMethodRepository implements Pay
             ->andWhere('o.enabled = true')
             ->andWhere(':channel MEMBER OF o.channels')
             ->andWhere('gatewayConfig.factoryName = :factoryName')
-            ->setParameter('channel', $channel, ChannelInterface::class)
+            ->setParameter('channel', $channel)
             ->setParameter('factoryName', AdyenClientProvider::FACTORY_NAME)
             ->addOrderBy('o.position')
         ;
