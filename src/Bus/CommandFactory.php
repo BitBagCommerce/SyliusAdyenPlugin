@@ -39,7 +39,7 @@ class CommandFactory
     {
         $class = (string) $this->mapping[$eventName];
 
-        $result = $class($payment);
+        $result = new $class($payment);
         Assert::isInstanceOf($result, PaymentLifecycleCommand::class);
 
         return $result;
