@@ -10,7 +10,6 @@ use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
 use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
-use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,9 +29,6 @@ class PaymentDetailsAction
     /** @var PaymentCheckoutOrderResolverInterface */
     private $paymentCheckoutOrderResolver;
 
-    /** @var FactoryInterface */
-    private $stateMachineFactory;
-
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
 
@@ -42,13 +38,11 @@ class PaymentDetailsAction
     public function __construct(
         AdyenClientProvider $adyenClientProvider,
         PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver,
-        FactoryInterface $stateMachineFactory,
         UrlGeneratorInterface $urlGenerator,
         Dispatcher $dispatcher
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;
-        $this->stateMachineFactory = $stateMachineFactory;
         $this->urlGenerator = $urlGenerator;
         $this->dispatcher = $dispatcher;
     }
