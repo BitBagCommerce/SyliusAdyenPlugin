@@ -4,21 +4,13 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Client;
 
-use Adyen\AdyenException;
 use Adyen\Client;
-use Adyen\Config;
-use Adyen\Environment;
 use Adyen\Service\Checkout;
 use Adyen\Service\Modification;
 use BitBag\SyliusAdyenPlugin\Adapter\PaymentMethodsToChoiceAdapter;
-use BitBag\SyliusAdyenPlugin\Exception\AuthenticationException;
-use BitBag\SyliusAdyenPlugin\Exception\InvalidApiKeyException;
-use BitBag\SyliusAdyenPlugin\Exception\InvalidMerchantAccountException;
 use Payum\Core\Bridge\Spl\ArrayObject;
-use Psr\Http\Client\ClientInterface;
-use Symfony\Component\HttpFoundation\Response;
 
-final class AdyenClient implements AdyenClientInterface
+class AdyenClient implements AdyenClientInterface
 {
     public const DEFAULT_OPTIONS = [
         'apiKey' => null,
@@ -33,12 +25,12 @@ final class AdyenClient implements AdyenClientInterface
     /** @var ArrayObject */
     private $options;
 
-    /** @var ClientInterface */
-    private $httpClient;
+    /** @var Client */
+    private $transport;
 
     public function __construct(
         array $options,
-        ClientInterface $httpClient
+        AdyenTransportFactory $adyenTransportFactory
     ) {
         $options = ArrayObject::ensureArrayObject($options);
         $options->defaults(self::DEFAULT_OPTIONS);
@@ -52,40 +44,21 @@ final class AdyenClient implements AdyenClientInterface
         ]);
 
         $this->options = $options;
-        $this->httpClient = $httpClient;
+        $this->transport = $adyenTransportFactory->create($options->getArrayCopy());
     }
 
-    private function getCheckout(ArrayObject $options): Checkout
+    private function getCheckout(): Checkout
     {
         return new Checkout(
-            $this->createClient($options)
+            $this->transport
         );
     }
 
-    private function getModification(ArrayObject $options): Modification
+    private function getModification(): Modification
     {
         return new Modification(
-            $this->createClient($options)
+            $this->transport
         );
-    }
-
-    private function createClient(ArrayObject $options): Client
-    {
-        /**
-         * @phpstan-ignore-next-line
-         * @psalm-suppress InvalidArgument
-         */
-        $client = new Client(new Config([
-            'httpClient' => $this->httpClient
-        ]));
-
-        $client->setXApiKey($options['apiKey']);
-        $client->setEnvironment(
-            $options['environment'] == 'test' ? Environment::TEST : Environment::LIVE
-        );
-        $client->setTimeout(30);
-
-        return $client;
     }
 
     public function getAvailablePaymentMethodsForForm(
@@ -116,7 +89,7 @@ final class AdyenClient implements AdyenClientInterface
             'shopperLocale' => $locale
         ];
 
-        $paymentMethods = (array) $this->getCheckout($this->options)->paymentMethods($payload);
+        $paymentMethods = (array) $this->getCheckout()->paymentMethods($payload);
 
         if (!isset($paymentMethods['paymentMethods'])) {
             throw new \RuntimeException(sprintf('Adyen API failed to return any payment methods'));
@@ -149,7 +122,7 @@ final class AdyenClient implements AdyenClientInterface
             throw new \InvalidArgumentException();
         }
 
-        return (array) $this->getCheckout($this->options)->paymentsDetails($receivedPayload);
+        return (array) $this->getCheckout()->paymentsDetails($receivedPayload);
     }
 
     public function submitPayment(
@@ -183,54 +156,7 @@ final class AdyenClient implements AdyenClientInterface
             $payload['browserInfo'] = (array) $receivedPayload['browserInfo'];
         }
 
-        return (array) $this->getCheckout($this->options)->payments($payload);
-    }
-
-    private function dispatchException(AdyenException $exception): void
-    {
-        if ($exception->getCode() === Response::HTTP_UNAUTHORIZED) {
-            throw new InvalidApiKeyException();
-        }
-
-        if ($exception->getCode() === Response::HTTP_FORBIDDEN) {
-            throw new InvalidMerchantAccountException();
-        }
-
-        throw $exception;
-    }
-
-    private function validateArguments(?string $merchantAccount, ?string $apiKey): void
-    {
-        if ($merchantAccount === null || $merchantAccount === '') {
-            throw new InvalidMerchantAccountException();
-        }
-        if ($apiKey === null || $apiKey === '') {
-            throw new InvalidApiKeyException();
-        }
-    }
-
-    /**
-     * @throws AuthenticationException|AdyenException
-     */
-    public function isApiKeyValid(string $environment, ?string $merchantAccount, ?string $apiKey): bool
-    {
-        $this->validateArguments($merchantAccount, $apiKey);
-
-        $payload = [
-            'merchantAccount' => $merchantAccount
-        ];
-        $options = ArrayObject::ensureArrayObject([
-            'environment' => $environment,
-            'apiKey' => $apiKey
-        ]);
-
-        try {
-            $this->getCheckout($options)->paymentMethods($payload);
-        } catch (AdyenException $exception) {
-            $this->dispatchException($exception);
-        }
-
-        return true;
+        return (array) $this->getCheckout()->payments($payload);
     }
 
     public function requestCapture(
@@ -247,7 +173,7 @@ final class AdyenClient implements AdyenClientInterface
             'originalReference' => $pspReference
         ];
 
-        return (array) $this->getModification($this->options)->capture($params);
+        return (array) $this->getModification()->capture($params);
     }
 
     public function getEnvironment(): string
