@@ -9,12 +9,12 @@ Feature: Adding a new payment method
     And I am logged in as an administrator
 
   @ui
-  Scenario: Adding a new adyen payment method
+  Scenario: Adding a new adyen payment method with passing validation
     Given I want to create a new Adyen payment method
+    And Adyen service will confirm merchantAccount "mer" and apiKey "api" are valid
     When I name it "Adyen" in "English (United States)"
     And I specify its code as "adyen_test"
-    And I configure it with test Adyen credentials
+    And I specify test configuration with merchantAccount "mer" and apiKey "api"
     And I add it
-#    Then I should be informed that this form contains errors
-#    Then I should be notified that it has been successfully created
-#    And the payment method "Adyen" should appear in the registry
+    Then I should be notified that it has been successfully created
+    And the payment method "Adyen" should appear in the registry

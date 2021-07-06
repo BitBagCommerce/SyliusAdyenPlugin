@@ -12,12 +12,17 @@ declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusAdyenPlugin\Behat\Context\Ui\Admin;
 
+use Adyen\AdyenException;
+use Adyen\Service;
 use Behat\Behat\Context\Context;
+use Behat\MinkExtension\Context\MinkContext;
 use FriendsOfBehat\PageObjectExtension\Page\UnexpectedPageException;
 use Sylius\Behat\Service\Resolver\CurrentPageResolverInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Tests\BitBag\SyliusAdyenPlugin\Behat\Page\Admin\PaymentMethod\CreatePageInterface;
 
-final class ManagingPaymentMethodAdyenContext implements Context
+final class ManagingPaymentMethodAdyenContext extends MinkContext implements Context
 {
     /** @var CurrentPageResolverInterface */
     private $currentPageResolver;
@@ -25,12 +30,17 @@ final class ManagingPaymentMethodAdyenContext implements Context
     /** @var CreatePageInterface */
     private $createPage;
 
+    /** @var KernelInterface */
+    private $kernel;
+
     public function __construct(
         CurrentPageResolverInterface $currentPageResolver,
-        CreatePageInterface $createPage
+        CreatePageInterface $createPage,
+        KernelInterface $kernel
     ) {
         $this->createPage = $createPage;
         $this->currentPageResolver = $currentPageResolver;
+        $this->kernel = $kernel;
     }
 
     /**
@@ -44,15 +54,40 @@ final class ManagingPaymentMethodAdyenContext implements Context
     }
 
     /**
-     * @When I configure it with test Adyen credentials
+     * @Given Adyen service will confirm merchantAccount :merchantAccount and apiKey :apiKey are valid
      */
-    public function iConfigureItWithTestAdyenCredentials(): void
+    public function adyenServiceWillConfirmMerchantAccountAndApiKeyAreValid(string $merchantAccount, string $apiKey): void
+    {
+        $this->kernel
+            ->getContainer()
+            ->get('tests.bit_bag.sylius_adyen_plugin.behat.context.api_mock_client')
+            ->setJsonHandler(function (Service $service, string $url, array $payload) use ($merchantAccount, $apiKey) {
+                $config = $service->getClient()->getConfig();
+
+                if ($config->getXApiKey() !== $apiKey) {
+                    throw new AdyenException('', Response::HTTP_UNAUTHORIZED);
+                }
+
+                if ($payload['merchantAccount'] !== $merchantAccount) {
+                    throw new AdyenException('', Response::HTTP_FORBIDDEN);
+                }
+
+                return [];
+            });
+    }
+
+    /**
+     * @When I specify test configuration with merchantAccount :merchantAccount and apiKey :apiKey
+     */
+    public function iSpecifyTestConfigurationWithMerchantAccountAndApiKey(string $merchantAccount, string $apiKey): void
     {
         $this->resolveCurrentPage()->setAdyenPlatform('test');
-        $this->resolveCurrentPage()->setAdyenMerchantAccount('test');
+        $this->resolveCurrentPage()->setAdyenMerchantAccount($merchantAccount);
         $this->resolveCurrentPage()->setAdyenHmacKey('test');
+        $this->resolveCurrentPage()->setApiKey($apiKey);
         $this->resolveCurrentPage()->setAuthUser('test');
         $this->resolveCurrentPage()->setAuthPassword('test');
+        $this->resolveCurrentPage()->setClientKey('test');
     }
 
     /**

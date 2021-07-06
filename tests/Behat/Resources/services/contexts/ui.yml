@@ -5,6 +5,7 @@ services:
         arguments:
             - "@sylius.behat.current_page_resolver"
             - "@bitbag_sylius_adyen_plugin.page.admin.payment_method.create"
+            - '@kernel'
 
 #    bitbag_sylius_adyen_plugin.context.ui.shop.adyen_checkout:
 #        class: Tests\BitBag\SyliusAdyenPlugin\Behat\Context\Ui\Shop\AdyenCheckoutContext

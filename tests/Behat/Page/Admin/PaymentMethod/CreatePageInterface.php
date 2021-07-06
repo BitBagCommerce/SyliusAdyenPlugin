@@ -25,4 +25,8 @@ interface CreatePageInterface extends BaseCreatePageInterface
     public function setAuthUser(string $authUser): void;
 
     public function setAuthPassword(string $authPassword): void;
+
+    public function setApiKey(string $apiKey): void;
+
+    public function setClientKey(string $string);
 }

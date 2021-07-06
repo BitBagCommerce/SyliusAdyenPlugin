@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Client;
 
 use Adyen\Client;
-use Adyen\Config;
 use Adyen\Environment;
-use Psr\Http\Client\ClientInterface;
+use Adyen\HttpClient\ClientInterface;
+use Adyen\HttpClient\CurlClient;
 use Webmozart\Assert\Assert;
 
 class AdyenTransportFactory
 {
     /** @var ClientInterface */
-    private $httpClient;
+    private $adyenHttpClient;
 
-    public function __construct(ClientInterface $httpClient)
+    public function __construct(?ClientInterface $adyenHttpClient = null)
     {
-        $this->httpClient = $httpClient;
+        $this->adyenHttpClient = $adyenHttpClient ?? new CurlClient();
     }
 
     public function create(array $options): Client
@@ -25,17 +25,14 @@ class AdyenTransportFactory
         Assert::keyExists($options, 'apiKey');
         Assert::keyExists($options, 'environment');
 
-        /**
-         * @phpstan-ignore-next-line
-         * @psalm-suppress InvalidArgument
-         */
-        $client = new Client(new Config([
-            'httpClient' => $this->httpClient
-        ]));
+        $client = new Client();
+        $client->setHttpClient($this->adyenHttpClient);
 
         $client->setXApiKey($options['apiKey']);
         $client->setEnvironment(
-            $options['environment'] == 'test' ? Environment::TEST : Environment::LIVE
+            $options['environment'] == AdyenClientInterface::TEST_ENVIRONMENT
+                ? Environment::TEST
+                : Environment::LIVE
         );
         $client->setTimeout(30);
 

@@ -55,4 +55,14 @@ final class CreatePage extends BaseCreatePage implements CreatePageInterface
     {
         $this->getDocument()->fillField('sylius_payment_method_gatewayConfig_config_authPassword', $authPassword);
     }
+
+    public function setApiKey(string $apiKey): void
+    {
+        $this->getDocument()->fillField('sylius_payment_method_gatewayConfig_config_apiKey', $apiKey);
+    }
+
+    public function setClientKey(string $clientKey)
+    {
+        $this->getDocument()->fillField('sylius_payment_method_gatewayConfig_config_clientKey', $clientKey);
+    }
 }

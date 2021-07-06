@@ -8,6 +8,20 @@
     </imports>
     <services>
         <defaults public="true" />
+        <service
+                class="Tests\BitBag\SyliusAdyenPlugin\HttpClientStub"
+                id="tests.bit_bag.sylius_adyen_plugin.behat.context.api_mock_client"
+        />
+
+        <service
+                class="BitBag\SyliusAdyenPlugin\Client\AdyenTransportFactory"
+                decorates="bit_bag.sylius_adyen_plugin.client.adyen_transport_factory"
+                id="bit_bag.sylius_adyen_plugin.client.adyen_transport_factory.decorator"
+                lazy="true"
+        >
+            <argument type="service" id="tests.bit_bag.sylius_adyen_plugin.behat.context.api_mock_client"/>
+        </service>
+
         <!-- Put your Behat services here -->
 
         <!--<service id="acme_sylius_example.context.ui.shop.welcome" class="Tests\BitBag\SyliusAdyenPlugin\Behat\Context\Ui\Shop\WelcomeContext">
