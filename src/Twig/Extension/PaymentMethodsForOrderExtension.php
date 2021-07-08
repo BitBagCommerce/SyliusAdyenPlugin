@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Twig\Extension;
 
+use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Bus\Query\GetToken;
+use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
@@ -28,12 +31,17 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
     /** @var PaymentMethodRepositoryInterface */
     private $paymentMethodRepository;
 
+    /** @var Dispatcher */
+    private $dispatcher;
+
     public function __construct(
         AdyenClientProvider $adyenClientProvider,
-        PaymentMethodRepositoryInterface $paymentMethodRepository
+        PaymentMethodRepositoryInterface $paymentMethodRepository,
+        Dispatcher $dispatcher
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->paymentMethodRepository = $paymentMethodRepository;
+        $this->dispatcher = $dispatcher;
     }
 
     public function getFunctions()
@@ -59,14 +67,31 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
 
     public function adyenPaymentConfiguration(OrderInterface $order, ?string $code = null): array
     {
+        $token = $this->getToken($order);
+
         $paymentMethod = $this->getPaymentMethod($order, $code);
 
         $result = $this->filterKeys(
             $this->getGatewayConfig($paymentMethod)->getConfig()
         );
-        $result['paymentMethods'] = $this->adyenPaymentMethods($order, $code);
+        $result['paymentMethods'] = $this->adyenPaymentMethods($order, $code, $token);
 
         return $result;
+    }
+
+    private function getToken(OrderInterface $order): ?AdyenTokenInterface
+    {
+        $customer = $order->getCustomer();
+        if ($customer === null || !$customer->hasUser()) {
+            return null;
+        }
+
+        /**
+         * @var AdyenTokenInterface $token
+         */
+        $token = $this->dispatcher->dispatch(new GetToken($order));
+
+        return $token;
     }
 
     private function getCountryCode(OrderInterface $order): string
@@ -79,8 +104,11 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         return (string) $address->getCountryCode();
     }
 
-    private function adyenPaymentMethods(OrderInterface $order, ?string $code = null): array
-    {
+    private function adyenPaymentMethods(
+        OrderInterface $order,
+        ?string $code = null,
+        ?AdyenTokenInterface $adyenToken = null
+    ): array {
         $method = $this->getPaymentMethod($order, $code);
 
         try {
@@ -93,7 +121,8 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
             (string) $order->getLocaleCode(),
             $this->getCountryCode($order),
             $order->getTotal(),
-            (string) $order->getCurrencyCode()
+            (string) $order->getCurrencyCode(),
+            $adyenToken
         );
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Client;
 
+use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
+
 interface AdyenClientInterface
 {
     public const TEST_ENVIRONMENT = 'test';
@@ -19,8 +21,6 @@ interface AdyenClientInterface
 
     public function getEnvironment(): string;
 
-    public function getAvailablePaymentMethodsForForm(string $locale, string $countryCode, int $amount, string $currencyCode): array;
-
     /**
      * @param mixed $reference
      */
@@ -29,7 +29,8 @@ interface AdyenClientInterface
         string $currencyCode,
         $reference,
         string $redirectUrl,
-        array $receivedPayload
+        array $receivedPayload,
+        ?AdyenTokenInterface $customerIdentifier = null
     ): array;
 
     public function paymentDetails(array $receivedPayload): array;

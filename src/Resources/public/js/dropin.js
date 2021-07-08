@@ -54,6 +54,7 @@
                 clientKey: configuration.clientKey,
                 locale: configuration.locale,
                 environment: configuration.environment,
+
                 onSubmit: (state, dropin) => { submitHandler(state, dropin, configuration.path.payments) },
                 onAdditionalDetails: (state, dropin) => { submitHandler(state, dropin, configuration.path.paymentDetails) }
             });

@@ -7,6 +7,7 @@ namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\TakeOverPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Bus\Query\GetToken;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
@@ -118,6 +119,7 @@ class PaymentsAction
 
         $payment = $this->getPayablePayment($order);
         $url = $this->prepareTargetUrl($order);
+        $token = $this->dispatcher->dispatch(new GetToken($order));
 
         $client = $this->adyenClientProvider->getForPaymentMethod($this->getMethod($payment));
         $result = $client->submitPayment(
@@ -125,7 +127,8 @@ class PaymentsAction
             (string) $order->getCurrencyCode(),
             $payment->getId(),
             $url,
-            $this->createPaymentPayload($request, $order)
+            $this->createPaymentPayload($request, $order),
+            $token
         );
 
         $payment->setDetails($result);

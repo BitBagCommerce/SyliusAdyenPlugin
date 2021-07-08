@@ -7,7 +7,7 @@ namespace BitBag\SyliusAdyenPlugin\Client;
 use Adyen\Client;
 use Adyen\Service\Checkout;
 use Adyen\Service\Modification;
-use BitBag\SyliusAdyenPlugin\Adapter\PaymentMethodsToChoiceAdapter;
+use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 
 class AdyenClient implements AdyenClientInterface
@@ -61,33 +61,24 @@ class AdyenClient implements AdyenClientInterface
         );
     }
 
-    public function getAvailablePaymentMethodsForForm(
-        string $locale,
-        string $countryCode,
-        int $amount,
-        string $currencyCode
-    ): array {
-        $paymentMethods = $this->getAvailablePaymentMethods($locale, $countryCode, $amount, $currencyCode);
-
-        return (new PaymentMethodsToChoiceAdapter())($paymentMethods);
-    }
-
     public function getAvailablePaymentMethods(
         string $locale,
         string $countryCode,
         int $amount,
-        string $currencyCode
+        string $currencyCode,
+        ?AdyenTokenInterface $adyenToken = null
     ): array {
         $payload = [
             'amount' => [
                 'value' => $amount,
                 'currency' => $currencyCode
             ],
-            'reference' => 'payment-test',
             'merchantAccount' => $this->options['merchantAccount'],
             'countryCode' => $countryCode,
             'shopperLocale' => $locale
         ];
+
+        $payload = $this->enableOneOffPayment($payload, $adyenToken);
 
         $paymentMethods = (array) $this->getCheckout()->paymentMethods($payload);
 
@@ -116,13 +107,36 @@ class AdyenClient implements AdyenClientInterface
     }
 
     public function paymentDetails(
-        array $receivedPayload
+        array $receivedPayload,
+        ?AdyenTokenInterface $adyenToken = null
     ): array {
         if (!isset($receivedPayload['details'])) {
             throw new \InvalidArgumentException();
         }
 
+        $receivedPayload = $this->enableOneOffPayment($receivedPayload, $adyenToken);
+
         return (array) $this->getCheckout()->paymentsDetails($receivedPayload);
+    }
+
+    private function enableOneOffPayment(
+        array $payload,
+        ?AdyenTokenInterface $customerIdentifier,
+        bool $store = false
+    ): array {
+        if ($customerIdentifier === null) {
+            return $payload;
+        }
+
+        if ($store) {
+            $payload['storePaymentMethod'] = true;
+        }
+
+        $payload['recurringProcessingModel'] = 'CardOnFile';
+        $payload['shopperInteraction'] = 'Ecommerce';
+        $payload['shopperReference'] = $customerIdentifier->getIdentifier();
+
+        return $payload;
     }
 
     public function submitPayment(
@@ -130,7 +144,8 @@ class AdyenClient implements AdyenClientInterface
         string $currencyCode,
         $reference,
         string $redirectUrl,
-        array $receivedPayload
+        array $receivedPayload,
+        ?AdyenTokenInterface $customerIdentifier = null
     ): array {
         if (!isset($receivedPayload['paymentMethod'])) {
             throw new \InvalidArgumentException();
@@ -155,6 +170,8 @@ class AdyenClient implements AdyenClientInterface
         if (isset($receivedPayload['browserInfo'])) {
             $payload['browserInfo'] = (array) $receivedPayload['browserInfo'];
         }
+
+        $payload = $this->enableOneOffPayment($payload, $customerIdentifier, true);
 
         return (array) $this->getCheckout()->payments($payload);
     }
