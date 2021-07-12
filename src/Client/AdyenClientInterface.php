@@ -34,4 +34,6 @@ interface AdyenClientInterface
     ): array;
 
     public function paymentDetails(array $receivedPayload): array;
+
+    public function removeStoredToken(string $paymentReference, string $shopperReference): array;
 }

@@ -51,5 +51,16 @@
 
             <tag name="controller.service_arguments"/>
         </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Controller\Shop\RemoveStoredTokenAction"
+            id="bit_bag.sylius_adyen_plugin.controller.shop.remove_stored_token_action"
+        >
+
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="sylius.repository.adyen_token"/>
+            <argument type="service" id="sylius.repository.payment_method"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
+        </service>
     </services>
 </container>

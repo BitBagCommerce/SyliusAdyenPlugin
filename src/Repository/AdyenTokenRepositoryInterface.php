@@ -6,6 +6,7 @@ namespace BitBag\SyliusAdyenPlugin\Repository;
 
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
+use Sylius\Component\Core\Model\PaymentMethodInterface;
 
 interface AdyenTokenRepositoryInterface
 {
@@ -13,5 +14,8 @@ interface AdyenTokenRepositoryInterface
      * @psalm-suppress MixedReturnStatement
      * @psalm-suppress MixedInferredReturnType
      */
-    public function findOneByCustomer(CustomerInterface $customer): ?AdyenTokenInterface;
+    public function findOneByPaymentMethodAndCustomer(
+        PaymentMethodInterface $paymentMethod,
+        CustomerInterface $customer
+    ): ?AdyenTokenInterface;
 }

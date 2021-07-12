@@ -6,6 +6,7 @@ namespace BitBag\SyliusAdyenPlugin\Factory;
 
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
+use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 
 class AdyenTokenFactory implements AdyenTokenFactoryInterface
@@ -18,7 +19,7 @@ class AdyenTokenFactory implements AdyenTokenFactoryInterface
         $this->baseFactory = $baseFactory;
     }
 
-    public function create(CustomerInterface $customer): AdyenTokenInterface
+    public function create(PaymentMethodInterface $paymentMethod, CustomerInterface $customer): AdyenTokenInterface
     {
         /**
          * @var AdyenTokenInterface $result
@@ -28,6 +29,7 @@ class AdyenTokenFactory implements AdyenTokenFactoryInterface
             bin2hex(random_bytes(32))
         );
         $result->setCustomer($customer);
+        $result->setPaymentMethod($paymentMethod);
 
         return $result;
     }

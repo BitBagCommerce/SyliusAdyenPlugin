@@ -23,6 +23,7 @@
         <service
                 class="BitBag\SyliusAdyenPlugin\Client\AdyenClient"
                 id="bit_bag.sylius_adyen_plugin.client.adyen_client"
+                lazy="true"
         >
             <factory service="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider" method="getDefaultClient"/>
         </service>

@@ -29,24 +29,32 @@ class GetTokenHandler implements MessageHandlerInterface
         $this->dispatcher = $dispatcher;
     }
 
+    /**
+     * @psalm-suppress MixedReturnStatement
+     * @psalm-suppress MixedInferredReturnType
+     */
     public function __invoke(GetToken $getTokenQuery): AdyenTokenInterface
     {
         $customer = $getTokenQuery->getOrder()->getCustomer();
         if ($customer === null) {
             throw new \InvalidArgumentException(
-                sprintf('An order %d has no customer associated', $getTokenQuery->getOrder()->getId())
+                sprintf('An order %d has no customer associated', (int) $getTokenQuery->getOrder()->getId())
             );
         }
 
         Assert::isInstanceOf($customer, CustomerInterface::class);
 
-        $token = $this->adyenTokenRepository->findOneByCustomer($customer);
+        $token = $this->adyenTokenRepository->findOneByPaymentMethodAndCustomer(
+            $getTokenQuery->getPaymentMethod(),
+            $customer
+        );
+
         if ($token !== null) {
             return $token;
         }
 
         return $this->dispatcher->dispatch(
-            new CreateToken($customer)
+            new CreateToken($getTokenQuery->getPaymentMethod(), $customer)
         );
     }
 }

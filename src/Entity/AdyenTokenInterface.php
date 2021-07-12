@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Entity;
 
 use Sylius\Component\Core\Model\CustomerInterface;
+use Sylius\Component\Core\Model\PaymentMethodInterface;
 
 interface AdyenTokenInterface
 {
@@ -15,4 +16,8 @@ interface AdyenTokenInterface
     public function setIdentifier(?string $identifier): void;
 
     public function getIdentifier(): ?string;
+
+    public function setPaymentMethod(?PaymentMethodInterface $paymentMethod): void;
+
+    public function getPaymentMethod(): ?PaymentMethodInterface;
 }

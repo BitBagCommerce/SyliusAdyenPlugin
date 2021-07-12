@@ -11,6 +11,7 @@ use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
+use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Twig\Extension\AbstractExtension;
@@ -67,9 +68,8 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
 
     public function adyenPaymentConfiguration(OrderInterface $order, ?string $code = null): array
     {
-        $token = $this->getToken($order);
-
         $paymentMethod = $this->getPaymentMethod($order, $code);
+        $token = $this->getToken($paymentMethod, $order);
 
         $result = $this->filterKeys(
             $this->getGatewayConfig($paymentMethod)->getConfig()
@@ -79,8 +79,11 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         return $result;
     }
 
-    private function getToken(OrderInterface $order): ?AdyenTokenInterface
+    private function getToken(PaymentMethodInterface $paymentMethod, OrderInterface $order): ?AdyenTokenInterface
     {
+        /**
+         * @var ?CustomerInterface $customer
+         */
         $customer = $order->getCustomer();
         if ($customer === null || !$customer->hasUser()) {
             return null;
@@ -89,7 +92,7 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         /**
          * @var AdyenTokenInterface $token
          */
-        $token = $this->dispatcher->dispatch(new GetToken($order));
+        $token = $this->dispatcher->dispatch(new GetToken($paymentMethod, $order));
 
         return $token;
     }

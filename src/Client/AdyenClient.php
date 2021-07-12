@@ -7,6 +7,7 @@ namespace BitBag\SyliusAdyenPlugin\Client;
 use Adyen\Client;
 use Adyen\Service\Checkout;
 use Adyen\Service\Modification;
+use Adyen\Service\Recurring;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 
@@ -57,6 +58,13 @@ class AdyenClient implements AdyenClientInterface
     private function getModification(): Modification
     {
         return new Modification(
+            $this->transport
+        );
+    }
+
+    private function getRecurring(): Recurring
+    {
+        return new Recurring(
             $this->transport
         );
     }
@@ -191,6 +199,19 @@ class AdyenClient implements AdyenClientInterface
         ];
 
         return (array) $this->getModification()->capture($params);
+    }
+
+    public function removeStoredToken(
+        string $paymentReference,
+        string $shopperReference
+    ): array {
+        $params = [
+            'merchantAccount' => $this->options['merchantAccount'],
+            'recurringDetailReference' => $paymentReference,
+            'shopperReference' => $shopperReference
+        ];
+
+        return (array) $this->getRecurring()->disable($params);
     }
 
     public function getEnvironment(): string

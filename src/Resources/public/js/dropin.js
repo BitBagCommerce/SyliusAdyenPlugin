@@ -54,13 +54,17 @@
                 clientKey: configuration.clientKey,
                 locale: configuration.locale,
                 environment: configuration.environment,
+                showRemovePaymentMethodButton: true,
 
                 onSubmit: (state, dropin) => { submitHandler(state, dropin, configuration.path.payments) },
-                onAdditionalDetails: (state, dropin) => { submitHandler(state, dropin, configuration.path.paymentDetails) }
+                onAdditionalDetails: (state, dropin) => { submitHandler(state, dropin, configuration.path.paymentDetails) },
+                onDisableStoredPaymentMethod: (storedPaymentMethod, resolve, reject) => { resolve(); }
             });
         };
 
         configuration = JSON.parse(container.attributes['data-dropin'].value);
+        console.log(configuration);
+
         checkout = init();
 
         checkout

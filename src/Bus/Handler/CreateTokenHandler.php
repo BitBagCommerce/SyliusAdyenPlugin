@@ -28,7 +28,10 @@ class CreateTokenHandler implements MessageHandlerInterface
 
     public function __invoke(CreateToken $createToken): AdyenTokenInterface
     {
-        $token = $this->tokenFactory->create($createToken->getCustomer());
+        $token = $this->tokenFactory->create(
+            $createToken->getPaymentMethod(),
+            $createToken->getCustomer()
+        );
         $this->tokenManager->persist($token);
         $this->tokenManager->flush();
 
