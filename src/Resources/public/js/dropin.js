@@ -38,6 +38,19 @@
             ;
         };
 
+        let disableStoredPaymentMethodHandler = (storedPaymentMethod, resolve, reject) => {
+            let options = {
+                method: 'DELETE'
+            };
+
+            let url = configuration.path.deleteToken.replace('_REFERENCE_', storedPaymentMethod);
+
+            fetch(url, options)
+                .then(resolve)
+                .catch(reject)
+            ;
+        };
+
         let init = () => {
             return new AdyenCheckout({
                 paymentMethodsResponse: configuration.paymentMethods,
@@ -56,9 +69,12 @@
                 environment: configuration.environment,
                 showRemovePaymentMethodButton: true,
 
-                onSubmit: (state, dropin) => { submitHandler(state, dropin, configuration.path.payments) },
-                onAdditionalDetails: (state, dropin) => { submitHandler(state, dropin, configuration.path.paymentDetails) },
-                onDisableStoredPaymentMethod: (storedPaymentMethod, resolve, reject) => { resolve(); }
+                onSubmit: (state, dropin) => {
+                    submitHandler(state, dropin, configuration.path.payments)
+                },
+                onAdditionalDetails: (state, dropin) => {
+                    submitHandler(state, dropin, configuration.path.paymentDetails)
+                }
             });
         };
 
@@ -68,7 +84,10 @@
         checkout = init();
 
         checkout
-            .create('dropin')
+            .create('dropin', {
+                showRemovePaymentMethodButton: true,
+                onDisableStoredPaymentMethod: disableStoredPaymentMethodHandler
+            })
             .mount(container);
     };
 

@@ -75,6 +75,7 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
             $this->getGatewayConfig($paymentMethod)->getConfig()
         );
         $result['paymentMethods'] = $this->adyenPaymentMethods($order, $code, $token);
+        $result['code'] = $paymentMethod->getCode();
 
         return $result;
     }

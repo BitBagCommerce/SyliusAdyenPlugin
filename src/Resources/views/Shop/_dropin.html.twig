@@ -1,8 +1,6 @@
 {% set path_params = order.tokenValue ? {tokenValue: order.tokenValue} : {} %}
 
-{% if method.code is defined %}
-    {% set path_params = path_params|merge({code: method.code}) %}
-{% endif %}
+{% set path_params = path_params|merge({code: method.code is defined ? method.code : payment_configuration['code']}) %}
 
 {% set dropin_configuration = {
     billingAddress: {
@@ -19,7 +17,8 @@
     environment: payment_configuration['environment'],
     path: {
         payments: path('bitbag_adyen_payments', path_params),
-        paymentDetails: path('bitbag_adyen_payment_details', path_params)
+        paymentDetails: path('bitbag_adyen_payment_details', path_params),
+        deleteToken: path('bitbag_adyen_remove_token', path_params|merge({paymentReference: '_REFERENCE_'}))
     }
 } %}
 
