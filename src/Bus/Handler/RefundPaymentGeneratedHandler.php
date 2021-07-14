@@ -5,13 +5,19 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 
 use Sylius\RefundPlugin\Event\RefundPaymentGenerated;
+
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class RefundPaymentGeneratedHandler implements MessageHandlerInterface
 {
-    public function __invoke(RefundPaymentGenerated $event)
+    public function __construct()
     {
-        return;
+    }
+
+
+    public function __invoke(RefundPaymentGenerated $paymentGenerated): void
+    {
+        // TODO: Implement __invoke() method.
     }
 
 }

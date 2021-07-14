@@ -33,4 +33,6 @@ interface AdyenClientInterface
     ): array;
 
     public function paymentDetails(array $receivedPayload): array;
+
+    public function requestRefund(string $pspReference, int $amount, string $currencyCode, string $reference): array;
 }

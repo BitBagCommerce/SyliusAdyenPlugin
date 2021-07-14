@@ -65,5 +65,30 @@
             <tag name="messenger.message_handler" bus="sylius.command_bus"/>
         </service>
 
+        <service
+            class="BitBag\SyliusAdyenPlugin\Bus\Handler\RefundPaymentGeneratedHandler"
+            id="bit_bag.sylius_adyen_plugin.bus.handler.refund_payment_generated_handler"
+        >
+
+            <tag name="messenger.message_handler" bus="sylius.event_bus"/>
+        </service>
+
+        <service
+                class="BitBag\SyliusAdyenPlugin\Bus\Handler\RefundPaymentHandler"
+                id="bit_bag.sylius_adyen_plugin.bus.handler.refund_payment_handler"
+        >
+
+            <tag name="messenger.message_handler" bus="sylius.command_bus"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Command\AdyenTestCommand"
+            id="bit_bag.sylius_adyen_plugin.command.adyen_test_command"
+        >
+
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
+            <tag name="console.command"/>
+        </service>
+
     </services>
 </container>

@@ -176,6 +176,21 @@ class AdyenClient implements AdyenClientInterface
         return (array) $this->getModification()->capture($params);
     }
 
+    public function requestRefund(string $pspReference, int $amount, string $currencyCode, string $reference): array
+    {
+        $params = [
+            'merchantAccount' => $this->options['merchantAccount'],
+            'modificationAmount' => [
+                'value' => $amount,
+                'currency' => $currencyCode
+            ],
+            'reference' => $reference,
+            'originalReference' => $pspReference
+        ];
+
+        return (array)$this->getModification()->refund($params);
+    }
+    
     public function getEnvironment(): string
     {
         return (string) $this->options['environment'];
