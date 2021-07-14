@@ -9,9 +9,13 @@ body .dropin-container .adyen-checkout__threeds2__challenge iframe
     flex-wrap: wrap;
 }
 
+.adyen-method-grid:hover button[type=submit]{
+    border: 2px solid rgba(34, 36, 38, 0.15);
+}
+
 .adyen-method-grid button[type=submit]
 {
-    border: 2px solid rgba(34, 36, 38, 0.15);
+    border: 2px solid rgba(34, 36, 38, 0.05);
     background: transparent;
     padding: 0.2em;
     margin: 0.5em;
