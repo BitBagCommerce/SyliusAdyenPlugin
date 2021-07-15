@@ -188,9 +188,9 @@ class AdyenClient implements AdyenClientInterface
             'originalReference' => $pspReference
         ];
 
-        return (array)$this->getModification()->refund($params);
+        return (array) $this->getModification()->refund($params);
     }
-    
+
     public function getEnvironment(): string
     {
         return (string) $this->options['environment'];

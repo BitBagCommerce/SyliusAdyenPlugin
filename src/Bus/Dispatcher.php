@@ -14,18 +14,18 @@ class Dispatcher
     /** @var MessageBusInterface */
     private $messageBus;
 
-    /** @var CommandFactory */
+    /** @var PaymentCommandFactory */
     private $commandFactory;
 
     public function __construct(
         MessageBusInterface $messageBus,
-        CommandFactory $commandFactory
+        PaymentCommandFactory $commandFactory
     ) {
         $this->messageBus = $messageBus;
         $this->commandFactory = $commandFactory;
     }
 
-    public function getCommandFactory(): CommandFactory
+    public function getCommandFactory(): PaymentCommandFactory
     {
         return $this->commandFactory;
     }

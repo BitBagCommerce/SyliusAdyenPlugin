@@ -13,7 +13,7 @@ use BitBag\SyliusAdyenPlugin\Resolver\Payment\EventCodeResolver;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Webmozart\Assert\Assert;
 
-class CommandFactory
+class PaymentCommandFactory
 {
     public const MAPPING = [
         'authorisation' => AuthorizePayment::class,

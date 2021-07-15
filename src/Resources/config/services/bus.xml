@@ -30,8 +30,8 @@
         />
 
         <service
-            class="BitBag\SyliusAdyenPlugin\Bus\CommandFactory"
-            id="bit_bag.sylius_adyen_plugin.bus.command_factory"
+            class="BitBag\SyliusAdyenPlugin\Bus\PaymentCommandFactory"
+            id="bit_bag.sylius_adyen_plugin.bus.payment_command_factory"
         >
             <argument type="service" id="bit_bag.sylius_adyen_plugin.resolver.payment.event_code_resolver"/>
         </service>
@@ -41,7 +41,7 @@
             id="bit_bag.sylius_adyen_plugin.bus.dispatcher"
         >
             <argument type="service" id="sylius.command_bus"/>
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.bus.command_factory"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.bus.payment_command_factory"/>
         </service>
 
         <service
@@ -70,6 +70,9 @@
             id="bit_bag.sylius_adyen_plugin.bus.handler.refund_payment_generated_handler"
         >
 
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.resolver.payment.refund_reference_resolver"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
+            <argument type="service" id="sylius.repository.order"/>
             <tag name="messenger.message_handler" bus="sylius.event_bus"/>
         </service>
 
@@ -77,6 +80,8 @@
                 class="BitBag\SyliusAdyenPlugin\Bus\Handler\RefundPaymentHandler"
                 id="bit_bag.sylius_adyen_plugin.bus.handler.refund_payment_handler"
         >
+            <argument type="service" id="SM\Factory\Factory"/>
+            <argument type="service" id="sylius_refund.manager.refund_payment"/>
 
             <tag name="messenger.message_handler" bus="sylius.command_bus"/>
         </service>

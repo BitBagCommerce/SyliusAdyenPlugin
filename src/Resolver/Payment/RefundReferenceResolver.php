@@ -1,21 +1,18 @@
 <?php
 
+declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Resolver\Payment;
 
-
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
-use Sylius\RefundPlugin\Event\RefundPaymentGenerated;
 use Webmozart\Assert\Assert;
 
 class RefundReferenceResolver
 {
-    const REFERENCE_PATTERN = '##%s-%d##';
+    public const REFERENCE_PATTERN = '##%s-%d##';
 
-    /**
-     * @var RepositoryInterface
-     */
+    /** @var RepositoryInterface */
     private $refundPaymentRepository;
 
     public function __construct(RepositoryInterface $refundPaymentRepository)
@@ -30,17 +27,18 @@ class RefundReferenceResolver
 
     public function resolve(string $reference): RefundPaymentInterface
     {
-        [$orderNumber, $refundPaymentId] = (array)sscanf(self::REFERENCE_PATTERN, $reference);
+        [$orderNumber, $refundPaymentId] = (array) sscanf(self::REFERENCE_PATTERN, $reference);
 
         Assert::notEmpty($orderNumber);
         Assert::notEmpty($refundPaymentId);
 
         $result = $this->refundPaymentRepository->findOneBy([
-            'orderNumber'=>$orderNumber,
-            'id'=>$refundPaymentId
+            'orderNumber' => $orderNumber,
+            'id' => $refundPaymentId
         ]);
 
         Assert::notNull($result);
+
         return $result;
     }
 }

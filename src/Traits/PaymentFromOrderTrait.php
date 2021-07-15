@@ -19,9 +19,9 @@ trait PaymentFromOrderTrait
         return $method;
     }
 
-    private function getPayment(OrderInterface $order): PaymentInterface
+    private function getPayment(OrderInterface $order, ?string $state = null): PaymentInterface
     {
-        $payment = $order->getLastPayment();
+        $payment = $order->getLastPayment($state);
 
         if ($payment === null) {
             throw new \InvalidArgumentException(

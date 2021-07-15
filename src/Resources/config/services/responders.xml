@@ -33,9 +33,8 @@
                 id="bit_bag.sylius_adyen_plugin.controller.shop.process_notifications_action"
         >
             <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
-            <argument type="service" id="sylius.repository.payment"/>
             <argument type="service" id="bit_bag.sylius_adyen_plugin.bus.dispatcher"/>
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.resolver.payment.payment_notification_resolver"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.resolver.notification.notification_command_resolver"/>
 
             <tag name="controller.service_arguments"/>
         </service>
