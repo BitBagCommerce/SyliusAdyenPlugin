@@ -7,6 +7,7 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Exception\UnmappedAdyenActionException;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentRepositoryInterface;
+use Doctrine\ORM\NoResultException;
 use Sylius\Component\Core\Model\PaymentInterface;
 
 class PaymentNotificationResolver implements CommandResolver
@@ -27,13 +28,11 @@ class PaymentNotificationResolver implements CommandResolver
 
     private function fetchPayment(string $paymentCode, string $id): PaymentInterface
     {
-        $payment = $this->paymentRepository->findOneByCodeAndId($paymentCode, (int) $id);
-
-        if ($payment === null) {
+        try {
+            return $this->paymentRepository->getOneByCodeAndId($paymentCode, (int) $id);
+        } catch (NoResultException $ex) {
             throw new NoCommandResolved();
         }
-
-        return $payment;
     }
 
     public function resolve(string $paymentCode, array $notificationData): object

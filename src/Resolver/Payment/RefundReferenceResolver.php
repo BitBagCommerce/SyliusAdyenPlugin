@@ -10,7 +10,7 @@ use Webmozart\Assert\Assert;
 
 class RefundReferenceResolver
 {
-    public const REFERENCE_PATTERN = '##%s-%d##';
+    public const REFERENCE_PATTERN = '##%d-%s';
 
     /** @var RepositoryInterface */
     private $refundPaymentRepository;
@@ -22,12 +22,12 @@ class RefundReferenceResolver
 
     public function createReference(string $orderNumber, int $refundPaymentId): string
     {
-        return sprintf(self::REFERENCE_PATTERN, $orderNumber, $refundPaymentId);
+        return sprintf(self::REFERENCE_PATTERN, $refundPaymentId, $orderNumber);
     }
 
     public function resolve(string $reference): RefundPaymentInterface
     {
-        [$orderNumber, $refundPaymentId] = (array) sscanf(self::REFERENCE_PATTERN, $reference);
+        sscanf($reference, self::REFERENCE_PATTERN, $refundPaymentId, $orderNumber);
 
         Assert::notEmpty($orderNumber);
         Assert::notEmpty($refundPaymentId);

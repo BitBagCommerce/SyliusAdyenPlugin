@@ -9,11 +9,20 @@ use Sylius\Component\Core\Model\PaymentInterface;
 
 class PaymentRepository extends BasePaymentRepositoryAlias implements PaymentRepositoryInterface
 {
-    public function findOneByCodeAndId(string $code, int $id): ?PaymentInterface
+    public function getOneByCodeAndId(string $code, int $id): ?PaymentInterface
     {
-        return $this->findOneBy([
-            'code' => $code,
-            'id' => $id
-        ]);
+        $qb = $this->createQueryBuilder('p');
+        $qb
+            ->select('p')
+            ->innerJoin('p.method', 'pm')
+            ->where('pm.code=:code')
+            ->andWhere('p.id=:id')
+            ->setParameters([
+                'code' => $code,
+                'id' => $id
+            ])
+        ;
+
+        return $qb->getQuery()->getSingleResult();
     }
 }
