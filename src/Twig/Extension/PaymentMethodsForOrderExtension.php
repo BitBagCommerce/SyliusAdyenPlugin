@@ -61,7 +61,7 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
     {
         $paymentMethod = $this->getPaymentMethod($order, $code);
 
-        if (!isset($this->getGatewayConfig($paymentMethod)->getConfig()['adyen'])) {
+        if (!isset($this->getGatewayConfig($paymentMethod)->getConfig()[AdyenClientProvider::FACTORY_NAME])) {
             return null;
         }
 

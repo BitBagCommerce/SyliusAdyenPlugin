@@ -55,7 +55,7 @@ class AdyenClientProvider
     public function getForPaymentMethod(PaymentMethodInterface $paymentMethod): AdyenClient
     {
         $gatewayConfig = $this->getGatewayConfig($paymentMethod);
-        $isAdyen = isset($gatewayConfig->getConfig()['adyen']);
+        $isAdyen = isset($gatewayConfig->getConfig()[self::FACTORY_NAME]);
         if (!$isAdyen) {
             throw new \InvalidArgumentException(sprintf(
                 'Provided PaymentMethod #%d is not an Adyen instance',
