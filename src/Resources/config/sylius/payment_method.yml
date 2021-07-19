@@ -3,3 +3,6 @@ sylius_payment:
     payment_method:
       classes:
         repository: BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepository
+    payment:
+      classes:
+        repository: BitBag\SyliusAdyenPlugin\Repository\PaymentRepository

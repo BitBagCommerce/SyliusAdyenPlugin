@@ -8,6 +8,9 @@ use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Core\Repository\PaymentMethodRepositoryInterface as BasePaymentMethodRepositoryInterface;
 
+/**
+ * @method PaymentMethodInterface find($id)
+ */
 interface PaymentMethodRepositoryInterface extends BasePaymentMethodRepositoryInterface
 {
     public function findOneByChannel(ChannelInterface $channel): ?PaymentMethodInterface;

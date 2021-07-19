@@ -48,6 +48,9 @@
         "vimeo/psalm": "^4.4.1",
         "symplify/easy-coding-standard": "^9.3, !=9.3.27"
     },
+    "suggest": {
+        "sylius/refund-plugin": "A plugin for more granular refunds"
+    },
     "config": {
         "sort-packages": true
     },

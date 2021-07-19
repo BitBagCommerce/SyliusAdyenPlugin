@@ -9,6 +9,7 @@ use Adyen\Service\Checkout;
 use Adyen\Service\Modification;
 use Adyen\Service\Recurring;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
+use BitBag\SyliusAdyenPlugin\Adapter\PaymentMethodsToChoiceAdapter;
 use Payum\Core\Bridge\Spl\ArrayObject;
 
 class AdyenClient implements AdyenClientInterface
@@ -212,6 +213,21 @@ class AdyenClient implements AdyenClientInterface
         ];
 
         return (array) $this->getRecurring()->disable($params);
+    }
+
+    public function requestRefund(string $pspReference, int $amount, string $currencyCode, string $reference): array
+    {
+        $params = [
+            'merchantAccount' => $this->options['merchantAccount'],
+            'modificationAmount' => [
+                'value' => $amount,
+                'currency' => $currencyCode
+            ],
+            'reference' => $reference,
+            'originalReference' => $pspReference
+        ];
+
+        return (array) $this->getModification()->refund($params);
     }
 
     public function getEnvironment(): string

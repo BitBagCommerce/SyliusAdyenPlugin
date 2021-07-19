@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Form\Type;
 
 use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
+use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Validator\Constraint\AdyenCredentials;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -87,7 +88,7 @@ class ConfigurationType extends AbstractType
                 ],
             ])
 
-            ->add('adyen', HiddenType::class, [
+            ->add(AdyenClientProvider::FACTORY_NAME, HiddenType::class, [
                 'data' => true
             ]);
     }

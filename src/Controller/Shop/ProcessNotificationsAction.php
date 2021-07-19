@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
-use BitBag\SyliusAdyenPlugin\Exception\UnmappedAdyenActionException;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
-use BitBag\SyliusAdyenPlugin\Resolver\Payment\PaymentNotificationResolver;
-use Sylius\Component\Core\Model\PaymentInterface;
-use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
+use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationCommandResolver;
+use BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\NoCommandResolved;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -21,26 +19,21 @@ class ProcessNotificationsAction
     /** @var AdyenClientProvider */
     private $adyenClientProvider;
 
-    /** @var PaymentRepositoryInterface */
-    private $paymentRepository;
-
     /** @var Dispatcher */
     private $dispatcher;
 
-    /** @var PaymentNotificationResolver */
-    private $paymentNotificationResolver;
+    /** @var NotificationCommandResolver */
+    private $notificationCommandResolver;
 
     public function __construct(
         AdyenClientProvider $adyenClientProvider,
-        PaymentRepositoryInterface $paymentRepository,
         Dispatcher $dispatcher,
-        PaymentNotificationResolver $paymentNotificationResolver
+        NotificationCommandResolver $notificationCommandResolver
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
-        $this->paymentRepository = $paymentRepository;
 
         $this->dispatcher = $dispatcher;
-        $this->paymentNotificationResolver = $paymentNotificationResolver;
+        $this->notificationCommandResolver = $notificationCommandResolver;
     }
 
     private function validateRequest(array $arguments): void
@@ -54,37 +47,26 @@ class ProcessNotificationsAction
         }
     }
 
-    private function handleAction(PaymentInterface $payment, array $notificationItem): void
-    {
-        try {
-            $command = $this->dispatcher->getCommandFactory()->createForEvent(
-                (string) $notificationItem['eventCode'],
-                $payment,
-                $notificationItem
-            );
-            $this->dispatcher->dispatch($command);
-        } catch (UnmappedAdyenActionException $ex) {
-        }
-    }
-
     public function __invoke(string $code, Request $request): Response
     {
         $arguments = $request->request->all();
         $this->validateRequest($arguments);
 
         /**
-         * @var array<string, array> $notificationItem
+         * @var array<string, array<string, mixed>> $notificationItem
          */
         foreach ($arguments['notificationItems'] as $notificationItem) {
             $notificationItem = $notificationItem['NotificationRequestItem'];
 
-            $payment = $this->paymentNotificationResolver->resolve($code, $notificationItem);
-
-            if ($payment === null) {
+            if (isset($notificationItem['success']) && !$notificationItem['success']) {
                 continue;
             }
 
-            $this->handleAction($payment, $notificationItem);
+            try {
+                $command = $this->notificationCommandResolver->resolve($code, $notificationItem);
+                $this->dispatcher->dispatch($command);
+            } catch (NoCommandResolved $ex) {
+            }
         }
 
         return new Response(self::EXPECTED_ADYEN_RESPONSE);

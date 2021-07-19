@@ -35,5 +35,7 @@ interface AdyenClientInterface
 
     public function paymentDetails(array $receivedPayload): array;
 
+    public function requestRefund(string $pspReference, int $amount, string $currencyCode, string $reference): array;
+
     public function removeStoredToken(string $paymentReference, string $shopperReference): array;
 }

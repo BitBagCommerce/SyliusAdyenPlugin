@@ -1,0 +1,6 @@
+knp_snappy:
+  pdf:
+    enabled: true
+    binary: /home/sysop/bin/wkhtmltopdf
+    options:
+      enable-local-file-access: true

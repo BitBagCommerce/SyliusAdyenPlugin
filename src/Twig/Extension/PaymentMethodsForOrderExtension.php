@@ -66,10 +66,14 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         return $this->getMethod($this->getPayment($order));
     }
 
-    public function adyenPaymentConfiguration(OrderInterface $order, ?string $code = null): array
+    public function adyenPaymentConfiguration(OrderInterface $order, ?string $code = null): ?array
     {
         $paymentMethod = $this->getPaymentMethod($order, $code);
         $token = $this->getToken($paymentMethod, $order);
+
+        if (!isset($this->getGatewayConfig($paymentMethod)->getConfig()[AdyenClientProvider::FACTORY_NAME])) {
+            return null;
+        }
 
         $result = $this->filterKeys(
             $this->getGatewayConfig($paymentMethod)->getConfig()
