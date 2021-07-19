@@ -37,7 +37,6 @@
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-symfony": "^2.3",
         "sensiolabs/security-checker": "^6.0",
-        "stripe/stripe-php": "^7.79",
         "sylius-labs/coding-standard": "^4.0",
         "symfony/browser-kit": "^4.4",
         "symfony/debug-bundle": "^4.4 || ^5.0",
@@ -46,10 +45,8 @@
         "symfony/web-profiler-bundle": "^4.4 || ^5.0",
         "symfony/web-server-bundle": "^4.4 || ^5.0",
         "vimeo/psalm": "^4.4.1",
-        "symplify/easy-coding-standard": "^9.3, !=9.3.27"
-    },
-    "suggest": {
-        "sylius/refund-plugin": "A plugin for more granular refunds"
+        "symplify/easy-coding-standard": "^9.3, !=9.3.27",
+        "sylius/refund-plugin": ">=v1.0.0-RC.11"
     },
     "config": {
         "sort-packages": true

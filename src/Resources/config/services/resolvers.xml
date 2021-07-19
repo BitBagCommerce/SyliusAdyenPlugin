@@ -24,7 +24,6 @@
             class="BitBag\SyliusAdyenPlugin\Resolver\Payment\RefundReferenceResolver"
             id="bit_bag.sylius_adyen_plugin.resolver.payment.refund_reference_resolver"
         >
-            <!-- todo: optional marking? -->
             <argument type="service" id="sylius_refund.repository.refund_payment"/>
         </service>
 

@@ -10,7 +10,7 @@ use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationCommandResolver;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\NoCommandResolved;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Webmozart\Assert\Assert;
 
 class ProcessNotificationsAction
 {
@@ -38,13 +38,8 @@ class ProcessNotificationsAction
 
     private function validateRequest(array $arguments): void
     {
-        // todo: prettify
-        if (
-            !isset($arguments['notificationItems'])
-            || !is_array($arguments['notificationItems'])
-        ) {
-            throw new HttpException(Response::HTTP_BAD_REQUEST);
-        }
+        Assert::keyExists($arguments, 'notificationItems');
+        Assert::isArray($arguments['notificationItems']);
     }
 
     public function __invoke(string $code, Request $request): Response
