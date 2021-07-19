@@ -37,6 +37,12 @@ class PaymentCommandFactory
 
     private function createObject(string $eventName, PaymentInterface $payment): PaymentLifecycleCommand
     {
+        $eventName = strtolower($eventName);
+
+        if (!isset($this->mapping[$eventName])) {
+            throw new UnmappedAdyenActionException(sprintf('Event "%s" has no handler registered', $eventName));
+        }
+
         $class = (string) $this->mapping[$eventName];
 
         $result = new $class($payment);
@@ -54,12 +60,6 @@ class PaymentCommandFactory
             $event = $this->eventCodeResolver->resolve($notificationData);
         }
 
-        $eventName = strtolower($event);
-
-        if (!isset($this->mapping[$eventName])) {
-            throw new UnmappedAdyenActionException(sprintf('Event "%s" has no handler registered', $eventName));
-        }
-
-        return $this->createObject($eventName, $payment);
+        return $this->createObject($event, $payment);
     }
 }
