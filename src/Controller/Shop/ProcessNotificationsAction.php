@@ -8,7 +8,6 @@ use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationCommandResolver;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\NoCommandResolved;
-use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -19,9 +18,6 @@ class ProcessNotificationsAction
 
     /** @var AdyenClientProvider */
     private $adyenClientProvider;
-
-    /** @var PaymentRepositoryInterface */
-    private $paymentRepository;
 
     /** @var Dispatcher */
     private $dispatcher;
@@ -57,7 +53,7 @@ class ProcessNotificationsAction
         $this->validateRequest($arguments);
 
         /**
-         * @var array<string, array> $notificationItem
+         * @var array<string, array<string, mixed>> $notificationItem
          */
         foreach ($arguments['notificationItems'] as $notificationItem) {
             $notificationItem = $notificationItem['NotificationRequestItem'];

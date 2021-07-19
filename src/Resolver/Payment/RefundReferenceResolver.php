@@ -38,6 +38,7 @@ class RefundReferenceResolver
         ]);
 
         Assert::notNull($result);
+        Assert::isInstanceOf($result, RefundPaymentInterface::class);
 
         return $result;
     }

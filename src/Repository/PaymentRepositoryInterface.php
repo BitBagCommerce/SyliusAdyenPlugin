@@ -12,5 +12,5 @@ use Sylius\Component\Core\Repository\PaymentRepositoryInterface as BasePaymentRe
  */
 interface PaymentRepositoryInterface extends BasePaymentRepositoryInterface
 {
-    public function getOneByCodeAndId(string $code, int $id): ?PaymentInterface;
+    public function getOneByCodeAndId(string $code, int $id): PaymentInterface;
 }

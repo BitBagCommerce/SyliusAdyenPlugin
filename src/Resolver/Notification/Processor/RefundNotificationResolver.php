@@ -6,6 +6,7 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\RefundPayment;
 use BitBag\SyliusAdyenPlugin\Resolver\Payment\RefundReferenceResolver;
+use Webmozart\Assert\Assert;
 
 class RefundNotificationResolver implements CommandResolver
 {
@@ -21,7 +22,9 @@ class RefundNotificationResolver implements CommandResolver
     public function resolve(string $paymentCode, array $notificationData): object
     {
         try {
-            $refundPayment = $this->referenceResolver->resolve($notificationData['merchantReference']);
+            Assert::keyExists($notificationData, 'merchantReference');
+
+            $refundPayment = $this->referenceResolver->resolve((string) $notificationData['merchantReference']);
 
             return new RefundPayment($refundPayment);
         } catch (\InvalidArgumentException $ex) {

@@ -9,15 +9,21 @@ use BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\NoCommandResolved;
 
 class NotificationCommandResolver
 {
-    /** @var iterable|CommandResolver[] */
+    /** @var iterable<int, CommandResolver> */
     private $notificationResolvers;
 
+    /**
+     * @param iterable<int, CommandResolver> $notificationResolvers
+     */
     public function __construct(
         iterable $notificationResolvers
     ) {
         $this->notificationResolvers = $notificationResolvers;
     }
 
+    /**
+     * @param array<string, mixed> $notificationData
+     */
     public function resolve(string $paymentCode, array $notificationData): object
     {
         foreach ($this->notificationResolvers as $resolver) {
