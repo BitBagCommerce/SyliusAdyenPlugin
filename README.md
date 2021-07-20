@@ -59,11 +59,11 @@ We work on stable, supported and up-to-date versions of packages. We recommend y
 | Package | Version |
 | --- | --- |
 | PHP |  ^7.3 |
-| ext-json: * |  |
+| ext-json:  | * |
 | sylius/refund-plugin |  ^1.0.0-RC.10 |
 | sylius/sylius |  ^1.9.0 |
 | symfony/messenger |   ^4.4 |
-| adyen/php-api-library | "^10.1" |
+| adyen/php-api-library | ^10.1 |
 
 ----
 
