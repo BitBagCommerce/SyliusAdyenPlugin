@@ -16,12 +16,14 @@ composer config minimum-stability rc
 composer config prefer-stable true
 ```
 
-1.Require with composer
+See: [refund plug-in README](https://github.com/Sylius/RefundPlugin)
+
+1. Require with composer
 
 ```bash
 composer require bitbag/adyen-plugin
 ```
-2.Add plugin dependencies to your `config/bundles.php` file:
+2. Add plugin dependencies to your `config/bundles.php` file:
 
 ```php
 return [
@@ -30,7 +32,7 @@ return [
 ];
 ```
 
-3.Import required config in your `config/packages/_sylius.yaml` file:
+3. Import required config in your `config/packages/_sylius.yaml` file:
 
 ```yaml
 # config/packages/_sylius.yaml
@@ -40,7 +42,7 @@ imports:
     - { resource: "@BitBagSyliusAdyenPlugin/Resources/config/config.yaml" }
 ```
 
-4.Import the routing in your `config/routes.yaml` file:
+4. Import the routing in your `config/routes.yaml` file:
 
 ```yaml
 # config/routes.yaml
@@ -49,7 +51,7 @@ bitbag_sylius_adyen_plugin:
     resource: "@BitBagSyliusAdyenPlugin/Resources/config/shop_routing.yaml"
 ```
 
-5.Add image dir parameter in `config/packages/_sylius.yaml`
+5. Add image dir parameter in `config/packages/_sylius.yaml`
 
 ```yaml
 # config/packages/_sylius.yaml
@@ -60,7 +62,7 @@ bitbag_sylius_adyen_plugin:
          - adyen
 ``` 
 
-6.Copy Sylius templates overridden by plug-in to your templates directory (`templates/bundles/`):
+6. Copy Sylius templates overridden by plug-in to your templates directory (`templates/bundles/`):
 
 ```
 mkdir -p templates/bundles/SyliusAdminBundle/
@@ -70,7 +72,7 @@ cp -R vendor/bitbag/adyen-plugin/tests/Application/templates/bundles/SyliusAdmin
 cp -R vendor/bitbag/adyen-plugin/tests/Application/templates/bundles/SyliusShopBundle/* templates/bundles/SyliusShopBundle/
 ```
 
-7.Install assets
+7. Install assets
 
 ```
 bin/console assets:install
@@ -78,10 +80,10 @@ bin/console assets:install
 
 **Note:** If you are running it on production, add the `-e prod` flag to this command.
 
-8.Synchronize the database
+8. Synchronize the database
 
 ```
 bin/console doctrine:schema:update
 ```
 
-9.[Obtain Adyen credentials and configure payment method](configuration.md)
+9. [Obtain Adyen credentials and configure payment method](configuration.md)
