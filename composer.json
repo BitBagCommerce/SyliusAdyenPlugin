@@ -1,10 +1,11 @@
 {
     "name": "bitbag/sylius-adyen-plugin",
     "type": "sylius-plugin",
-    "description": "BitBag example plugin for Sylius.",
+    "description": "BitBag Adyen plug-in for Sylius.",
     "keywords": [
         "sylius",
-        "sylius-plugin"
+        "sylius-plugin",
+        "adyen"
     ],
     "license": "MIT",
     "require": {
@@ -12,7 +13,8 @@
         "adyen/php-api-library": "^10.1",
         "nyholm/psr7": "^1.4",
         "sylius/sylius": "^1.9.0",
-        "symfony/messenger": "~4.4"
+        "symfony/messenger": "~4.4",
+        "sylius/refund-plugin": ">=v1.0.0-RC.11"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",
@@ -45,8 +47,7 @@
         "symfony/web-profiler-bundle": "^4.4 || ^5.0",
         "symfony/web-server-bundle": "^4.4 || ^5.0",
         "vimeo/psalm": "^4.4.1",
-        "symplify/easy-coding-standard": "^9.3, !=9.3.27",
-        "sylius/refund-plugin": ">=v1.0.0-RC.11"
+        "symplify/easy-coding-standard": "^9.3, !=9.3.27"
     },
     "config": {
         "sort-packages": true
