@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Resolver\Payment;
 
-use Sylius\Component\Resource\Repository\RepositoryInterface;
+use BitBag\SyliusAdyenPlugin\Repository\RefundPaymentRepositoryInterface;
 use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
 use Webmozart\Assert\Assert;
 
@@ -12,11 +12,12 @@ class RefundReferenceResolver
 {
     public const REFERENCE_PATTERN = '##%d-%s';
 
-    /** @var RepositoryInterface */
+    /** @var RefundPaymentRepositoryInterface */
     private $refundPaymentRepository;
 
-    public function __construct(RepositoryInterface $refundPaymentRepository)
-    {
+    public function __construct(
+        RefundPaymentRepositoryInterface $refundPaymentRepository
+    ) {
         $this->refundPaymentRepository = $refundPaymentRepository;
     }
 
@@ -32,14 +33,9 @@ class RefundReferenceResolver
         Assert::notEmpty($orderNumber);
         Assert::notEmpty($refundPaymentId);
 
-        $result = $this->refundPaymentRepository->findOneBy([
-            'orderNumber' => $orderNumber,
-            'id' => $refundPaymentId
-        ]);
-
-        Assert::notNull($result);
-        Assert::isInstanceOf($result, RefundPaymentInterface::class);
-
-        return $result;
+        return $this->refundPaymentRepository->getForOrderNumberAndRefundPaymentId(
+            (string) $orderNumber,
+            (int) $refundPaymentId
+        );
     }
 }
