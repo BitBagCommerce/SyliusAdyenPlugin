@@ -201,6 +201,17 @@ class AdyenClient implements AdyenClientInterface
         return (array) $this->getModification()->capture($params);
     }
 
+    public function requestCancellation(
+        string $pspReference
+    ): array {
+        $params = [
+            'merchantAccount' => $this->options['merchantAccount'],
+            'paymentReference' => $pspReference
+        ];
+
+        return (array) $this->getModification()->cancel($params);
+    }
+
     public function removeStoredToken(
         string $paymentReference,
         string $shopperReference

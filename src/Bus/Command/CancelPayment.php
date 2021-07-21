@@ -6,18 +6,18 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Command;
 
 use Sylius\Component\Core\Model\OrderInterface;
 
-class RequestCapture implements AlterPaymentCommand
+class CancelPayment implements AlterPaymentCommand
 {
     /** @var OrderInterface */
-    private $payment;
+    private $order;
 
-    public function __construct(OrderInterface $payment)
+    public function __construct(OrderInterface $order)
     {
-        $this->payment = $payment;
+        $this->order = $order;
     }
 
     public function getOrder(): OrderInterface
     {
-        return $this->payment;
+        return $this->order;
     }
 }

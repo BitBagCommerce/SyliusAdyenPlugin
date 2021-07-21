@@ -6,3 +6,11 @@ winzou_state_machine:
           on: ["ship"]
           do: ["@bit_bag.sylius_adyen_plugin.callback.request_capture_on_ship_callback", "__invoke"]
           args: ["object.getOrder()"]
+
+  sylius_order:
+    callbacks:
+      before:
+        bitbag_cancel_payment:
+          on: ["cancel"]
+          do: [ "@bit_bag.sylius_adyen_plugin.callback.request_cancel_callback", "__invoke" ]
+          args: [ "object.getOrder()" ]
