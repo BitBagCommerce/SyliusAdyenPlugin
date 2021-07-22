@@ -206,7 +206,7 @@ class AdyenClient implements AdyenClientInterface
     ): array {
         $params = [
             'merchantAccount' => $this->options['merchantAccount'],
-            'paymentReference' => $pspReference
+            'originalReference' => $pspReference
         ];
 
         return (array) $this->getModification()->cancel($params);

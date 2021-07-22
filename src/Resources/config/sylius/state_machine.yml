@@ -13,4 +13,4 @@ winzou_state_machine:
         bitbag_cancel_payment:
           on: ["cancel"]
           do: [ "@bit_bag.sylius_adyen_plugin.callback.request_cancel_callback", "__invoke" ]
-          args: [ "object.getOrder()" ]
+          args: [ "object" ]
