@@ -17,9 +17,10 @@ class CapturePayment implements PaymentFinalizationCommand
         $this->payment = $payment;
     }
 
-    public function getTargetPaymentState(): string
+    public function getPaymentTransition(): string
     {
-        return PaymentInterface::STATE_COMPLETED;
+        // todo: constants
+        return 'capture';
     }
 
     public function getOrderTransition(): string
