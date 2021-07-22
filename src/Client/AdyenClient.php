@@ -9,7 +9,6 @@ use Adyen\Service\Checkout;
 use Adyen\Service\Modification;
 use Adyen\Service\Recurring;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
-use BitBag\SyliusAdyenPlugin\Adapter\PaymentMethodsToChoiceAdapter;
 use Payum\Core\Bridge\Spl\ArrayObject;
 
 class AdyenClient implements AdyenClientInterface
@@ -200,6 +199,17 @@ class AdyenClient implements AdyenClientInterface
         ];
 
         return (array) $this->getModification()->capture($params);
+    }
+
+    public function requestCancellation(
+        string $pspReference
+    ): array {
+        $params = [
+            'merchantAccount' => $this->options['merchantAccount'],
+            'originalReference' => $pspReference
+        ];
+
+        return (array) $this->getModification()->cancel($params);
     }
 
     public function removeStoredToken(

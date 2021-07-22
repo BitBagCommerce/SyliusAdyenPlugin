@@ -58,7 +58,7 @@
         </service>
 
         <service
-            class="BitBag\SyliusAdyenPlugin\Bus\Handler\RequestCaptureHandler"
+            class="BitBag\SyliusAdyenPlugin\Bus\Handler\AlterPaymentHandler"
             id="bit_bag.sylius_adyen_plugin.bus.handler.request_capture_handler"
         >
             <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>

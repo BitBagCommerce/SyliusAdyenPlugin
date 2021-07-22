@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
+use BitBag\SyliusAdyenPlugin\Bus\Command\AlterPaymentCommand;
+use BitBag\SyliusAdyenPlugin\Bus\Command\CancelPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\RequestCapture;
+use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -13,7 +16,7 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Webmozart\Assert\Assert;
 
-class RequestCaptureHandler implements MessageHandlerInterface
+class AlterPaymentHandler implements MessageHandlerInterface
 {
     use GatewayConfigFromPaymentTrait;
 
@@ -61,9 +64,27 @@ class RequestCaptureHandler implements MessageHandlerInterface
         return $payment;
     }
 
-    public function __invoke(RequestCapture $requestCapture): void
+    private function dispatchRemoteAction(
+        string $pspReference,
+        AlterPaymentCommand $alterPaymentCommand,
+        AdyenClientInterface $adyenClient
+    ): void {
+        if ($alterPaymentCommand instanceof RequestCapture) {
+            $adyenClient->requestCapture(
+                $pspReference,
+                $alterPaymentCommand->getOrder()->getTotal(),
+                (string) $alterPaymentCommand->getOrder()->getCurrencyCode()
+            );
+        }
+
+        if ($alterPaymentCommand instanceof CancelPayment) {
+            $adyenClient->requestCancellation($pspReference);
+        }
+    }
+
+    public function __invoke(AlterPaymentCommand $alterPaymentCommand): void
     {
-        $payment = $this->getPayment($requestCapture->getOrder());
+        $payment = $this->getPayment($alterPaymentCommand->getOrder());
 
         if ($payment === null || !$this->isAdyenPayment($payment)) {
             return;
@@ -78,10 +99,6 @@ class RequestCaptureHandler implements MessageHandlerInterface
         Assert::isInstanceOf($method, PaymentMethodInterface::class);
 
         $client = $this->adyenClientProvider->getForPaymentMethod($method);
-        $client->requestCapture(
-            (string) $details['pspReference'],
-            $requestCapture->getOrder()->getTotal(),
-            (string) $requestCapture->getOrder()->getCurrencyCode()
-        );
+        $this->dispatchRemoteAction((string) $details['pspReference'], $alterPaymentCommand, $client);
     }
 }

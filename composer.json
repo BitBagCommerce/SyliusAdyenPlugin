@@ -14,7 +14,7 @@
         "nyholm/psr7": "^1.4",
         "sylius/sylius": "^1.9.0",
         "symfony/messenger": "~4.4",
-        "sylius/refund-plugin": ">=v1.0.0-RC.11"
+        "sylius/refund-plugin": "~1.0.0"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",
