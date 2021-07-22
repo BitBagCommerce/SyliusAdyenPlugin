@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Bus\Command;
 
+use BitBag\SyliusAdyenPlugin\PaymentTransitions;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderPaymentTransitions;
 
@@ -19,8 +20,7 @@ class CapturePayment implements PaymentFinalizationCommand
 
     public function getPaymentTransition(): string
     {
-        // todo: constants
-        return 'capture';
+        return PaymentTransitions::TRANSITION_CAPTURE;
     }
 
     public function getOrderTransition(): string

@@ -7,11 +7,11 @@ namespace BitBag\SyliusAdyenPlugin\EventSubscriber;
 use BitBag\SyliusAdyenPlugin\Bus\Command\RequestCapture;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Exception\UnprocessablePaymentException;
+use BitBag\SyliusAdyenPlugin\PaymentTransitions;
 use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
 use SM\Event\SMEvents;
 use SM\Event\TransitionEvent;
 use Sylius\Component\Core\Model\PaymentInterface;
-use Sylius\Component\Payment\PaymentTransitions;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RoutePaymentCompleteTransitionSubscriber implements EventSubscriberInterface
@@ -69,7 +69,7 @@ class RoutePaymentCompleteTransitionSubscriber implements EventSubscriberInterfa
         if (
             !$this->isProcessableAdyenPayment($event)
             || $event->getState() !== PaymentInterface::STATE_PROCESSING
-            || $event->getTransition() === 'capture'
+            || $event->getTransition() === PaymentTransitions::TRANSITION_CAPTURE
         ) {
             return;
         }
