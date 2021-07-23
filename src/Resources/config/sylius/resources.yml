@@ -9,3 +9,13 @@ sylius_resource:
       classes:
         repository: BitBag\SyliusAdyenPlugin\Repository\RefundPaymentRepository
         model: Sylius\RefundPlugin\Entity\RefundPayment
+
+    bitbag_sylius_adyen_plugin.payment_method:
+      classes:
+        repository: BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepository
+        model: Sylius\Component\Core\Model\PaymentMethod
+
+    bitbag_sylius_adyen_plugin.payment:
+      classes:
+        repository: BitBag\SyliusAdyenPlugin\Repository\PaymentRepository
+        model: Sylius\Component\Core\Model\Payment

@@ -15,7 +15,7 @@
                 id="bit_bag.sylius_adyen_plugin.form.extension.payment_type_extension"
         >
             <argument type="service" id="bit_bag.sylius_adyen_plugin.resolver.order.payment_checkout_order_resolver"/>
-            <argument type="service" id="sylius.repository.payment_method"/>
+            <argument type="service" id="bitbag_sylius_adyen_plugin.repository.payment_method"/>
             <argument type="service" id="sylius.context.shopper"/>
             <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
             <tag name="form.type_extension" />
