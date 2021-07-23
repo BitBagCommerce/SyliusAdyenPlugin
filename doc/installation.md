@@ -1,23 +1,5 @@
 ## Installation
 
-The Refund plugin does not yet have stable release.
-You can install first Refund plugin by adding this line to composer.json
-
-```diff
-    "require": {
-        "sylius/refund-plugin": "1.0.0-RC10 as 1.0.0",
-    },
-    ...
-```
-Or configure project to accept releases candidate version
-
-```bash
-composer config minimum-stability rc
-composer config prefer-stable true
-```
-
-See: [refund plug-in README](https://github.com/Sylius/RefundPlugin)
-
 1. Require with composer
 
 ```bash
@@ -72,7 +54,9 @@ cp -R vendor/bitbag/adyen-plugin/tests/Application/templates/bundles/SyliusAdmin
 cp -R vendor/bitbag/adyen-plugin/tests/Application/templates/bundles/SyliusShopBundle/* templates/bundles/SyliusShopBundle/
 ```
 
-7. Install assets
+7. Complete [refund plug-in](https://github.com/Sylius/RefundPlugin) install steps (eg. templates and so on)
+
+8. Install assets
 
 ```
 bin/console assets:install
@@ -80,10 +64,10 @@ bin/console assets:install
 
 **Note:** If you are running it on production, add the `-e prod` flag to this command.
 
-8. Synchronize the database
+9. Synchronize the database
 
 ```
 bin/console doctrine:schema:update
 ```
 
-9. [Obtain Adyen credentials and configure payment method](configuration.md)
+10. [Obtain Adyen credentials and configure payment method](configuration.md)
