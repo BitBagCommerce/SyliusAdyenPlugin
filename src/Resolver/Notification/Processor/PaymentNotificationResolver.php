@@ -32,7 +32,7 @@ class PaymentNotificationResolver implements CommandResolver
         try {
             return $this->paymentRepository->getOneByCodeAndId($paymentCode, (int) $id);
         } catch (NoResultException $ex) {
-            throw new NoCommandResolved();
+            throw new NoCommandResolvedException();
         }
     }
 
@@ -49,7 +49,7 @@ class PaymentNotificationResolver implements CommandResolver
                 $notificationData
             );
         } catch (UnmappedAdyenActionException $ex) {
-            throw new NoCommandResolved();
+            throw new NoCommandResolvedException();
         }
     }
 }

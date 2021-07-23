@@ -6,6 +6,7 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\RefundPayment;
 use BitBag\SyliusAdyenPlugin\Resolver\Payment\RefundReferenceResolver;
+use Doctrine\ORM\NoResultException;
 use Webmozart\Assert\Assert;
 
 class RefundNotificationResolver implements CommandResolver
@@ -27,8 +28,8 @@ class RefundNotificationResolver implements CommandResolver
             $refundPayment = $this->referenceResolver->resolve((string) $notificationData['merchantReference']);
 
             return new RefundPayment($refundPayment);
-        } catch (\InvalidArgumentException $ex) {
-            throw new NoCommandResolved();
+        } catch (\InvalidArgumentException | NoResultException $ex) {
+            throw new NoCommandResolvedException();
         }
     }
 }
