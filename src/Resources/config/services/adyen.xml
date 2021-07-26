@@ -9,7 +9,6 @@
                 class="BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider"
                 id="bitbag.sylius_adyen_plugin.provider.adyen_client_provider"
         >
-
             <argument type="service" id="bitbag.sylius_adyen_plugin.repository.payment_method"/>
             <argument type="service" id="sylius.context.shopper"/>
             <argument type="service" id="bitbag.sylius_adyen_plugin.client.adyen_transport_factory"/>
