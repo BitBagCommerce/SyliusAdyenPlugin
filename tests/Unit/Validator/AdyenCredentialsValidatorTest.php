@@ -29,7 +29,7 @@ class AdyenCredentialsValidatorTest extends ConstraintValidatorTestCase
         );
     }
 
-    public function testAffirmative()
+    public function testAffirmative(): void
     {
         $constraint = new AdyenCredentials();
         $this->validator->validate([

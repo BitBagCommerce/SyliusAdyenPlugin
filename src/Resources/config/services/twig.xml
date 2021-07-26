@@ -4,11 +4,11 @@
     <services>
         <service
                 class="BitBag\SyliusAdyenPlugin\Twig\Extension\PaymentMethodsForOrderExtension"
-                id="bit_bag.sylius_adyen_plugin.twig.extension.payment_methods_for_order_extension"
+                id="bitbag.sylius_adyen_plugin.twig.extension.payment_methods_for_order_extension"
         >
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.provider.adyen_client_provider"/>
             <argument type="service" id="sylius.repository.payment_method"/>
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.bus.dispatcher"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
 
             <tag name="twig.extension"/>
         </service>

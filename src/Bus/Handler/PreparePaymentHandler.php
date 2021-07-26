@@ -33,22 +33,6 @@ class PreparePaymentHandler implements MessageHandlerInterface
         $this->paymentManager = $paymentManager;
     }
 
-    private function updateOrderState(OrderInterface $order): void
-    {
-        $sm = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
-        if (!$sm->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)) {
-            return;
-        }
-
-        $sm->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
-    }
-
-    private function persistPayment(PaymentInterface $payment): void
-    {
-        $this->paymentManager->persist($payment);
-        $this->paymentManager->flush();
-    }
-
     public function __invoke(PreparePayment $command): void
     {
         $payment = $command->getPayment();
@@ -57,6 +41,18 @@ class PreparePaymentHandler implements MessageHandlerInterface
         }
 
         $this->persistPayment($payment);
+    }
+
+    private function updateOrderState(OrderInterface $order): void
+    {
+        $sm = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
+        $sm->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE, true);
+    }
+
+    private function persistPayment(PaymentInterface $payment): void
+    {
+        $this->paymentManager->persist($payment);
+        $this->paymentManager->flush();
     }
 
     private function isAccepted(PaymentInterface $payment): bool

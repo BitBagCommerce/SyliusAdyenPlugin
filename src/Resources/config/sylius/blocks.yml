@@ -11,6 +11,6 @@ sylius_ui:
 
     sylius.admin.update:
       blocks:
-        blah:
+        adyen_description:
           priority: 11
           template: '@BitBagSyliusAdyenPlugin/Admin/_description.html.twig'

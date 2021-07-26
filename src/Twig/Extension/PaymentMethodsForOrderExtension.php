@@ -45,7 +45,7 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         $this->dispatcher = $dispatcher;
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('adyen_payment_configuration', [$this, 'adyenPaymentConfiguration'])

@@ -37,26 +37,6 @@ class PaymentFinalizationHandler implements MessageHandlerInterface
         $this->paymentManager = $paymentManager;
     }
 
-    private function persistPaymentAndOrder(PaymentInterface $payment): void
-    {
-        $this->paymentManager->persist($payment);
-        $this->paymentManager->flush();
-
-        $this->orderManager->persist($this->getOrderFromPayment($payment));
-        $this->orderManager->flush();
-    }
-
-    private function updateOrderState(OrderInterface $order, string $transition): void
-    {
-        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-
-        if (!$stateMachine->can($transition)) {
-            return;
-        }
-
-        $stateMachine->apply($transition);
-    }
-
     public function __invoke(PaymentFinalizationCommand $command): void
     {
         $payment = $command->getPayment();
@@ -69,6 +49,21 @@ class PaymentFinalizationHandler implements MessageHandlerInterface
         $this->updateOrderState($this->getOrderFromPayment($payment), $command->getOrderTransition());
 
         $this->persistPaymentAndOrder($payment);
+    }
+
+    private function persistPaymentAndOrder(PaymentInterface $payment): void
+    {
+        $this->paymentManager->persist($payment);
+        $this->paymentManager->flush();
+
+        $this->orderManager->persist($this->getOrderFromPayment($payment));
+        $this->orderManager->flush();
+    }
+
+    private function updateOrderState(OrderInterface $order, string $transition): void
+    {
+        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+        $stateMachine->apply($transition, true);
     }
 
     private function isAccepted(PaymentInterface $payment): bool

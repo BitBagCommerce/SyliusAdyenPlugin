@@ -1,20 +1,20 @@
 bitbag_adyen_payment_details:
   path: /payment/adyen/details
   methods: [POST]
-  controller: bit_bag.sylius_adyen_plugin.controller.shop.payment_details_action
+  controller: bitbag.sylius_adyen_plugin.controller.shop.payment_details_action
 
 bitbag_adyen_payments:
   path: /payment/adyen/{code}
   methods: [POST]
-  controller: bit_bag.sylius_adyen_plugin.controller.shop.payments_action
+  controller: bitbag.sylius_adyen_plugin.controller.shop.payments_action
   defaults:
     code: null
 
 bitbag_adyen_thank_you:
   path: /payment/adyen/{code}/thanks
-  controller: bit_bag.sylius_adyen_plugin.controller.shop.redirect_target_action
+  controller: bitbag.sylius_adyen_plugin.controller.shop.redirect_target_action
 
 bitbag_adyen_remove_token:
   path: /payment/adyen/{code}/token/{paymentReference}
   methods: [DELETE]
-  controller: bit_bag.sylius_adyen_plugin.controller.shop.remove_stored_token_action
+  controller: bitbag.sylius_adyen_plugin.controller.shop.remove_stored_token_action

@@ -3,11 +3,11 @@
 {% if payment_method is defined and payment_method.gatewayConfig.factoryName == factory %}
     <div class="ui segment">
 
-        <p>In order to configure Adyen payment, head to merchant panel and use following URL as target:</p>
+        <p>{{ 'bitbag_sylius_adyen_plugin.ui.notification_endpoint_description'|trans }}:</p>
 
         <div class="ui form">
             <div class="required field">
-                <label for="notifications-endpoint">Notifications endpoint</label>
+                <label for="notifications-endpoint">{{ 'bitbag_sylius_adyen_plugin.ui.notification_endpoint'|trans }}</label>
                 <input type="text"
                        id="notifications-endpoint"
                        value="{{ url('bitbag_adyen_process_notifications', {code: payment_method.code}) }}"

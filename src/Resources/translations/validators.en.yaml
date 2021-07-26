@@ -8,7 +8,7 @@ bitbag_sylius_adyen_plugin:
   auth_user:
     not_blank: Notification user cannot be blank.
   auth_password:
-    not_blank: Notification passwqord password cannot be blank.
+    not_blank: Notification password cannot be blank.
   api_key:
     not_blank: API key cannot be blank.
   credentials:
