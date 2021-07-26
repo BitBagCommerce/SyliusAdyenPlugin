@@ -50,11 +50,11 @@ bitbag_sylius_adyen_plugin:
 mkdir -p templates/bundles/SyliusAdminBundle/
 mkdir -p templates/bundles/SyliusShopBundle/
 
-cp -R vendor/bitbag/adyen-plugin/tests/Application/templates/bundles/SyliusAdminBundle/* templates/bundles/SyliusAdminBundle/
-cp -R vendor/bitbag/adyen-plugin/tests/Application/templates/bundles/SyliusShopBundle/* templates/bundles/SyliusShopBundle/
+cp -R vendor/bitbag/sylius-adyen-plugin/tests/Application/templates/bundles/SyliusAdminBundle/* templates/bundles/SyliusAdminBundle/
+cp -R vendor/bitbag/sylius-adyen-plugin/tests/Application/templates/bundles/SyliusShopBundle/* templates/bundles/SyliusShopBundle/
 ```
 
-7. Complete [refund plug-in](https://github.com/Sylius/RefundPlugin) install steps (eg. templates and so on)
+7. Complete [refund plug-in](https://github.com/Sylius/RefundPlugin) install steps (e.g. templates and so on)
 
 8. Install assets
 

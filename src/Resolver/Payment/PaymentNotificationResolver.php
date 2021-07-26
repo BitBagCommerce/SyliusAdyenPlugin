@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Resolver\Payment;
 
 use BitBag\SyliusAdyenPlugin\Provider\SignatureValidatorProvider;
-use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentRepository;
+use BitBag\SyliusAdyenPlugin\Repository\PaymentRepositoryInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Payment\Model\PaymentMethodInterface;
 
@@ -14,12 +14,12 @@ class PaymentNotificationResolver
     /** @var SignatureValidatorProvider */
     private $signatureValidatorProvider;
 
-    /** @var PaymentRepository */
+    /** @var PaymentRepositoryInterface */
     private $paymentRepository;
 
     public function __construct(
         SignatureValidatorProvider $signatureValidatorProvider,
-        PaymentRepository $paymentRepository
+        PaymentRepositoryInterface $paymentRepository
     ) {
         $this->signatureValidatorProvider = $signatureValidatorProvider;
         $this->paymentRepository = $paymentRepository;
