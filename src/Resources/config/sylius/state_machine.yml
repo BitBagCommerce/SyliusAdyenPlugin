@@ -4,7 +4,7 @@ winzou_state_machine:
       before:
         bitbag_cancel_payment:
           on: ["cancel"]
-          do: [ "@bit_bag.sylius_adyen_plugin.callback.request_cancel_callback", "__invoke" ]
+          do: [ "@bitbag.sylius_adyen_plugin.callback.request_cancel_callback", "__invoke" ]
           args: [ "object" ]
 
   sylius_payment:

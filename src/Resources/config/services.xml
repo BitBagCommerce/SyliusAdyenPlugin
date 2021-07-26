@@ -8,19 +8,19 @@
     <services>
         <service
             class="BitBag\SyliusAdyenPlugin\Callback\RequestCaptureOnShipCallback"
-            id="bit_bag.sylius_adyen_plugin.callback.request_capture_on_ship_callback"
+            id="bitbag.sylius_adyen_plugin.callback.request_capture_on_ship_callback"
             public="true"
         >
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.bus.dispatcher"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
         </service>
 
         <service
             class="BitBag\SyliusAdyenPlugin\Callback\RequestCancelCallback"
-            id="bit_bag.sylius_adyen_plugin.callback.request_cancel_callback"
+            id="bitbag.sylius_adyen_plugin.callback.request_cancel_callback"
             public="true"
         >
             <argument type="service" id="sm.factory"/>
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.bus.dispatcher"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
         </service>
     </services>
 

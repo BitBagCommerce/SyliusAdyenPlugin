@@ -7,21 +7,21 @@
             class="BitBag\SyliusAdyenPlugin\EventSubscriber\FilterHttpAuthenticationForNotificationProcessor"
             id="bitbag.sylius_adyen_plugin.event_subscriber.filter_http_authentication_for_notification_processor"
         >
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.repository.payment_method"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.repository.payment_method"/>
             <tag name="kernel.event_subscriber"/>
         </service>
 
         <service
             class="BitBag\SyliusAdyenPlugin\EventSubscriber\RoutePaymentCompleteTransitionSubscriber"
-            id="bit_bag.sylius_adyen_plugin.event_subscriber.filter_payment_complete_transition_subscriber"
+            id="bitbag.sylius_adyen_plugin.event_subscriber.filter_payment_complete_transition_subscriber"
         >
-            <argument type="service" id="bit_bag.sylius_adyen_plugin.bus.dispatcher"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
             <tag name="kernel.event_subscriber"/>
         </service>
 
         <service
             class="BitBag\SyliusAdyenPlugin\EventSubscriber\FilterManualRefundConfirmationSubscriber"
-            id="bit_bag.sylius_adyen_plugin.event_subscriber.filter_manual_refund_confirmation_subscriber"
+            id="bitbag.sylius_adyen_plugin.event_subscriber.filter_manual_refund_confirmation_subscriber"
         >
             <tag name="kernel.event_subscriber"/>
         </service>
