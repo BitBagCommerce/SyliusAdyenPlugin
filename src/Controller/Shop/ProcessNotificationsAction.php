@@ -7,7 +7,7 @@ namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationCommandResolver;
-use BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\NoCommandResolved;
+use BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\NoCommandResolvedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Webmozart\Assert\Assert;
@@ -60,7 +60,7 @@ class ProcessNotificationsAction
             try {
                 $command = $this->notificationCommandResolver->resolve($code, $notificationItem);
                 $this->dispatcher->dispatch($command);
-            } catch (NoCommandResolved $ex) {
+            } catch (NoCommandResolvedException $ex) {
             }
         }
 

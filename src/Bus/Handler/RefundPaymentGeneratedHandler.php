@@ -46,7 +46,10 @@ class RefundPaymentGeneratedHandler implements MessageHandlerInterface
         $payment = $this->paymentRepository->find($paymentGenerated->paymentId());
         $paymentMethod = $this->paymentMethodRepository->find($paymentGenerated->paymentMethodId());
 
-        if (!isset($this->getGatewayConfig($paymentMethod)->getConfig()[AdyenClientProvider::FACTORY_NAME])) {
+        if ($payment === null
+            || $paymentMethod === null
+            || !isset($this->getGatewayConfig($paymentMethod)->getConfig()[AdyenClientProvider::FACTORY_NAME])
+        ) {
             return;
         }
 

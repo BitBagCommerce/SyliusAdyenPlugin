@@ -7,8 +7,16 @@ namespace BitBag\SyliusAdyenPlugin\Repository;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
 
-class RefundPaymentRepository extends EntityRepository implements RefundPaymentRepositoryInterface
+class RefundPaymentRepository implements RefundPaymentRepositoryInterface
 {
+    /** @var EntityRepository */
+    private $baseRepository;
+
+    public function __construct(EntityRepository $baseRepository)
+    {
+        $this->baseRepository = $baseRepository;
+    }
+
     /**
      * @psalm-suppress MixedReturnStatement
      * @psalm-suppress MixedInferredReturnType
@@ -17,7 +25,7 @@ class RefundPaymentRepository extends EntityRepository implements RefundPaymentR
         string $orderNumber,
         int $paymentId
     ): RefundPaymentInterface {
-        $qb = $this->createQueryBuilder('rp');
+        $qb = $this->baseRepository->createQueryBuilder('rp');
         $qb
             ->select('rp')
             ->innerJoin('rp.order', 'o')

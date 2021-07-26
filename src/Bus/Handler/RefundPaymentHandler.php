@@ -29,9 +29,7 @@ class RefundPaymentHandler implements MessageHandlerInterface
     public function __invoke(RefundPayment $command): void
     {
         $machine = $this->stateMachineFactory->get($command->getRefundPayment(), RefundPaymentTransitions::GRAPH);
-        if ($machine->can(RefundPaymentTransitions::TRANSITION_COMPLETE)) {
-            $machine->apply(RefundPaymentTransitions::TRANSITION_COMPLETE);
-        }
+        $machine->apply('confirm', true);
 
         $this->refundPaymentManager->persist($command->getRefundPayment());
         $this->refundPaymentManager->flush();

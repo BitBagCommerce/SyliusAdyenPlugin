@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Resolver\Notification;
 
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\CommandResolver;
-use BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\NoCommandResolved;
+use BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\NoCommandResolvedException;
 
 class NotificationCommandResolver
 {
@@ -29,10 +29,10 @@ class NotificationCommandResolver
         foreach ($this->notificationResolvers as $resolver) {
             try {
                 return $resolver->resolve($paymentCode, $notificationData);
-            } catch (NoCommandResolved $ex) {
+            } catch (NoCommandResolvedException $ex) {
             }
         }
 
-        throw new NoCommandResolved();
+        throw new NoCommandResolvedException();
     }
 }

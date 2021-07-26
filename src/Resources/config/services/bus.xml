@@ -5,7 +5,7 @@
     <services>
         <service
             class="BitBag\SyliusAdyenPlugin\Bus\Handler\PaymentFinalizationHandler"
-            id="bitbag.sylius_adyen_plugin.bus.handler.authorize_payment_handler"
+            id="bit_bag.sylius_adyen_plugin.bus.handler.authorize_payment_handler"
         >
             <argument type="service" id="sm.factory"/>
             <argument type="service" id="sylius.manager.order"/>
@@ -16,7 +16,7 @@
 
         <service
             class="BitBag\SyliusAdyenPlugin\Bus\Handler\PreparePaymentHandler"
-            id="bitbag.sylius_adyen_plugin.bus.handler.prepare_payment_handler"
+            id="bit_bag.sylius_adyen_plugin.bus.handler.prepare_payment_handler"
         >
             <argument type="service" id="sm.factory"/>
             <argument type="service" id="sylius.manager.payment"/>
@@ -26,30 +26,30 @@
 
         <service
             class="BitBag\SyliusAdyenPlugin\Resolver\Payment\EventCodeResolver"
-            id="bitbag.sylius_adyen_plugin.resolver.payment.event_code_resolver"
+            id="bit_bag.sylius_adyen_plugin.resolver.payment.event_code_resolver"
         />
 
         <service
             class="BitBag\SyliusAdyenPlugin\Bus\PaymentCommandFactory"
-            id="bitbag.sylius_adyen_plugin.bus.payment_command_factory"
+            id="bit_bag.sylius_adyen_plugin.bus.payment_command_factory"
         >
-            <argument type="service" id="bitbag.sylius_adyen_plugin.resolver.payment.event_code_resolver"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.resolver.payment.event_code_resolver"/>
         </service>
 
         <service
             class="BitBag\SyliusAdyenPlugin\Bus\Dispatcher"
-            id="bitbag.sylius_adyen_plugin.bus.dispatcher"
+            id="bit_bag.sylius_adyen_plugin.bus.dispatcher"
         >
             <argument type="service" id="sylius.command_bus"/>
-            <argument type="service" id="bitbag.sylius_adyen_plugin.bus.payment_command_factory"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.bus.payment_command_factory"/>
         </service>
 
         <service
             class="BitBag\SyliusAdyenPlugin\Bus\Handler\TakeOverPaymentHandler"
-            id="bitbag.sylius_adyen_plugin.bus.handler.take_over_payment_handler"
+            id="bit_bag.sylius_adyen_plugin.bus.handler.take_over_payment_handler"
         >
 
-            <argument type="service" id="sylius.repository.payment_method"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.repository.payment_method"/>
             <argument type="service" id="sylius.factory.payment"/>
             <argument type="service" id="sylius.manager.payment"/>
             <argument type="service" id="sylius.manager.order"/>
@@ -59,27 +59,27 @@
 
         <service
             class="BitBag\SyliusAdyenPlugin\Bus\Handler\AlterPaymentHandler"
-            id="bitbag.sylius_adyen_plugin.bus.handler.request_capture_handler"
+            id="bit_bag.sylius_adyen_plugin.bus.handler.request_capture_handler"
         >
-            <argument type="service" id="bitbag.sylius_adyen_plugin.provider.adyen_client_provider"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
             <tag name="messenger.message_handler" bus="sylius.command_bus"/>
         </service>
 
         <service
             class="BitBag\SyliusAdyenPlugin\Bus\Handler\RefundPaymentGeneratedHandler"
-            id="bitbag.sylius_adyen_plugin.bus.handler.refund_payment_generated_handler"
+            id="bit_bag.sylius_adyen_plugin.bus.handler.refund_payment_generated_handler"
         >
 
-            <argument type="service" id="bitbag.sylius_adyen_plugin.resolver.payment.refund_reference_resolver"/>
-            <argument type="service" id="bitbag.sylius_adyen_plugin.provider.adyen_client_provider"/>
-            <argument type="service" id="sylius.repository.payment"/>
-            <argument type="service" id="sylius.repository.payment_method"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.resolver.payment.refund_reference_resolver"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.provider.adyen_client_provider"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.repository.payment"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.repository.payment_method"/>
             <tag name="messenger.message_handler" bus="sylius.event_bus"/>
         </service>
 
         <service
                 class="BitBag\SyliusAdyenPlugin\Bus\Handler\RefundPaymentHandler"
-                id="bitbag.sylius_adyen_plugin.bus.handler.refund_payment_handler"
+                id="bit_bag.sylius_adyen_plugin.bus.handler.refund_payment_handler"
         >
             <argument type="service" id="SM\Factory\Factory"/>
             <argument type="service" id="sylius_refund.manager.refund_payment"/>
@@ -87,17 +87,17 @@
             <tag name="messenger.message_handler" bus="sylius.command_bus"/>
         </service>
 
-        <service id="bitbag.sylius_adyen_plugin.factory.adyen_token_factory"
+        <service id="bit_bag.sylius_adyen_plugin.factory.adyen_token_factory"
                  class="BitBag\SyliusAdyenPlugin\Factory\AdyenTokenFactory"
                  decorates="bitbag_sylius_adyen_plugin.factory.adyen_token">
-            <argument type="service" id="bitbag.sylius_adyen_plugin.factory.adyen_token_factory.inner"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.factory.adyen_token_factory.inner"/>
         </service>
 
         <service
             class="BitBag\SyliusAdyenPlugin\Bus\Handler\CreateTokenHandler"
-            id="bitbag.sylius_adyen_plugin.bus.handler.create_token_handler"
+            id="bit_bag.sylius_adyen_plugin.bus.handler.create_token_handler"
         >
-            <argument type="service" id="bitbag.sylius_adyen_plugin.factory.adyen_token_factory"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.factory.adyen_token_factory"/>
             <argument type="service" id="bitbag_sylius_adyen_plugin.manager.adyen_token"/>
 
             <tag name="messenger.message_handler"/>
@@ -105,11 +105,11 @@
 
         <service
             class="BitBag\SyliusAdyenPlugin\Bus\Handler\GetTokenHandler"
-            id="bitbag.sylius_adyen_plugin.bus.handler.get_token_handler"
+            id="bit_bag.sylius_adyen_plugin.bus.handler.get_token_handler"
         >
 
             <argument type="service" id="bitbag_sylius_adyen_plugin.repository.adyen_token"/>
-            <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
+            <argument type="service" id="bit_bag.sylius_adyen_plugin.bus.dispatcher"/>
 
             <tag name="messenger.message_handler"/>
         </service>
