@@ -16,6 +16,6 @@ class AdyenCredentials extends Constraint
 
     public function validatedBy(): string
     {
-        return 'bit_bag_sylius_adyen_plugin_credentials';
+        return 'bitbag_sylius_adyen_plugin_credentials';
     }
 }
