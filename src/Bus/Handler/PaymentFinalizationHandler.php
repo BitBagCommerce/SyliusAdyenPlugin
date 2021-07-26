@@ -8,10 +8,9 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentFinalizationCommand;
 use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface;
-use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderPaymentStates;
-use Sylius\Component\Core\OrderPaymentTransitions;
+use Sylius\Component\Payment\PaymentTransitions;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class PaymentFinalizationHandler implements MessageHandlerInterface
@@ -46,15 +45,10 @@ class PaymentFinalizationHandler implements MessageHandlerInterface
         $this->orderManager->flush();
     }
 
-    private function updateOrderState(OrderInterface $order, string $transition): void
+    private function updatePaymentState(PaymentInterface $payment, string $transition): void
     {
-        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-
-        if (!$stateMachine->can($transition)) {
-            return;
-        }
-
-        $stateMachine->apply($transition);
+        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+        $stateMachine->apply($transition, true);
     }
 
     public function __invoke(PaymentFinalizationCommand $command): void
@@ -65,9 +59,7 @@ class PaymentFinalizationHandler implements MessageHandlerInterface
             return;
         }
 
-        $payment->setState($command->getTargetPaymentState());
-        $this->updateOrderState($this->getOrderFromPayment($payment), $command->getOrderTransition());
-
+        $this->updatePaymentState($payment, $command->getPaymentTransition());
         $this->persistPaymentAndOrder($payment);
     }
 

@@ -6,8 +6,8 @@ namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
+use BitBag\SyliusAdyenPlugin\Repository\PaymentRepositoryInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
-use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -77,7 +77,7 @@ class RedirectTargetAction
 
     private function getPaymentForReference(string $reference): PaymentInterface
     {
-        $payment = $this->paymentRepository->find($reference);
+        $payment = $this->paymentRepository->find((int) $reference);
         if (!$payment instanceof PaymentInterface) {
             throw new \InvalidArgumentException(
                 sprintf('Payment not found for reference "%s"', $reference)

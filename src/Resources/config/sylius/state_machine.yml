@@ -1,12 +1,4 @@
 winzou_state_machine:
-  sylius_shipment:
-    callbacks:
-      before:
-        bitbag_capture_payment:
-          on: ["ship"]
-          do: ["@bit_bag.sylius_adyen_plugin.callback.request_capture_on_ship_callback", "__invoke"]
-          args: ["object.getOrder()"]
-
   sylius_order:
     callbacks:
       before:
@@ -14,3 +6,27 @@ winzou_state_machine:
           on: ["cancel"]
           do: [ "@bit_bag.sylius_adyen_plugin.callback.request_cancel_callback", "__invoke" ]
           args: [ "object" ]
+
+  sylius_payment:
+    transitions:
+      capture:
+        from: [ processing, authorized ]
+        to: completed
+      process:
+        from: [ authorized ]
+        to: processing
+    callbacks:
+      after:
+        sylius_resolve_state:
+          on: [ "complete", "process", "refund", "authorize", "capture" ]
+
+  sylius_order_payment:
+    transitions:
+      pay:
+        from: [awaiting_payment, partially_paid, authorized, processing]
+
+  sylius_refund_refund_payment:
+    transitions:
+      confirm:
+        from: [new]
+        to: completed

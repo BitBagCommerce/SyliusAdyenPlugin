@@ -7,7 +7,7 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor;
 interface CommandResolver
 {
     /**
-     * @throws NoCommandResolved
+     * @throws NoCommandResolvedException
      *
      * @param array<string, mixed> $notificationData
      */
