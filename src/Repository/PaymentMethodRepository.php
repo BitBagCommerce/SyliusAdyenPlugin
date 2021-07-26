@@ -7,19 +7,36 @@ namespace BitBag\SyliusAdyenPlugin\Repository;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
-use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentMethodRepository as BasePaymentMethodRepository;
+use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 
-class PaymentMethodRepository extends BasePaymentMethodRepository implements PaymentMethodRepositoryInterface
+class PaymentMethodRepository implements PaymentMethodRepositoryInterface
 {
+    /** @var EntityRepository */
+    private $baseRepository;
+
+    public function __construct(EntityRepository $baseRepository)
+    {
+        $this->baseRepository = $baseRepository;
+    }
+
+    /**
+     * @psalm-suppress MixedReturnStatement
+     * @psalm-suppress MixedInferredReturnType
+     */
+    public function find(int $id): ?PaymentMethodInterface
+    {
+        return $this->baseRepository->find($id);
+    }
+
     /**
      * @psalm-suppress MixedReturnStatement
      * @psalm-suppress MixedInferredReturnType
      */
     public function getOneForAdyenAndCode(string $code): PaymentMethodInterface
     {
-        return $this->createQueryBuilder('o')
+        return $this->baseRepository->createQueryBuilder('o')
             ->innerJoin('o.gatewayConfig', 'gatewayConfig')
             ->where('gatewayConfig.factoryName = :factoryName')
             ->andWhere('o.code = :code')
@@ -44,7 +61,7 @@ class PaymentMethodRepository extends BasePaymentMethodRepository implements Pay
      */
     private function getQueryForChannel(ChannelInterface $channel): QueryBuilder
     {
-        return $this->createQueryBuilder('o')
+        return $this->baseRepository->createQueryBuilder('o')
             ->innerJoin('o.gatewayConfig', 'gatewayConfig')
             ->andWhere('o.enabled = true')
             ->andWhere(':channel MEMBER OF o.channels')

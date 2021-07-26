@@ -77,7 +77,7 @@ class RedirectTargetAction
 
     private function getPaymentForReference(string $reference): PaymentInterface
     {
-        $payment = $this->paymentRepository->find($reference);
+        $payment = $this->paymentRepository->find((int) $reference);
         if (!$payment instanceof PaymentInterface) {
             throw new \InvalidArgumentException(
                 sprintf('Payment not found for reference "%s"', $reference)

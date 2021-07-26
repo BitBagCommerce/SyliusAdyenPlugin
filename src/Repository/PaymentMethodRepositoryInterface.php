@@ -6,13 +6,11 @@ namespace BitBag\SyliusAdyenPlugin\Repository;
 
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
-use Sylius\Component\Core\Repository\PaymentMethodRepositoryInterface as BasePaymentMethodRepositoryInterface;
 
-/**
- * @method PaymentMethodInterface find($id)
- */
-interface PaymentMethodRepositoryInterface extends BasePaymentMethodRepositoryInterface
+interface PaymentMethodRepositoryInterface
 {
+    public function find(int $id): ?PaymentMethodInterface;
+
     public function findOneByChannel(ChannelInterface $channel): ?PaymentMethodInterface;
 
     public function findOneForAdyenAndCode(string $code): ?PaymentMethodInterface;

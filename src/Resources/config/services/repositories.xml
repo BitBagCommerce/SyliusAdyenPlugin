@@ -5,20 +5,23 @@
         <service
                 class="BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepository"
                 id="bit_bag.sylius_adyen_plugin.repository.payment_method"
-                parent="sylius.repository.payment_method"
-        />
+        >
+            <argument type="service" id="sylius.repository.payment_method"/>
+        </service>
 
         <service
                 class="BitBag\SyliusAdyenPlugin\Repository\PaymentRepository"
                 id="bit_bag.sylius_adyen_plugin.repository.payment"
-                parent="sylius.repository.payment"
-        />
+        >
+            <argument type="service" id="sylius.repository.payment"/>
+        </service>
 
         <service
             class="BitBag\SyliusAdyenPlugin\Repository\RefundPaymentRepository"
             id="bit_bag.sylius_adyen_plugin.repository.refund_payment"
-            parent="sylius_refund.repository.refund_payment"
-        />
+        >
+            <argument type="service" id="sylius_refund.repository.refund_payment"/>
+        </service>
 
 
     </services>

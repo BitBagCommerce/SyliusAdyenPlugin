@@ -45,10 +45,7 @@ class PaymentNotificationResolver
             return null;
         }
 
-        /**
-         * @var PaymentInterface|null $payment
-         */
-        $payment = $this->paymentRepository->find($notificationItem['merchantReference']);
+        $payment = $this->paymentRepository->find((int) $notificationItem['merchantReference']);
 
         if ($payment === null) {
             return null;
