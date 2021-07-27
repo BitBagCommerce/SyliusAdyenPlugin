@@ -7,6 +7,7 @@ namespace BitBag\SyliusAdyenPlugin\Provider;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClient;
 use BitBag\SyliusAdyenPlugin\Client\AdyenTransportFactory;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
+use BitBag\SyliusAdyenPlugin\Resolver\Version\VersionResolver;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
@@ -27,14 +28,19 @@ class AdyenClientProvider
     /** @var AdyenTransportFactory */
     private $adyenTransportFactory;
 
+    /** @var VersionResolver */
+    private $versionResolver;
+
     public function __construct(
         PaymentMethodRepositoryInterface $paymentMethodRepository,
         ChannelContextInterface $channelContext,
-        AdyenTransportFactory $adyenTransportFactory
+        AdyenTransportFactory $adyenTransportFactory,
+        VersionResolver $versionResolver
     ) {
         $this->paymentMethodRepository = $paymentMethodRepository;
         $this->channelContext = $channelContext;
         $this->adyenTransportFactory = $adyenTransportFactory;
+        $this->versionResolver = $versionResolver;
     }
 
     public function getDefaultClient(): AdyenClient
@@ -49,7 +55,7 @@ class AdyenClientProvider
 
         $config = $this->getGatewayConfig($paymentMethod)->getConfig();
 
-        return new AdyenClient($config, $this->adyenTransportFactory);
+        return new AdyenClient($config, $this->adyenTransportFactory, $this->versionResolver);
     }
 
     public function getForPaymentMethod(PaymentMethodInterface $paymentMethod): AdyenClient
@@ -63,7 +69,7 @@ class AdyenClientProvider
             ));
         }
 
-        return new AdyenClient($gatewayConfig->getConfig(), $this->adyenTransportFactory);
+        return new AdyenClient($gatewayConfig->getConfig(), $this->adyenTransportFactory, $this->versionResolver);
     }
 
     public function getClientForCode(string $code): AdyenClient

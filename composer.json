@@ -11,10 +11,11 @@
     "require": {
         "php": "^7.4",
         "adyen/php-api-library": "^10.1",
+        "composer/package-versions-deprecated": "1.11.99.2",
         "nyholm/psr7": "^1.4",
+        "sylius/refund-plugin": "~1.0.0",
         "sylius/sylius": "^1.9.0",
-        "symfony/messenger": "~4.4",
-        "sylius/refund-plugin": "~1.0.0"
+        "symfony/messenger": "~4.4"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",

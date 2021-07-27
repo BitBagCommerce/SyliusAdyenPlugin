@@ -9,6 +9,7 @@ use Adyen\Service\Checkout;
 use Adyen\Service\Modification;
 use Adyen\Service\Recurring;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
+use BitBag\SyliusAdyenPlugin\Resolver\Version\VersionResolver;
 use Payum\Core\Bridge\Spl\ArrayObject;
 
 class AdyenClient implements AdyenClientInterface
@@ -29,9 +30,13 @@ class AdyenClient implements AdyenClientInterface
     /** @var Client */
     private $transport;
 
+    /** @var VersionResolver */
+    private $versionResolver;
+
     public function __construct(
         array $options,
-        AdyenTransportFactory $adyenTransportFactory
+        AdyenTransportFactory $adyenTransportFactory,
+        VersionResolver $versionResolver
     ) {
         $options = ArrayObject::ensureArrayObject($options);
         $options->defaults(self::DEFAULT_OPTIONS);
@@ -46,6 +51,7 @@ class AdyenClient implements AdyenClientInterface
 
         $this->options = $options;
         $this->transport = $adyenTransportFactory->create($options->getArrayCopy());
+        $this->versionResolver = $versionResolver;
     }
 
     private function getCheckout(): Checkout
@@ -87,6 +93,7 @@ class AdyenClient implements AdyenClientInterface
         ];
 
         $payload = $this->enableOneOffPayment($payload, $adyenToken);
+        $payload = $this->versionResolver->appendVersionConstraints($payload);
 
         $paymentMethods = (array) $this->getCheckout()->paymentMethods($payload);
 
@@ -123,6 +130,7 @@ class AdyenClient implements AdyenClientInterface
         }
 
         $receivedPayload = $this->enableOneOffPayment($receivedPayload, $adyenToken);
+        $receivedPayload = $this->versionResolver->appendVersionConstraints($receivedPayload);
 
         return (array) $this->getCheckout()->paymentsDetails($receivedPayload);
     }
@@ -180,6 +188,7 @@ class AdyenClient implements AdyenClientInterface
         }
 
         $payload = $this->enableOneOffPayment($payload, $customerIdentifier, true);
+        $payload = $this->versionResolver->appendVersionConstraints($payload);
 
         return (array) $this->getCheckout()->payments($payload);
     }
@@ -198,6 +207,8 @@ class AdyenClient implements AdyenClientInterface
             'originalReference' => $pspReference
         ];
 
+        $params = $this->versionResolver->appendVersionConstraints($params);
+
         return (array) $this->getModification()->capture($params);
     }
 
@@ -208,6 +219,8 @@ class AdyenClient implements AdyenClientInterface
             'merchantAccount' => $this->options['merchantAccount'],
             'originalReference' => $pspReference
         ];
+
+        $params = $this->versionResolver->appendVersionConstraints($params);
 
         return (array) $this->getModification()->cancel($params);
     }
@@ -221,6 +234,8 @@ class AdyenClient implements AdyenClientInterface
             'recurringDetailReference' => $paymentReference,
             'shopperReference' => $shopperReference
         ];
+
+        $params = $this->versionResolver->appendVersionConstraints($params);
 
         return (array) $this->getRecurring()->disable($params);
     }
@@ -236,6 +251,8 @@ class AdyenClient implements AdyenClientInterface
             'reference' => $reference,
             'originalReference' => $pspReference
         ];
+
+        $params = $this->versionResolver->appendVersionConstraints($params);
 
         return (array) $this->getModification()->refund($params);
     }
