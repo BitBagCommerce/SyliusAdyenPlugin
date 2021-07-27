@@ -53,7 +53,7 @@ class ProcessNotificationsAction
         foreach ($arguments['notificationItems'] as $notificationItem) {
             $notificationItem = $notificationItem['NotificationRequestItem'];
 
-            if (isset($notificationItem['success']) && !$notificationItem['success']) {
+            if (isset($notificationItem['success']) && !(bool) $notificationItem['success']) {
                 continue;
             }
 
