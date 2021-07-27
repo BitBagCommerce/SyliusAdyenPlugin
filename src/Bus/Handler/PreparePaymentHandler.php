@@ -36,10 +36,11 @@ class PreparePaymentHandler implements MessageHandlerInterface
     public function __invoke(PreparePayment $command): void
     {
         $payment = $command->getPayment();
-        if ($this->isAccepted($payment)) {
-            $this->updateOrderState($this->getOrderFromPayment($payment));
+        if (!$this->isAccepted($payment)) {
+            return;
         }
 
+        $this->updateOrderState($this->getOrderFromPayment($payment));
         $this->persistPayment($payment);
     }
 

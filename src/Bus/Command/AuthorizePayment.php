@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Bus\Command;
 
 use Sylius\Component\Core\Model\PaymentInterface;
-use Sylius\Component\Core\OrderPaymentTransitions;
 use Sylius\Component\Payment\PaymentTransitions;
 
 class AuthorizePayment implements PaymentFinalizationCommand
@@ -26,10 +25,5 @@ class AuthorizePayment implements PaymentFinalizationCommand
     public function getPaymentTransition(): string
     {
         return PaymentTransitions::TRANSITION_AUTHORIZE;
-    }
-
-    public function getOrderTransition(): string
-    {
-        return OrderPaymentTransitions::TRANSITION_AUTHORIZE;
     }
 }

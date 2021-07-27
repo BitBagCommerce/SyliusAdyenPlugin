@@ -10,8 +10,6 @@ use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
 use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
-use Sylius\Component\Core\Model\PaymentMethodInterface;
-use Sylius\Component\Payment\Factory\PaymentFactoryInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class TakeOverPaymentHandler implements MessageHandlerInterface
@@ -22,38 +20,15 @@ class TakeOverPaymentHandler implements MessageHandlerInterface
     /** @var PaymentMethodRepositoryInterface */
     private $paymentMethodRepository;
 
-    /** @var PaymentFactoryInterface */
-    private $paymentFactory;
-
     /** @var EntityManagerInterface */
     private $paymentManager;
 
-    /** @var EntityManagerInterface */
-    private $orderManager;
-
     public function __construct(
         PaymentMethodRepositoryInterface $paymentMethodRepository,
-        PaymentFactoryInterface $paymentFactory,
-        EntityManagerInterface $paymentManager,
-        EntityManagerInterface $orderManager
+        EntityManagerInterface $paymentManager
     ) {
         $this->paymentMethodRepository = $paymentMethodRepository;
-        $this->paymentFactory = $paymentFactory;
         $this->paymentManager = $paymentManager;
-        $this->orderManager = $orderManager;
-    }
-
-    private function getPaymentMethod(string $paymentCode): PaymentMethodInterface
-    {
-        $paymentMethod = $this->paymentMethodRepository->findOneForAdyenAndCode($paymentCode);
-
-        if ($paymentMethod === null) {
-            throw new \InvalidArgumentException(
-                sprintf('Cannot get PaymentMethod with code "%s"', $paymentCode)
-            );
-        }
-
-        return $paymentMethod;
     }
 
     private function persistPayment(PaymentInterface $payment): void
@@ -71,7 +46,7 @@ class TakeOverPaymentHandler implements MessageHandlerInterface
             return;
         }
 
-        $paymentMethod = $this->getPaymentMethod($command->getPaymentCode());
+        $paymentMethod = $this->paymentMethodRepository->getOneForAdyenAndCode($command->getPaymentCode());
         $payment->setMethod($paymentMethod);
 
         $this->persistPayment($payment);

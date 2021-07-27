@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\RefundPayment;
+use BitBag\SyliusAdyenPlugin\RefundPaymentTransitions as BitBagRefundPaymentTransitions;
 use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface;
 use Sylius\RefundPlugin\StateResolver\RefundPaymentTransitions;
@@ -29,7 +30,7 @@ class RefundPaymentHandler implements MessageHandlerInterface
     public function __invoke(RefundPayment $command): void
     {
         $machine = $this->stateMachineFactory->get($command->getRefundPayment(), RefundPaymentTransitions::GRAPH);
-        $machine->apply('confirm', true);
+        $machine->apply(BitBagRefundPaymentTransitions::TRANSITION_CONFIRM, true);
 
         $this->refundPaymentManager->persist($command->getRefundPayment());
         $this->refundPaymentManager->flush();

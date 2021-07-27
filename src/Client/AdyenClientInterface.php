@@ -16,7 +16,8 @@ interface AdyenClientInterface
         string $locale,
         string $countryCode,
         int $amount,
-        string $currencyCode
+        string $currencyCode,
+        ?AdyenTokenInterface $adyenToken = null
     ): array;
 
     public function getEnvironment(): string;
