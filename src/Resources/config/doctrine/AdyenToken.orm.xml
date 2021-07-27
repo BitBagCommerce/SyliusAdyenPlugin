@@ -11,7 +11,7 @@
         </id>
         <field name="identifier" type="string" length="64" unique="true"/>
 
-        <many-to-one field="customer" target-entity="Sylius\Component\Core\Model\Customer" />
-        <many-to-one field="paymentMethod" target-entity="Sylius\Component\Core\Model\PaymentMethod" />
+        <many-to-one field="customer" target-entity="Sylius\Component\Customer\Model\CustomerInterface" />
+        <many-to-one field="paymentMethod" target-entity="Sylius\Component\Payment\Model\PaymentInterface" />
     </entity>
 </doctrine-mapping>
