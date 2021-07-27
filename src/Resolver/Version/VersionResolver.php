@@ -23,7 +23,7 @@ class VersionResolver
     {
         try {
             if (class_exists(\Composer\InstalledVersions::class)) {
-                return \Composer\InstalledVersions::getPrettyVersion(self::PACKAGE_NAME);
+                return \Composer\InstalledVersions::getPrettyVersion(self::PACKAGE_NAME) ?? self::TEST_APPLICATION_VERSION;
             }
 
             return substr(
