@@ -65,7 +65,7 @@
                     card: {
                         hasHolderName: true,
                         holderNameRequired: true,
-                        enableStoreDetails: true,
+                        enableStoreDetails: configuration.canBeStored,
                         data: {
                             holderName: `${configuration.billingAddress.firstName} ${configuration.billingAddress.lastName}`,
                         }
@@ -86,7 +86,6 @@
         };
 
         configuration = JSON.parse(container.attributes['data-dropin'].value);
-        console.log(configuration);
 
         checkout = init();
 

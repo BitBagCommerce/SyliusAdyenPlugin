@@ -86,6 +86,7 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         );
         $result['paymentMethods'] = $this->adyenPaymentMethods($order, $code, $token);
         $result['code'] = $paymentMethod->getCode();
+        $result['canBeStored'] = $token !== null;
 
         return $result;
     }

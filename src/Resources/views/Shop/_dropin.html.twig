@@ -15,6 +15,7 @@
     clientKey: payment_configuration['clientKey'],
     locale: order.localeCode,
     environment: payment_configuration['environment'],
+    canBeStored: payment_configuration['canBeStored'],
     path: {
         payments: path('bitbag_adyen_payments', path_params),
         paymentDetails: path('bitbag_adyen_payment_details', path_params),
