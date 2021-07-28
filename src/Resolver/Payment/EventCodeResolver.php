@@ -27,7 +27,7 @@ class EventCodeResolver
             throw new \InvalidArgumentException('eventCode is not supplied');
         }
 
-        if ($notificationData['eventCode'] !== self::AUTHORIZATION) {
+        if (strtolower((string) $notificationData['eventCode']) !== self::AUTHORIZATION) {
             return (string) $notificationData['eventCode'];
         }
 
