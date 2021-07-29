@@ -48,16 +48,16 @@ final class ConfigurationType extends AbstractType
                     ])
                 ],
             ])
-            ->add('apiKey', TextType::class, [
+            ->add('apiKey', CredentialType::class, [
                 'label' => 'bitbag_sylius_adyen_plugin.ui.api_key',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'bitbag_sylius_adyen_plugin.api_key.not_blank',
                         'groups' => ['sylius'],
                     ])
-                ],
+                ]
             ])
-            ->add('clientKey', TextType::class, [
+            ->add('clientKey', CredentialType::class, [
                 'label' => 'bitbag_sylius_adyen_plugin.ui.client_key',
                 'constraints' => [
                     new NotBlank([
@@ -66,7 +66,7 @@ final class ConfigurationType extends AbstractType
                     ])
                 ]
             ])
-            ->add('hmacKey', TextType::class, [
+            ->add('hmacKey', CredentialType::class, [
                 'label' => 'bitbag_sylius_adyen_plugin.ui.hmac_key',
                 'constraints' => [
                     new NotBlank([
@@ -75,7 +75,7 @@ final class ConfigurationType extends AbstractType
                     ])
                 ],
             ])
-            ->add('authUser', TextType::class, [
+            ->add('authUser', CredentialType::class, [
                 'label' => 'bitbag_sylius_adyen_plugin.ui.auth_user',
                 'constraints' => [
                     new NotBlank([
@@ -84,7 +84,7 @@ final class ConfigurationType extends AbstractType
                     ])
                 ],
             ])
-            ->add('authPassword', TextType::class, [
+            ->add('authPassword', CredentialType::class, [
                 'label' => 'bitbag_sylius_adyen_plugin.ui.auth_password',
                 'constraints' => [
                     new NotBlank([

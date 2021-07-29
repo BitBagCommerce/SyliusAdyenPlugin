@@ -14,12 +14,14 @@ namespace Tests\BitBag\SyliusAdyenPlugin\Behat\Context\Ui\Admin;
 use Adyen\AdyenException;
 use Adyen\Service;
 use Behat\Behat\Context\Context;
+use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
 use FriendsOfBehat\PageObjectExtension\Page\UnexpectedPageException;
 use Sylius\Behat\Service\Resolver\CurrentPageResolverInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Tests\BitBag\SyliusAdyenPlugin\Behat\Page\Admin\PaymentMethod\CreatePageInterface;
+use Tests\BitBag\SyliusAdyenPlugin\Behat\Page\Admin\PaymentMethod\UpdatePage;
 
 final class ManagingPaymentMethodAdyenContext extends MinkContext implements Context
 {
@@ -32,18 +34,24 @@ final class ManagingPaymentMethodAdyenContext extends MinkContext implements Con
     /** @var KernelInterface */
     private $kernel;
 
+    /** @var UpdatePage */
+    private $updatePage;
+
     public function __construct(
         CurrentPageResolverInterface $currentPageResolver,
         CreatePageInterface $createPage,
+        UpdatePage $updatePage,
         KernelInterface $kernel
     ) {
         $this->createPage = $createPage;
         $this->currentPageResolver = $currentPageResolver;
         $this->kernel = $kernel;
+        $this->updatePage = $updatePage;
     }
 
     /**
      * @Given I want to create a new Adyen payment method
+     * @Given I open
      *
      * @throws UnexpectedPageException
      */
@@ -76,26 +84,25 @@ final class ManagingPaymentMethodAdyenContext extends MinkContext implements Con
     }
 
     /**
-     * @When I specify test configuration with merchantAccount :merchantAccount and apiKey :apiKey
+     * @When /^I specify test configuration with:$/
      */
-    public function iSpecifyTestConfigurationWithMerchantAccountAndApiKey(string $merchantAccount, string $apiKey): void
+    public function iSpecifyTestConfigurationWithMerchantAccountAndApiKey(TableNode $formValues): void
     {
         $this->resolveCurrentPage()->setAdyenPlatform('test');
-        $this->resolveCurrentPage()->setAdyenMerchantAccount($merchantAccount);
-        $this->resolveCurrentPage()->setAdyenHmacKey('test');
-        $this->resolveCurrentPage()->setApiKey($apiKey);
-        $this->resolveCurrentPage()->setAuthUser('test');
-        $this->resolveCurrentPage()->setAuthPassword('test');
-        $this->resolveCurrentPage()->setClientKey('test');
+
+        $hash = $formValues->getHash();
+        foreach ($hash as $row) {
+            $this->resolveCurrentPage()->setValue($row['name'], $row['value']);
+        }
     }
 
     /**
-     * @return CreatePageInterface
+     * @return CreatePageInterface|UpdatePage
      */
     private function resolveCurrentPage()
     {
         return $this->currentPageResolver->getCurrentPageWithForm([
-            $this->createPage,
+            $this->createPage, $this->updatePage
         ]);
     }
 }
