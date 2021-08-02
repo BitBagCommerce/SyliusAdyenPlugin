@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Resolver\Payment;
 
+use BitBag\SyliusAdyenPlugin\Exception\RefundNotFoundException;
 use BitBag\SyliusAdyenPlugin\Repository\RefundPaymentRepositoryInterface;
 use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
-use Webmozart\Assert\Assert;
 
 class RefundReferenceResolver
 {
@@ -36,8 +36,9 @@ class RefundReferenceResolver
     {
         sscanf($reference, self::REFERENCE_PATTERN, $refundPaymentId, $orderNumber);
 
-        Assert::notEmpty($orderNumber);
-        Assert::notEmpty($refundPaymentId);
+        if ($orderNumber === null || $refundPaymentId === null) {
+            throw new RefundNotFoundException($reference);
+        }
 
         return $this->refundPaymentRepository->getForOrderNumberAndRefundPaymentId(
             (string) $orderNumber,

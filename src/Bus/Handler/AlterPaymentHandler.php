@@ -36,7 +36,7 @@ class AlterPaymentHandler implements MessageHandlerInterface
 
     private function isCompleted(OrderInterface $order): bool
     {
-        return $order->getPaymentState() == PaymentInterface::STATE_COMPLETED;
+        return $order->getPaymentState() === PaymentInterface::STATE_COMPLETED;
     }
 
     private function isAdyenPayment(PaymentInterface $payment): bool

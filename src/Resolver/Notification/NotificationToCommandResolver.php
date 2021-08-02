@@ -12,27 +12,25 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Notification;
 
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\CommandResolver;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\NoCommandResolvedException;
+use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 
-class NotificationCommandResolver
+class NotificationToCommandResolver
 {
     /** @var iterable<int, CommandResolver> */
-    private $notificationResolvers;
+    private $commandResolvers;
 
     /**
-     * @param iterable<int, CommandResolver> $notificationResolvers
+     * @param iterable<int, CommandResolver> $commandResolvers
      */
     public function __construct(
-        iterable $notificationResolvers
+        iterable $commandResolvers
     ) {
-        $this->notificationResolvers = $notificationResolvers;
+        $this->commandResolvers = $commandResolvers;
     }
 
-    /**
-     * @param array<string, mixed> $notificationData
-     */
-    public function resolve(string $paymentCode, array $notificationData): object
+    public function resolve(string $paymentCode, NotificationItemData $notificationData): object
     {
-        foreach ($this->notificationResolvers as $resolver) {
+        foreach ($this->commandResolvers as $resolver) {
             try {
                 return $resolver->resolve($paymentCode, $notificationData);
             } catch (NoCommandResolvedException $ex) {

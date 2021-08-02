@@ -1,0 +1,30 @@
+BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationRequest:
+  properties:
+    notificationItems:
+      - Valid: ~
+
+BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItem:
+  properties:
+    notificationRequestItem:
+      - Valid: ~
+
+BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\Amount:
+  properties:
+    currency:
+      - NotBlank: ~
+    value:
+      - GreaterOrEqualThan: 0
+
+BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData:
+  constraints:
+    - BitBag\SyliusAdyenPlugin\Validator\Constraint\HmacSignature: ~
+  properties:
+    eventCode:
+      - NotBlank: ~
+    merchantReference:
+      - NotBlank: ~
+    pspReference:
+      - NotBlank: ~
+    amount:
+      - Valid: ~
+      - NotBlank: ~

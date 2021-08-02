@@ -15,6 +15,7 @@ use Adyen\Service\Checkout;
 use Adyen\Service\Modification;
 use Adyen\Service\Recurring;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
+use BitBag\SyliusAdyenPlugin\Exception\PaymentMethodsResponseMissing;
 use BitBag\SyliusAdyenPlugin\Resolver\Version\VersionResolver;
 use Payum\Core\Bridge\Spl\ArrayObject;
 
@@ -104,7 +105,7 @@ class AdyenClient implements AdyenClientInterface
         $paymentMethods = (array) $this->getCheckout()->paymentMethods($payload);
 
         if (!isset($paymentMethods['paymentMethods'])) {
-            throw new \RuntimeException(sprintf('Adyen API failed to return any payment methods'));
+            throw new PaymentMethodsResponseMissing();
         }
 
         return $paymentMethods;

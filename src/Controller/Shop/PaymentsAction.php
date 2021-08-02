@@ -15,6 +15,7 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\TakeOverPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Bus\Query\GetToken;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
+use BitBag\SyliusAdyenPlugin\Exception\UnboundAddressFromOrderException;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
@@ -33,6 +34,8 @@ class PaymentsAction
     public const REDIRECT_TARGET_ACTION = 'bitbag_adyen_thank_you';
 
     public const NO_COUNTRY_AVAILABLE_PLACEHOLDER = 'ZZ';
+
+    public const ORDER_ID_KEY = 'sylius_order_id';
 
     /** @var AdyenClientProvider */
     private $adyenClientProvider;
@@ -69,13 +72,11 @@ class PaymentsAction
             $this->getPayment($order)
         );
 
-        $params = [
-            'code' => $method->getCode()
-        ];
-
         return $this->urlGenerator->generate(
             self::REDIRECT_TARGET_ACTION,
-            $params,
+            [
+                'code' => $method->getCode()
+            ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
     }
@@ -83,7 +84,7 @@ class PaymentsAction
     private function prepareOrder(Request $request, OrderInterface $order): void
     {
         if ($request->get('tokenValue') === null) {
-            $request->getSession()->set('sylius_order_id', $order->getId());
+            $request->getSession()->set(self::ORDER_ID_KEY, $order->getId());
         }
         $this->orderTokenAssigner->assignTokenValueIfNotSet($order);
     }
@@ -93,7 +94,7 @@ class PaymentsAction
         $billingAddress = $order->getBillingAddress();
 
         if ($billingAddress === null) {
-            throw new \InvalidArgumentException('Unbound billing address for order #%d', (int) $order->getId());
+            throw new UnboundAddressFromOrderException($order);
         }
 
         return [

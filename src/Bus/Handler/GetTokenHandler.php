@@ -14,6 +14,7 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\CreateToken;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Bus\Query\GetToken;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
+use BitBag\SyliusAdyenPlugin\Exception\OrderWithoutCustomerException;
 use BitBag\SyliusAdyenPlugin\Repository\AdyenTokenRepositoryInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -43,12 +44,14 @@ class GetTokenHandler implements MessageHandlerInterface
     {
         $customer = $getTokenQuery->getOrder()->getCustomer();
         if ($customer === null) {
-            throw new \InvalidArgumentException(
-                sprintf('An order %d has no customer associated', (int) $getTokenQuery->getOrder()->getId())
-            );
+            throw new OrderWithoutCustomerException($getTokenQuery->getOrder());
         }
 
-        Assert::isInstanceOf($customer, CustomerInterface::class);
+        Assert::isInstanceOf(
+            $customer,
+            CustomerInterface::class,
+            'Customer doesn\'t implement a core CustomerInterface'
+        );
 
         $token = $this->adyenTokenRepository->findOneByPaymentMethodAndCustomer(
             $getTokenQuery->getPaymentMethod(),

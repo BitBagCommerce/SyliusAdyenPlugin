@@ -12,8 +12,9 @@ namespace BitBag\SyliusAdyenPlugin\Entity;
 
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
+use Sylius\Component\Resource\Model\ResourceInterface;
 
-interface AdyenTokenInterface
+interface AdyenTokenInterface extends ResourceInterface
 {
     public function setCustomer(?CustomerInterface $customer): void;
 

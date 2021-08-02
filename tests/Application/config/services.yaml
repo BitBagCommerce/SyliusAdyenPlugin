@@ -7,4 +7,9 @@ parameters:
         - adyen
 
 services:
-
+    test_controller:
+        class: BitBag\SyliusAdyenPlugin\Controller\TestController
+        arguments:
+            - '@serializer'
+        tags:
+            - controller.service_arguments

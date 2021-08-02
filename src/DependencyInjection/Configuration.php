@@ -18,7 +18,6 @@ final class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('bitbag_adyen');
-        //$rootNode = $treeBuilder->getRootNode();
 
         return $treeBuilder;
     }

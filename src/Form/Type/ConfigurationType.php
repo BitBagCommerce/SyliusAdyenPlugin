@@ -93,7 +93,6 @@ final class ConfigurationType extends AbstractType
                     ])
                 ],
             ])
-
             ->add(AdyenClientProvider::FACTORY_NAME, HiddenType::class, [
                 'data' => true
             ]);

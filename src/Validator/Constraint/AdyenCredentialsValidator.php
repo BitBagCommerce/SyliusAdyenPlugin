@@ -49,6 +49,7 @@ class AdyenCredentialsValidator extends ConstraintValidator
         if ($merchantAccount === null || $merchantAccount === '') {
             throw new InvalidMerchantAccountException();
         }
+
         if ($apiKey === null || $apiKey === '') {
             throw new InvalidApiKeyException();
         }

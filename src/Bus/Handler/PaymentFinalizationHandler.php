@@ -12,8 +12,8 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentFinalizationCommand;
 use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
-use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface;
+use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Payment\PaymentTransitions;
@@ -26,35 +26,31 @@ class PaymentFinalizationHandler implements MessageHandlerInterface
     /** @var FactoryInterface */
     private $stateMachineFactory;
 
-    /** @var EntityManagerInterface */
-    private $orderManager;
-
-    /** @var EntityManagerInterface */
-    private $paymentManager;
+    /** @var EntityRepository */
+    private $orderRepository;
 
     public function __construct(
         FactoryInterface $stateMachineFactory,
-        EntityManagerInterface $orderManager,
-        EntityManagerInterface $paymentManager
+        EntityRepository $orderRepository
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
-        $this->orderManager = $orderManager;
-        $this->paymentManager = $paymentManager;
-    }
-
-    private function persistPaymentAndOrder(PaymentInterface $payment): void
-    {
-        $this->paymentManager->persist($payment);
-        $this->paymentManager->flush();
-
-        $this->orderManager->persist($this->getOrderFromPayment($payment));
-        $this->orderManager->flush();
+        $this->orderRepository = $orderRepository;
     }
 
     private function updatePaymentState(PaymentInterface $payment, string $transition): void
     {
         $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
         $stateMachine->apply($transition, true);
+    }
+
+    private function updatePayment(PaymentInterface $payment): void
+    {
+        $order = $payment->getOrder();
+        if ($order === null) {
+            return;
+        }
+
+        $this->orderRepository->add($order);
     }
 
     public function __invoke(PaymentFinalizationCommand $command): void
@@ -66,7 +62,7 @@ class PaymentFinalizationHandler implements MessageHandlerInterface
         }
 
         $this->updatePaymentState($payment, $command->getPaymentTransition());
-        $this->persistPaymentAndOrder($payment);
+        $this->updatePayment($payment);
     }
 
     private function isAccepted(PaymentInterface $payment): bool
