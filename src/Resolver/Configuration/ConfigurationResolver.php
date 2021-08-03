@@ -24,7 +24,9 @@ class ConfigurationResolver
             'hmacKey' => '',
             'authUser' => '',
             'authPassword' => '',
-            'environment' => AdyenClientInterface::TEST_ENVIRONMENT
+            'environment' => AdyenClientInterface::TEST_ENVIRONMENT,
+            'adyen' => 0,
+            'merchantAccount' => ''
         ]);
         $resolver->setRequired($resolver->getDefinedOptions());
 
