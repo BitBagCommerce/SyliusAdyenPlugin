@@ -16,6 +16,7 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentFinalizationCommand;
 use BitBag\SyliusAdyenPlugin\Bus\Handler\PaymentFinalizationHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\Payment;
 use Sylius\Component\Core\OrderPaymentStates;
@@ -24,26 +25,22 @@ class PaymentFinalizationHandlerTest extends TestCase
 {
     use StateMachineTrait;
 
-    /** @var EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject */
-    private $orderManager;
-
-    /** @var EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject */
-    private $paymentManager;
-
     /** @var PaymentFinalizationHandler */
     private $handler;
+    /**
+     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository
+     */
+    private $orderRepository;
 
     protected function setUp(): void
     {
         $this->setupStateMachineMocks();
 
-        $this->orderManager = $this->createMock(EntityManagerInterface::class);
-        $this->paymentManager = $this->createMock(EntityManagerInterface::class);
+        $this->orderRepository = $this->createMock(EntityRepository::class);
 
         $this->handler = new PaymentFinalizationHandler(
             $this->stateMachineFactory,
-            $this->orderManager,
-            $this->paymentManager
+            $this->orderRepository
         );
     }
 
@@ -55,9 +52,9 @@ class PaymentFinalizationHandlerTest extends TestCase
         $payment = new Payment();
         $payment->setOrder($order);
 
-        $this->paymentManager
+        $this->orderRepository
             ->expects($this->never())
-            ->method('persist')
+            ->method('add')
         ;
 
         $command = new AuthorizePayment($payment);
@@ -99,18 +96,9 @@ class PaymentFinalizationHandlerTest extends TestCase
         ;
 
         $this
-            ->paymentManager
+            ->orderRepository
             ->expects($this->once())
-            ->method('persist')
-            ->with(
-                $this->equalTo($payment)
-            )
-        ;
-
-        $this
-            ->orderManager
-            ->expects($this->once())
-            ->method('persist')
+            ->method('add')
             ->with(
                 $this->equalTo($order)
             )

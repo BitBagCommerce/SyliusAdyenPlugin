@@ -14,6 +14,7 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
 use BitBag\SyliusAdyenPlugin\Bus\Handler\PreparePaymentHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\Payment;
 
@@ -25,16 +26,17 @@ class PreparePaymentHandlerTest extends TestCase
 
     /** @var PreparePaymentHandler */
     private $handler;
-
-    /** @var EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject */
-    private $paymentManager;
+    /**
+     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository
+     */
+    private $paymentRepository;
 
     protected function setUp(): void
     {
         $this->setupStateMachineMocks();
 
-        $this->paymentManager = $this->createMock(EntityManagerInterface::class);
-        $this->handler = new PreparePaymentHandler($this->stateMachineFactory, $this->paymentManager);
+        $this->paymentRepository = $this->createMock(EntityRepository::class);
+        $this->handler = new PreparePaymentHandler($this->stateMachineFactory, $this->paymentRepository);
     }
 
     public static function provideForTestFlow(): array
