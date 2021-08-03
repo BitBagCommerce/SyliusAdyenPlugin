@@ -71,7 +71,7 @@ class NotificationItemNormalizer implements DenormalizerAwareInterface, Denormal
         }
 
         /**
-         * @var array $result
+         * @var array<string, mixed> $result
          */
         $result = $this->normalizer->normalize($object, $format, $context);
         $result['eventCode'] = strtoupper((string) $result['eventCode']);
