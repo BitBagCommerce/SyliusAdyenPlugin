@@ -14,7 +14,6 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\CreateToken;
 use BitBag\SyliusAdyenPlugin\Bus\Handler\CreateTokenHandler;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenToken;
 use BitBag\SyliusAdyenPlugin\Factory\AdyenTokenFactoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\CustomerInterface;
@@ -27,9 +26,8 @@ class CreateTokenHandlerTest extends TestCase
 
     /** @var CreateTokenHandler */
     private $handler;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository
-     */
+
+    /** @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository */
     private $tokenRepository;
 
     protected function setUp(): void

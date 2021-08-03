@@ -13,7 +13,7 @@ BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\Amount:
     currency:
       - NotBlank: ~
     value:
-      - GreaterOrEqualThan: 0
+      - GreaterThanOrEqual: 0
 
 BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData:
   constraints:

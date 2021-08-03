@@ -51,32 +51,22 @@ class HmacSignatureValidator extends ConstraintValidator
         $this->context->buildViolation($constraint->message);
     }
 
-    /**
-     * @param object|array $value
-     */
-    private function getPaymentCode($value): string
+    private function getPaymentCode(): string
     {
-        try {
-            return (string) $this->propertyAccessor->getValue(
-                $value,
-                self::PAYMENT_METHOD_FIELD_NAME
-            );
-        } catch (\InvalidArgumentException $exception) {
-            /**
-             * @var object|array $objectOrArray
-             */
-            $objectOrArray = $this->context->getRoot();
+        /**
+         * @var object|array $objectOrArray
+         */
+        $objectOrArray = $this->context->getRoot();
 
-            return (string) $this->propertyAccessor->getValue(
-                $objectOrArray,
-                self::PAYMENT_METHOD_FIELD_NAME
-            );
-        }
+        return (string) $this->propertyAccessor->getValue(
+            $objectOrArray,
+            self::PAYMENT_METHOD_FIELD_NAME
+        );
     }
 
     private function getNormalizedNotificationData(NotificationItemData $value): array
     {
-        $params = (array) $this->normalizer->normalize($value, 'xml');
+        $params = (array) $this->normalizer->normalize($value);
         $params['success'] = $value->success ? 'true' : 'false';
 
         return $params;
@@ -92,7 +82,7 @@ class HmacSignatureValidator extends ConstraintValidator
         Assert::isInstanceOf($constraint, HmacSignature::class);
 
         $validator = $this->signatureValidatorProvider->getValidatorForCode(
-            $this->getPaymentCode($value)
+            $this->getPaymentCode()
         );
 
         $params = $this->getNormalizedNotificationData($value);

@@ -12,7 +12,6 @@ namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
 use BitBag\SyliusAdyenPlugin\Bus\Handler\PreparePaymentHandler;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\Order;
@@ -26,9 +25,8 @@ class PreparePaymentHandlerTest extends TestCase
 
     /** @var PreparePaymentHandler */
     private $handler;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository
-     */
+
+    /** @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository */
     private $paymentRepository;
 
     protected function setUp(): void

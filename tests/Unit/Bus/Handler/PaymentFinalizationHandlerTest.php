@@ -14,7 +14,6 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\AuthorizePayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\CapturePayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentFinalizationCommand;
 use BitBag\SyliusAdyenPlugin\Bus\Handler\PaymentFinalizationHandler;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\Order;
@@ -27,9 +26,8 @@ class PaymentFinalizationHandlerTest extends TestCase
 
     /** @var PaymentFinalizationHandler */
     private $handler;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository
-     */
+
+    /** @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository */
     private $orderRepository;
 
     protected function setUp(): void

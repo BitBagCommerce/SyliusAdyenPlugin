@@ -66,8 +66,8 @@
         </service>
 
         <service
-            class="BitBag\SyliusAdyenPlugin\Resolver\Notification\Serializer\NotificationItemDenormalizer"
-            id="bitbag.sylius_adyen_plugin.resolver.notification.serializer.notification_item_denormalizer"
+            class="BitBag\SyliusAdyenPlugin\Resolver\Notification\Serializer\NotificationItemNormalizer"
+            id="bitbag.sylius_adyen_plugin.resolver.notification.serializer.notification_item_normalizer"
         >
             <tag name="serializer.normalizer"/>
         </service>
