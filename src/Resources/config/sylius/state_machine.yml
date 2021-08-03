@@ -10,7 +10,7 @@ winzou_state_machine:
   sylius_payment:
     transitions:
       capture:
-        from: [ processing, authorized ]
+        from: [ new, processing, authorized ]
         to: completed
       process:
         from: [ authorized ]
