@@ -23,7 +23,7 @@ class PreparePaymentHandler implements MessageHandlerInterface
 {
     use OrderFromPaymentTrait;
 
-    public const ALLOWED_EVENT_NAMES = ['Authorised', 'RedirectShopper'];
+    public const ALLOWED_EVENT_NAMES = ['authorised', 'redirectshopper'];
 
     /** @var FactoryInterface */
     private $stateMachineFactory;
@@ -60,6 +60,7 @@ class PreparePaymentHandler implements MessageHandlerInterface
     {
         $details = $payment->getDetails();
 
-        return in_array($details['resultCode'], self::ALLOWED_EVENT_NAMES, true);
+        $resultCode = strtolower((string)$details['resultCode']);
+        return in_array($resultCode, self::ALLOWED_EVENT_NAMES, true);
     }
 }
