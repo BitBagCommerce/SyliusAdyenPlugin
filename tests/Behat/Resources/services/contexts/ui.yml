@@ -5,17 +5,10 @@ services:
         arguments:
             - "@sylius.behat.current_page_resolver"
             - "@bitbag_sylius_adyen_plugin.page.admin.payment_method.create"
+            - "@bitbag_sylius_adyen_plugin.page.admin.payment_method.update"
             - '@kernel'
 
-#    bitbag_sylius_adyen_plugin.context.ui.shop.adyen_checkout:
-#        class: Tests\BitBag\SyliusAdyenPlugin\Behat\Context\Ui\Shop\AdyenCheckoutContext
-#        arguments:
-#            - '@sylius.behat.page.shop.checkout.complete'
-#            - '@bitbag_sylius_adyen_plugin.page.external.adyen_checkout'
-#            - '@sylius.behat.page.shop.order.show'
-#            - '@sylius.repository.payment'
-#
-#    bitbag_sylius_adyen_plugin.context.ui.admin.order:
-#        class: Tests\BitBag\SyliusAdyenPlugin\Behat\Context\Ui\Admin\OrderContext
-#        arguments:
-#            - "@sylius.behat.page.admin.order.show"
+    bitbag_sylius_adyen_plugin.context.ui.admin.adyen_payment_method_configuration:
+        class: Tests\BitBag\SyliusAdyenPlugin\Behat\Context\Ui\Admin\AdyenPaymentMethodConfigurationContext
+        arguments:
+            - "@bitbag_sylius_adyen_plugin.page.admin.payment_method.update"

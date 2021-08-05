@@ -20,33 +20,20 @@ final class CreatePage extends BaseCreatePage implements CreatePageInterface
         $this->getDocument()->selectFieldOption('Platform', $platform);
     }
 
-    public function setAdyenMerchantAccount(string $merchantAccount): void
+    public function setValue(string $name, $value): void
     {
-        $this->getDocument()->fillField('Merchant account', $merchantAccount);
+        $this->getElement($name)->setValue($value);
     }
 
-    public function setAdyenHmacKey(string $hmacKey): void
+    protected function getDefinedElements(): array
     {
-        $this->getDocument()->fillField('HMAC Key', $hmacKey);
-    }
-
-    public function setAuthUser(string $authUser): void
-    {
-        $this->getDocument()->fillField('sylius_payment_method_gatewayConfig_config_authUser', $authUser);
-    }
-
-    public function setAuthPassword(string $authPassword): void
-    {
-        $this->getDocument()->fillField('sylius_payment_method_gatewayConfig_config_authPassword', $authPassword);
-    }
-
-    public function setApiKey(string $apiKey): void
-    {
-        $this->getDocument()->fillField('sylius_payment_method_gatewayConfig_config_apiKey', $apiKey);
-    }
-
-    public function setClientKey(string $clientKey)
-    {
-        $this->getDocument()->fillField('sylius_payment_method_gatewayConfig_config_clientKey', $clientKey);
+        return parent::getDefinedElements() + [
+            'apiKey' => '#sylius_payment_method_gatewayConfig_config_apiKey',
+            'merchantAccount' => '#sylius_payment_method_gatewayConfig_config_merchantAccount',
+            'hmacKey' => '#sylius_payment_method_gatewayConfig_config_hmacKey',
+            'clientKey' => '#sylius_payment_method_gatewayConfig_config_clientKey',
+            'authUser' => '#sylius_payment_method_gatewayConfig_config_authUser',
+            'authPassword' => '#sylius_payment_method_gatewayConfig_config_authPassword'
+        ];
     }
 }
