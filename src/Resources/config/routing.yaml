@@ -1,0 +1,2 @@
+bitbag_adyen_localized:
+  resource: "@BitBagSyliusAdyenPlugin/Resources/config/routing/shop_routing.yml"

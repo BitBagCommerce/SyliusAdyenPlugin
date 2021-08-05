@@ -1,0 +1,7 @@
+sylius_resource:
+  resources:
+    bitbag_sylius_adyen_plugin.adyen_token:
+      classes:
+        repository: BitBag\SyliusAdyenPlugin\Repository\AdyenTokenRepository
+        model: BitBag\SyliusAdyenPlugin\Entity\AdyenToken
+

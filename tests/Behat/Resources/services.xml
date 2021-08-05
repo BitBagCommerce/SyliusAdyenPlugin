@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <imports>
+        <import resource="services/contexts.yml"/>
+        <import resource="services/mocker.yml"/>
+        <import resource="services/pages.yml"/>
+    </imports>
     <services>
         <defaults public="true" />
-        <!-- Put your Behat services here -->
+        <service
+                class="Tests\BitBag\SyliusAdyenPlugin\HttpClientStub"
+                id="tests.bitbag.sylius_adyen_plugin.behat.context.api_mock_client"
+        />
 
-        <service id="acme_sylius_example.context.ui.shop.welcome" class="Tests\BitBag\SyliusAdyenPlugin\Behat\Context\Ui\Shop\WelcomeContext">
-            <argument type="service" id="acme_sylius_example.page.shop.static_welcome" />
-            <argument type="service" id="acme_sylius_example.page.shop.dynamic_welcome" />
+        <service
+                class="BitBag\SyliusAdyenPlugin\Client\AdyenTransportFactory"
+                decorates="bitbag.sylius_adyen_plugin.client.adyen_transport_factory"
+                id="bitbag.sylius_adyen_plugin.client.adyen_transport_factory.decorator"
+                lazy="true"
+        >
+            <argument type="service" id="tests.bitbag.sylius_adyen_plugin.behat.context.api_mock_client"/>
         </service>
 
-        <service id="acme_sylius_example.page.shop.static_welcome" class="Tests\BitBag\SyliusAdyenPlugin\Behat\Page\Shop\StaticWelcomePage" parent="sylius.behat.symfony_page" public="false" />
-        <service id="acme_sylius_example.page.shop.dynamic_welcome" class="Tests\BitBag\SyliusAdyenPlugin\Behat\Page\Shop\DynamicWelcomePage" parent="sylius.behat.symfony_page" public="false" />
     </services>
 </container>

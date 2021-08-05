@@ -1,0 +1,9 @@
+{% set payment_configuration = adyen_payment_configuration(order) %}
+
+{% if payment_configuration is empty %}
+    <button type="submit" class="ui huge primary fluid icon labeled button" {{ sylius_test_html_attribute('confirmation-button') }}>
+        <i class="check icon"></i> {{ 'sylius.ui.place_order'|trans }}
+    </button>
+{% else %}
+    {% include '@BitBagSyliusAdyenPlugin/Shop/_dropin.html.twig' %}
+{% endif %}

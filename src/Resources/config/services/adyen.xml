@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <defaults public="true"/>
+
+        <service
+                class="BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider"
+                id="bitbag.sylius_adyen_plugin.provider.adyen_client_provider"
+        >
+            <argument type="service" id="bitbag.sylius_adyen_plugin.repository.payment_method"/>
+            <argument type="service" id="sylius.context.shopper"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.client.adyen_transport_factory"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.resolver.version.version_resolver"/>
+        </service>
+
+        <service
+                class="BitBag\SyliusAdyenPlugin\Client\AdyenTransportFactory"
+                id="bitbag.sylius_adyen_plugin.client.adyen_transport_factory"
+        />
+
+        <service
+                class="BitBag\SyliusAdyenPlugin\Client\AdyenClient"
+                id="bitbag.sylius_adyen_plugin.client.adyen_client"
+        >
+            <factory service="bitbag.sylius_adyen_plugin.provider.adyen_client_provider" method="getDefaultClient"/>
+        </service>
+
+        <service
+                class="BitBag\SyliusAdyenPlugin\Validator\Constraint\AdyenCredentialsValidator"
+                id="bitbag.sylius_adyen_plugin.validator.constraint.adyen_credentials_validator"
+        >
+            <argument type="service" id="bitbag.sylius_adyen_plugin.client.adyen_transport_factory"/>
+            <tag name="validator.constraint_validator" alias="bitbag_sylius_adyen_plugin_credentials"/>
+        </service>
+
+        <service
+                class="BitBag\SyliusAdyenPlugin\Provider\SignatureValidatorProvider"
+                id="bitbag.sylius_adyen_plugin.provider.signature_validator_provider"
+        >
+            <argument type="service" id="bitbag.sylius_adyen_plugin.repository.payment_method"/>
+        </service>
+    </services>
+</container>

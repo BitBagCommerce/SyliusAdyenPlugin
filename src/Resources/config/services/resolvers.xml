@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service
+                class="BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolver"
+                id="bitbag.sylius_adyen_plugin.resolver.order.payment_checkout_order_resolver"
+        >
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="sylius.context.cart"/>
+            <argument type="service" id="sylius.repository.order"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Resolver\Payment\PaymentNotificationResolver"
+            id="bitbag.sylius_adyen_plugin.resolver.payment.payment_notification_resolver"
+        >
+            <argument type="service" id="bitbag.sylius_adyen_plugin.provider.signature_validator_provider"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.repository.payment"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Resolver\Payment\RefundReferenceResolver"
+            id="bitbag.sylius_adyen_plugin.resolver.payment.refund_reference_resolver"
+        >
+            <argument type="service" id="bitbag.sylius_adyen_plugin.repository.refund_payment"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\PaymentNotificationResolver"
+            id="bitbag.sylius_adyen_plugin.resolver.notification.processor.payment_notification_resolver"
+        >
+            <tag name="bitbag.sylius_adyen_plugin.resolver.notification.processor.command_resolver"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.repository.payment"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\RefundNotificationResolver"
+            id="bitbag.sylius_adyen_plugin.resolver.notification.processor.refund_notification_resolver"
+        >
+            <argument type="service" id="bitbag.sylius_adyen_plugin.resolver.payment.refund_reference_resolver"/>
+
+            <tag name="bitbag.sylius_adyen_plugin.resolver.notification.processor.command_resolver"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationToCommandResolver"
+            id="bitbag.sylius_adyen_plugin.resolver.notification.notification_command_resolver"
+        >
+            <argument type="tagged_iterator" tag="bitbag.sylius_adyen_plugin.resolver.notification.processor.command_resolver"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Resolver\Version\VersionResolver"
+            id="bitbag.sylius_adyen_plugin.resolver.version.version_resolver"
+        />
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver"
+            id="bitbag.sylius_adyen_plugin.resolver.notification.notification_resolver"
+        >
+            <argument type="service" id="serializer"/>
+            <argument type="service" id="validator"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Resolver\Notification\Serializer\NotificationItemNormalizer"
+            id="bitbag.sylius_adyen_plugin.resolver.notification.serializer.notification_item_normalizer"
+        >
+            <tag name="serializer.normalizer"/>
+        </service>
+
+    </services>
+</container>

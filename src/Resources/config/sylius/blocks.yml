@@ -1,0 +1,16 @@
+sylius_ui:
+  events:
+    sylius.shop.layout.stylesheets:
+      blocks:
+        adyen:
+          template: '@BitBagSyliusAdyenPlugin/Shop/_stylesheets.html.twig'
+    sylius.shop.layout.javascripts:
+      blocks:
+        adyen:
+          template: '@BitBagSyliusAdyenPlugin/Shop/_javascripts.html.twig'
+
+    sylius.admin.update:
+      blocks:
+        adyen_description:
+          priority: 11
+          template: '@BitBagSyliusAdyenPlugin/Admin/_description.html.twig'

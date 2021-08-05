@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <imports>
+        <import resource="services/*.xml"/>
+    </imports>
+
     <services>
-        <!-- Put your services here -->
+        <service
+            class="BitBag\SyliusAdyenPlugin\Callback\RequestCaptureOnShipCallback"
+            id="bitbag.sylius_adyen_plugin.callback.request_capture_on_ship_callback"
+            public="true"
+        >
+            <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Callback\RequestCancelCallback"
+            id="bitbag.sylius_adyen_plugin.callback.request_cancel_callback"
+            public="true"
+        >
+            <argument type="service" id="sm.factory"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
+        </service>
     </services>
+
 </container>

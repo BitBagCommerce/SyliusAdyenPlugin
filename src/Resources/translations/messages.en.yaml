@@ -1,0 +1,16 @@
+bitbag_sylius_adyen_plugin:
+  ui:
+    api_key: API key
+    test_platform: Test platform
+    live_platform: Live platform
+    platform: Platform
+    merchant_account: Merchant account
+    hmac_key: HMAC Key
+    ayden_gateway_label: Adyen
+    auth_user: Notification authentication username
+    auth_password: Notification authentication password
+    client_key: Client key
+    notification_endpoint_description: In order to configure Adyen payment, head to merchant panel and use following URL as target
+    notification_endpoint: Notifications endpoint
+  runtime:
+    signature: Invalid notification signature provided

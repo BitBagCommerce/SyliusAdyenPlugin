@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service
+                class="BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepository"
+                id="bitbag.sylius_adyen_plugin.repository.payment_method"
+        >
+            <argument type="service" id="sylius.repository.payment_method"/>
+        </service>
+
+        <service
+                class="BitBag\SyliusAdyenPlugin\Repository\PaymentRepository"
+                id="bitbag.sylius_adyen_plugin.repository.payment"
+        >
+            <argument type="service" id="sylius.repository.payment"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Repository\RefundPaymentRepository"
+            id="bitbag.sylius_adyen_plugin.repository.refund_payment"
+        >
+            <argument type="service" id="sylius_refund.repository.refund_payment"/>
+        </service>
+
+
+    </services>
+</container>
