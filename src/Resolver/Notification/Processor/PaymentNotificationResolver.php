@@ -13,9 +13,9 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Exception\UnmappedAdyenActionException;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentRepositoryInterface;
+use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 use Doctrine\ORM\NoResultException;
 use Sylius\Component\Core\Model\PaymentInterface;
-use Webmozart\Assert\Assert;
 
 class PaymentNotificationResolver implements CommandResolver
 {
@@ -42,15 +42,13 @@ class PaymentNotificationResolver implements CommandResolver
         }
     }
 
-    public function resolve(string $paymentCode, array $notificationData): object
+    public function resolve(string $paymentCode, NotificationItemData $notificationData): object
     {
         try {
-            Assert::keyExists($notificationData, 'merchantReference');
-
-            $payment = $this->fetchPayment($paymentCode, (string) $notificationData['merchantReference']);
+            $payment = $this->fetchPayment($paymentCode, (string) $notificationData->merchantReference);
 
             return $this->dispatcher->getCommandFactory()->createForEvent(
-                (string) $notificationData['eventCode'],
+                (string) $notificationData->eventCode,
                 $payment,
                 $notificationData
             );

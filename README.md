@@ -1,5 +1,4 @@
-todo: replace a 
-# [![](https://placekitten.com/1024/534)](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen)
+# ![Logo](doc/AdyenPlugin.png)
 
 # Adyen Payments Plugin for Sylius
 ----

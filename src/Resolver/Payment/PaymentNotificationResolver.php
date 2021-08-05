@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Resolver\Payment;
 
+use BitBag\SyliusAdyenPlugin\Exception\UnprocessablePaymentException;
 use BitBag\SyliusAdyenPlugin\Provider\SignatureValidatorProvider;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentRepositoryInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -35,7 +36,7 @@ class PaymentNotificationResolver
     {
         $result = $payment->getMethod();
         if ($result === null) {
-            throw new \InvalidArgumentException(
+            throw new UnprocessablePaymentException(
                 sprintf('Payment #%d has no method associated', (int) $payment->getId())
             );
         }

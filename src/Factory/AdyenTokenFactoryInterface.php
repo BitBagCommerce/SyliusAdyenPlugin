@@ -13,8 +13,9 @@ namespace BitBag\SyliusAdyenPlugin\Factory;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
+use Sylius\Component\Resource\Factory\FactoryInterface;
 
-interface AdyenTokenFactoryInterface
+interface AdyenTokenFactoryInterface extends FactoryInterface
 {
     public function create(PaymentMethodInterface $paymentMethod, CustomerInterface $customer): AdyenTokenInterface;
 }

@@ -14,7 +14,7 @@ use Adyen\Client;
 use Adyen\Environment;
 use Adyen\HttpClient\ClientInterface;
 use Adyen\HttpClient\CurlClient;
-use Webmozart\Assert\Assert;
+use BitBag\SyliusAdyenPlugin\Resolver\Configuration\ConfigurationResolver;
 
 class AdyenTransportFactory
 {
@@ -28,8 +28,7 @@ class AdyenTransportFactory
 
     public function create(array $options): Client
     {
-        Assert::keyExists($options, 'apiKey');
-        Assert::keyExists($options, 'environment');
+        $options = (new ConfigurationResolver())->resolve($options);
 
         $client = new Client();
         $client->setHttpClient($this->adyenHttpClient);

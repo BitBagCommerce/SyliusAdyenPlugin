@@ -6,12 +6,12 @@
  */
 
 (() => {
-    let instantiate = (container) => {
+    const instantiate = (container) => {
 
         let checkout = null;
         let configuration = {}
 
-        let _successfulFetchCallback = (dropin, data) => {
+        const _successfulFetchCallback = (dropin, data) => {
             if (data.action) {
                 dropin.handleAction(data.action);
                 return;
@@ -25,7 +25,7 @@
             window.location.replace(data.redirect)
         }
 
-        let submitHandler = (state, dropin, url) => {
+        const submitHandler = (state, dropin, url) => {
             const options = {
                 method: 'POST',
                 body: JSON.stringify(state.data),
@@ -45,8 +45,8 @@
             ;
         };
 
-        let disableStoredPaymentMethodHandler = (storedPaymentMethod, resolve, reject) => {
-            let options = {
+        const disableStoredPaymentMethodHandler = (storedPaymentMethod, resolve, reject) => {
+            const options = {
                 method: 'DELETE'
             };
 
@@ -58,7 +58,7 @@
             ;
         };
 
-        let init = () => {
+        const init = () => {
             return new AdyenCheckout({
                 paymentMethodsResponse: configuration.paymentMethods,
                 paymentMethodsConfiguration: {

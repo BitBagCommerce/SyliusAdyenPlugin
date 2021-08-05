@@ -6,5 +6,4 @@ parameters:
         - offline
         - adyen
 
-services:
-
+services: ~

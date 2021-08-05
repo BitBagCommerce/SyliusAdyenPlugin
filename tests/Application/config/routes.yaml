@@ -1,2 +1,3 @@
 bitbag_adyen_plugin_shop_routing:
     resource: "@BitBagSyliusAdyenPlugin/Resources/config/routing/shop_routing.yml"
+

@@ -13,6 +13,7 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Order;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -42,7 +43,7 @@ final class PaymentCheckoutOrderResolver implements PaymentCheckoutOrderResolver
     {
         $result = $this->requestStack->getMainRequest();
         if ($result === null) {
-            throw new \InvalidArgumentException('No request available in stack');
+            throw new BadRequestException('No request provided');
         }
 
         return $result;

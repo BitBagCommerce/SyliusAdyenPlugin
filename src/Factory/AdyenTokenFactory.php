@@ -27,15 +27,22 @@ class AdyenTokenFactory implements AdyenTokenFactoryInterface
 
     public function create(PaymentMethodInterface $paymentMethod, CustomerInterface $customer): AdyenTokenInterface
     {
-        /**
-         * @var AdyenTokenInterface $result
-         */
-        $result = $this->baseFactory->createNew();
+        $result = $this->createNew();
         $result->setIdentifier(
             bin2hex(random_bytes(32))
         );
         $result->setCustomer($customer);
         $result->setPaymentMethod($paymentMethod);
+
+        return $result;
+    }
+
+    public function createNew(): AdyenTokenInterface
+    {
+        /**
+         * @var AdyenTokenInterface $result
+         */
+        $result = $this->baseFactory->createNew();
 
         return $result;
     }

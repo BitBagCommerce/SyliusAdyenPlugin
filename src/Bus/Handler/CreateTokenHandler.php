@@ -13,7 +13,7 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 use BitBag\SyliusAdyenPlugin\Bus\Command\CreateToken;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use BitBag\SyliusAdyenPlugin\Factory\AdyenTokenFactoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
+use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class CreateTokenHandler implements MessageHandlerInterface
@@ -21,15 +21,15 @@ class CreateTokenHandler implements MessageHandlerInterface
     /** @var AdyenTokenFactoryInterface */
     private $tokenFactory;
 
-    /** @var EntityManagerInterface */
-    private $tokenManager;
+    /** @var EntityRepository */
+    private $tokenRepository;
 
     public function __construct(
         AdyenTokenFactoryInterface $tokenFactory,
-        EntityManagerInterface $tokenManager
+        EntityRepository $tokenRepository
     ) {
         $this->tokenFactory = $tokenFactory;
-        $this->tokenManager = $tokenManager;
+        $this->tokenRepository = $tokenRepository;
     }
 
     public function __invoke(CreateToken $createToken): AdyenTokenInterface
@@ -38,8 +38,8 @@ class CreateTokenHandler implements MessageHandlerInterface
             $createToken->getPaymentMethod(),
             $createToken->getCustomer()
         );
-        $this->tokenManager->persist($token);
-        $this->tokenManager->flush();
+
+        $this->tokenRepository->add($token);
 
         return $token;
     }

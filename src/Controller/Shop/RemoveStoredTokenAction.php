@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
+use BitBag\SyliusAdyenPlugin\Exception\TokenRemovalFailureException;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Repository\AdyenTokenRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
@@ -49,12 +50,12 @@ class RemoveStoredTokenAction
     {
         $token = $this->tokenStorage->getToken();
         if ($token === null) {
-            throw new \InvalidArgumentException();
+            throw TokenRemovalFailureException::forAnonymous();
         }
 
         $user = $token->getUser();
         if (!$user instanceof ShopUserInterface) {
-            throw new \InvalidArgumentException();
+            throw TokenRemovalFailureException::forAnonymous();
         }
 
         return $user;
@@ -67,14 +68,14 @@ class RemoveStoredTokenAction
          */
         $customer = $this->getUser()->getCustomer();
         if ($customer === null) {
-            throw new \InvalidArgumentException();
+            throw TokenRemovalFailureException::forAnonymous();
         }
 
         $paymentMethod = $this->paymentMethodRepository->getOneForAdyenAndCode($code);
 
         $token = $this->adyenTokenRepository->findOneByPaymentMethodAndCustomer($paymentMethod, $customer);
         if ($token === null) {
-            throw new \InvalidArgumentException();
+            throw TokenRemovalFailureException::forNonExistingToken();
         }
 
         $client = $this->adyenClientProvider->getForPaymentMethod($paymentMethod);

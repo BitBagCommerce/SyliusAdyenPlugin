@@ -65,7 +65,11 @@ class RefundPaymentGeneratedHandler implements MessageHandlerInterface
             $paymentGenerated->id()
         );
 
-        Assert::keyExists($payment->getDetails(), 'pspReference');
+        Assert::keyExists(
+            $payment->getDetails(),
+            'pspReference',
+            'Payment has not been initialized by Adyen'
+        );
 
         $client->requestRefund(
             (string) $payment->getDetails()['pspReference'],

@@ -14,8 +14,8 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\CreateToken;
 use BitBag\SyliusAdyenPlugin\Bus\Handler\CreateTokenHandler;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenToken;
 use BitBag\SyliusAdyenPlugin\Factory\AdyenTokenFactoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 
@@ -24,17 +24,17 @@ class CreateTokenHandlerTest extends TestCase
     /** @var AdyenTokenFactoryInterface|\PHPUnit\Framework\MockObject\MockObject */
     private $adyenTokenFactory;
 
-    /** @var EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject */
-    private $tokenManager;
-
     /** @var CreateTokenHandler */
     private $handler;
+
+    /** @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository */
+    private $tokenRepository;
 
     protected function setUp(): void
     {
         $this->adyenTokenFactory = $this->createMock(AdyenTokenFactoryInterface::class);
-        $this->tokenManager = $this->createMock(EntityManagerInterface::class);
-        $this->handler = new CreateTokenHandler($this->adyenTokenFactory, $this->tokenManager);
+        $this->tokenRepository = $this->createMock(EntityRepository::class);
+        $this->handler = new CreateTokenHandler($this->adyenTokenFactory, $this->tokenRepository);
     }
 
     public function testProcess(): void
@@ -55,9 +55,9 @@ class CreateTokenHandlerTest extends TestCase
             ->willReturn($token)
         ;
 
-        $this->tokenManager
+        $this->tokenRepository
             ->expects($this->once())
-            ->method('persist')
+            ->method('add')
             ->with(
                 $this->equalTo($token)
             )

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Provider;
 
 use BitBag\SyliusAdyenPlugin\Client\SignatureValidator;
-use BitBag\SyliusAdyenPlugin\Exception\AdyenNotConfigured;
+use BitBag\SyliusAdyenPlugin\Exception\AdyenNotConfiguredException;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 
@@ -33,7 +33,7 @@ class SignatureValidatorProvider
         $paymentMethod = $this->paymentMethodRepository->findOneForAdyenAndCode($code);
 
         if ($paymentMethod === null) {
-            throw new AdyenNotConfigured($code);
+            throw new AdyenNotConfiguredException($code);
         }
         $gatewayConfig = $this->getGatewayConfig($paymentMethod);
 

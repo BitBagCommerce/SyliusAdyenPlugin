@@ -13,6 +13,8 @@ namespace BitBag\SyliusAdyenPlugin\Provider;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClient;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
 use BitBag\SyliusAdyenPlugin\Client\AdyenTransportFactory;
+use BitBag\SyliusAdyenPlugin\Exception\NonAdyenPaymentMethodException;
+use BitBag\SyliusAdyenPlugin\Exception\UnprocessablePaymentException;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Version\VersionResolver;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
@@ -70,10 +72,7 @@ class AdyenClientProvider
         $gatewayConfig = $this->getGatewayConfig($paymentMethod);
         $isAdyen = isset($gatewayConfig->getConfig()[self::FACTORY_NAME]);
         if (!$isAdyen) {
-            throw new \InvalidArgumentException(sprintf(
-                'Provided PaymentMethod #%d is not an Adyen instance',
-                (int) $paymentMethod->getId()
-            ));
+            throw new NonAdyenPaymentMethodException($paymentMethod);
         }
 
         return new AdyenClient($gatewayConfig->getConfig(), $this->adyenTransportFactory, $this->versionResolver);
@@ -84,7 +83,7 @@ class AdyenClientProvider
         $paymentMethod = $this->paymentMethodRepository->findOneForAdyenAndCode($code);
 
         if ($paymentMethod === null) {
-            throw new \InvalidArgumentException(sprintf('Adyen for "%s" code is not configured', $code));
+            throw new UnprocessablePaymentException();
         }
 
         return $this->getForPaymentMethod($paymentMethod);

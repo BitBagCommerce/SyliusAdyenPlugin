@@ -12,8 +12,8 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
 use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
-use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface;
+use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
@@ -23,20 +23,20 @@ class PreparePaymentHandler implements MessageHandlerInterface
 {
     use OrderFromPaymentTrait;
 
-    public const ALLOWED_EVENT_NAMES = ['Authorised', 'RedirectShopper'];
+    public const ALLOWED_EVENT_NAMES = ['authorised', 'redirectshopper'];
 
     /** @var FactoryInterface */
     private $stateMachineFactory;
 
-    /** @var EntityManagerInterface */
-    private $paymentManager;
+    /** @var EntityRepository */
+    private $paymentRepository;
 
     public function __construct(
         FactoryInterface $stateMachineFactory,
-        EntityManagerInterface $paymentManager
+        EntityRepository $paymentRepository
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
-        $this->paymentManager = $paymentManager;
+        $this->paymentRepository = $paymentRepository;
     }
 
     public function __invoke(PreparePayment $command): void
@@ -47,7 +47,7 @@ class PreparePaymentHandler implements MessageHandlerInterface
         }
 
         $this->updateOrderState($this->getOrderFromPayment($payment));
-        $this->persistPayment($payment);
+        $this->paymentRepository->add($payment);
     }
 
     private function updateOrderState(OrderInterface $order): void
@@ -56,16 +56,11 @@ class PreparePaymentHandler implements MessageHandlerInterface
         $sm->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE, true);
     }
 
-    private function persistPayment(PaymentInterface $payment): void
-    {
-        $this->paymentManager->persist($payment);
-        $this->paymentManager->flush();
-    }
-
     private function isAccepted(PaymentInterface $payment): bool
     {
         $details = $payment->getDetails();
 
-        return in_array($details['resultCode'], self::ALLOWED_EVENT_NAMES, true);
+        $resultCode = strtolower((string)$details['resultCode']);
+        return in_array($resultCode, self::ALLOWED_EVENT_NAMES, true);
     }
 }
