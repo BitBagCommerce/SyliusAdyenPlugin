@@ -97,6 +97,7 @@ class RedirectTargetAction
         $client = $this->adyenClientProvider->getClientForCode($code);
         $result = $client->paymentDetails($this->createPayloadForDetails($referenceId));
         $payment = $this->getPaymentForReference((string) $result['merchantReference']);
+        $payment->setDetails($result);
 
         return $this->handleDetailsResponse($payment, $result);
     }
