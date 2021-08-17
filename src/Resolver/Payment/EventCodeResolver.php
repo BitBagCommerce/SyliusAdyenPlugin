@@ -20,7 +20,8 @@ class EventCodeResolver
 
     public const PAYMENT_METHOD_TYPES = [
         'visa' => self::AUTHORIZATION,
-        'ideal' => self::CAPTURE
+        'ideal' => self::CAPTURE,
+        'blik' => self::CAPTURE
     ];
 
     public function resolve(NotificationItemData $notificationData): string
