@@ -15,9 +15,6 @@ use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 
-/**
- * @extends EntityRepository<AdyenTokenInterface>
- */
 class AdyenTokenRepository extends EntityRepository implements AdyenTokenRepositoryInterface
 {
     /**
