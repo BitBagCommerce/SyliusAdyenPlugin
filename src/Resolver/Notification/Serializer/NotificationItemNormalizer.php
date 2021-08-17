@@ -57,11 +57,13 @@ class NotificationItemNormalizer implements DenormalizerAwareInterface, Denormal
     private function getNormalizationMarking($object): string
     {
         Assert::isInstanceOf($object, NotificationItemData::class);
+
         return sprintf('%s_%s', self::DENORMALIZATION_PROCESSED_FLAG, spl_object_hash($object));
     }
 
     /**
      * @param NotificationItemData|mixed $object
+     *
      * @return array<string, mixed>
      */
     public function normalize($object, string $format = null, array $context = [])
