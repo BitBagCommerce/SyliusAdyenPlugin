@@ -13,8 +13,9 @@ namespace BitBag\SyliusAdyenPlugin\Repository;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 
-interface AdyenTokenRepositoryInterface
+interface AdyenTokenRepositoryInterface extends RepositoryInterface
 {
     /**
      * @psalm-suppress MixedReturnStatement

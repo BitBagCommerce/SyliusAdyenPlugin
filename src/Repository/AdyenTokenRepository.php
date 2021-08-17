@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Repository;
 
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
-use Doctrine\ORM\EntityRepository;
+use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 
