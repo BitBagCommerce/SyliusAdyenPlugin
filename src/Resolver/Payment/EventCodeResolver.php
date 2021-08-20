@@ -20,7 +20,11 @@ class EventCodeResolver
 
     public const PAYMENT_METHOD_TYPES = [
         'visa' => self::AUTHORIZATION,
-        'ideal' => self::CAPTURE
+        'ideal' => self::CAPTURE,
+        'giropay' => self::CAPTURE,
+        'bcmc' => self::CAPTURE,
+        'bcmc_mobile' => self::CAPTURE,
+        'sepadirectdebit' => self::CAPTURE
     ];
 
     public function resolve(NotificationItemData $notificationData): string
