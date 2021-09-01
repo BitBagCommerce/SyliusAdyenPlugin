@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Form\Extension;
 
-use BitBag\SyliusAdyenPlugin\Adapter\PaymentMethodsToChoiceAdapter;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
 use BitBag\SyliusAdyenPlugin\Form\Type\PaymentMethodChoiceType;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
@@ -21,13 +20,9 @@ use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 
 class PaymentTypeExtension extends AbstractTypeExtension
 {
-    /** @var array */
-    private $paymentMethodsForCode = [];
 
     /** @var PaymentCheckoutOrderResolverInterface */
     private $paymentCheckoutOrderResolver;
@@ -63,30 +58,27 @@ class PaymentTypeExtension extends AbstractTypeExtension
         $paymentMethods = $this->paymentMethodRepository->findAllByChannel($this->channelContext->getChannel());
         foreach ($paymentMethods as $paymentMethod) {
             $client = $this->adyenClientProvider->getForPaymentMethod($paymentMethod);
-            $choices = $this->getChoicesForPaymentMethod($client, (string) $paymentMethod->getCode());
+            $paymentMethods = $this->getPaymentMethods($client);
             $adyen->add((string) $paymentMethod->getCode(), PaymentMethodChoiceType::class, [
-                'choices' => $choices,
-                'environment' => $client->getEnvironment()
+                'environment' => $client->getEnvironment(),
+                'payment_methods' => $paymentMethods
             ]);
         }
 
         $builder->add($adyen);
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options): void
-    {
-        $view->vars['payment_methods'] = $this->paymentMethodsForCode;
-    }
-
-    private function getChoicesForPaymentMethod(
-        AdyenClientInterface $client,
-        string $code
+    private function getPaymentMethods(
+        AdyenClientInterface $client
     ): array {
         $order = $this->paymentCheckoutOrderResolver->resolve();
 
         $address = $order->getBillingAddress();
         $countryCode = $address !== null ? (string) $address->getCountryCode() : '';
 
+        /**
+         * @var array<string, array> $result
+         */
         $result = $client->getAvailablePaymentMethods(
             (string) $order->getLocaleCode(),
             $countryCode,
@@ -94,9 +86,7 @@ class PaymentTypeExtension extends AbstractTypeExtension
             (string) $order->getCurrencyCode()
         );
 
-        $this->paymentMethodsForCode[$code] = $result;
-
-        return (new PaymentMethodsToChoiceAdapter())($result);
+        return $result['paymentMethods'];
     }
 
     public static function getExtendedTypes(): array

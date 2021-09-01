@@ -29,6 +29,8 @@ body .dropin-container .adyen-checkout__threeds2__challenge iframe
 .adyen-method-grid button[type=submit] img
 {
     display: block;
+    min-width: 77px;
+    min-height: 50px;
 }
 
 .adyen-method .dropin-container
