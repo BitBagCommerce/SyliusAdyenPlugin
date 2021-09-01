@@ -21,6 +21,7 @@ final class PaymentMethodChoiceType extends ChoiceType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefault('environment', AdyenClientInterface::TEST_ENVIRONMENT);
+        $resolver->setDefault('payment_methods', []);
     }
 
     public function getParent(): string
@@ -32,5 +33,6 @@ final class PaymentMethodChoiceType extends ChoiceType
     {
         parent::buildView($view, $form, $options);
         $view->vars['environment'] = $options['environment'];
+        $view->vars['payment_methods'] = $options['payment_methods'];
     }
 }

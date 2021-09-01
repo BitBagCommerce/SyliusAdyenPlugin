@@ -19,8 +19,7 @@ class EventCodeResolver
     public const CAPTURE = 'capture';
 
     public const PAYMENT_METHOD_TYPES = [
-        'visa' => self::AUTHORIZATION,
-        'ideal' => self::CAPTURE
+        'visa' => self::AUTHORIZATION
     ];
 
     public function resolve(NotificationItemData $notificationData): string
@@ -29,6 +28,6 @@ class EventCodeResolver
             return (string) $notificationData->eventCode;
         }
 
-        return self::PAYMENT_METHOD_TYPES[$notificationData->paymentMethod] ?? self::AUTHORIZATION;
+        return self::PAYMENT_METHOD_TYPES[$notificationData->paymentMethod] ?? self::CAPTURE;
     }
 }
