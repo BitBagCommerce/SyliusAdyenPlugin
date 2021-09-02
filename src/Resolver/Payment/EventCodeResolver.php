@@ -19,13 +19,22 @@ class EventCodeResolver
     public const CAPTURE = 'capture';
 
     public const PAYMENT_METHOD_TYPES = [
-        'visa' => self::AUTHORIZATION
+        'amazonpay' =>  self::AUTHORIZATION,
+        'applepay' => self::AUTHORIZATION,
+        'klarna' => self::AUTHORIZATION,
+        'paywithgoogle' => self::AUTHORIZATION,
+        'twint' => self::AUTHORIZATION
     ];
 
     public function resolve(NotificationItemData $notificationData): string
     {
         if ($notificationData->eventCode !== self::AUTHORIZATION) {
             return (string) $notificationData->eventCode;
+        }
+
+        // Adyen doesn't provide a "card" payment method name but specifies a brand for each, so make it generic
+        if (isset($notificationData->additionalData['expiryDate'])) {
+            return self::AUTHORIZATION;
         }
 
         return self::PAYMENT_METHOD_TYPES[$notificationData->paymentMethod] ?? self::CAPTURE;
