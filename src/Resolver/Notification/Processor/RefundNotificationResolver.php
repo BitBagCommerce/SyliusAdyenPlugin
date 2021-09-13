@@ -11,26 +11,30 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\RefundPayment;
+use BitBag\SyliusAdyenPlugin\Repository\AdyenReferenceRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 use BitBag\SyliusAdyenPlugin\Resolver\Payment\RefundReferenceResolver;
 use Doctrine\ORM\NoResultException;
 
 class RefundNotificationResolver implements CommandResolver
 {
-    /** @var RefundReferenceResolver */
-    private $referenceResolver;
+
+    private AdyenReferenceRepositoryInterface $adyenReferenceRepository;
 
     public function __construct(
-        RefundReferenceResolver $referenceResolver
+        AdyenReferenceRepositoryInterface $adyenReferenceRepository
     ) {
-        $this->referenceResolver = $referenceResolver;
+        $this->adyenReferenceRepository = $adyenReferenceRepository;
     }
 
     public function resolve(string $paymentCode, NotificationItemData $notificationData): object
     {
         try {
-            $refundPayment = $this->referenceResolver->resolve((string) $notificationData->merchantReference);
+            $reference = $this->adyenReferenceRepository->getOneByCodeAndReference(
+                $paymentCode, $notificationData->originalReference ?? $notificationData->pspReference
+            );
 
+            $refundPayment = $reference->getRefundPayment();
             return new RefundPayment($refundPayment);
         } catch (\InvalidArgumentException | NoResultException $ex) {
             throw new NoCommandResolvedException();

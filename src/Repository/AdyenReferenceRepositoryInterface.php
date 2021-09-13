@@ -6,14 +6,12 @@
  * an email on hello@bitbag.io.
  */
 
-declare(strict_types=1);
-
 namespace BitBag\SyliusAdyenPlugin\Repository;
 
-use Sylius\Component\Core\Model\PaymentInterface;
+use BitBag\SyliusAdyenPlugin\Entity\AdyenReferenceInterface;
 
-interface PaymentRepositoryInterface
+interface AdyenReferenceRepositoryInterface
 {
-    public function find(int $id): ?PaymentInterface;
 
+    public function getOneByCodeAndReference(string $code, string $pspReference): AdyenReferenceInterface;
 }

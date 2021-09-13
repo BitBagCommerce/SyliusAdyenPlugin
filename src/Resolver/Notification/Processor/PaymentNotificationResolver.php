@@ -12,6 +12,7 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor;
 
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Exception\UnmappedAdyenActionException;
+use BitBag\SyliusAdyenPlugin\Repository\AdyenReferenceRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 use Doctrine\ORM\NoResultException;
@@ -21,22 +22,23 @@ class PaymentNotificationResolver implements CommandResolver
 {
     /** @var Dispatcher */
     private $dispatcher;
-
-    /** @var PaymentRepositoryInterface */
-    private $paymentRepository;
+    private AdyenReferenceRepositoryInterface $adyenReferenceRepository;
 
     public function __construct(
         Dispatcher $dispatcher,
-        PaymentRepositoryInterface $paymentRepository
+        AdyenReferenceRepositoryInterface $adyenReferenceRepository
     ) {
         $this->dispatcher = $dispatcher;
-        $this->paymentRepository = $paymentRepository;
+        $this->adyenReferenceRepository = $adyenReferenceRepository;
     }
 
-    private function fetchPayment(string $paymentCode, string $id): PaymentInterface
+    private function fetchPayment(string $paymentCode, string $reference, ?string $originalReference): PaymentInterface
     {
         try {
-            return $this->paymentRepository->getOneByCodeAndId($paymentCode, (int) $id);
+            $reference = $this->adyenReferenceRepository->getOneByCodeAndReference(
+                $paymentCode, $originalReference ?? $reference
+            );
+            return $reference->getPayment();
         } catch (NoResultException $ex) {
             throw new NoCommandResolvedException();
         }
@@ -45,7 +47,9 @@ class PaymentNotificationResolver implements CommandResolver
     public function resolve(string $paymentCode, NotificationItemData $notificationData): object
     {
         try {
-            $payment = $this->fetchPayment($paymentCode, (string) $notificationData->merchantReference);
+            $payment = $this->fetchPayment(
+                $paymentCode, (string) $notificationData->pspReference, $notificationData->originalReference
+            );
 
             return $this->dispatcher->getCommandFactory()->createForEvent(
                 (string) $notificationData->eventCode,

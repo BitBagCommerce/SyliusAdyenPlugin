@@ -10,7 +10,10 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
+use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
+use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Entity\AdyenReference;
 use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
 use SM\Factory\FactoryInterface;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
@@ -30,13 +33,19 @@ class PreparePaymentHandler implements MessageHandlerInterface
 
     /** @var EntityRepository */
     private $paymentRepository;
+    /**
+     * @var Dispatcher
+     */
+    private $dispatcher;
 
     public function __construct(
         FactoryInterface $stateMachineFactory,
-        EntityRepository $paymentRepository
+        EntityRepository $paymentRepository,
+        Dispatcher $dispatcher
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
         $this->paymentRepository = $paymentRepository;
+        $this->dispatcher = $dispatcher;
     }
 
     public function __invoke(PreparePayment $command): void
@@ -48,6 +57,8 @@ class PreparePaymentHandler implements MessageHandlerInterface
 
         $this->updateOrderState($this->getOrderFromPayment($payment));
         $this->paymentRepository->add($payment);
+
+        $this->dispatcher->dispatch(new CreateReferenceForPayment($payment));
     }
 
     private function updateOrderState(OrderInterface $order): void
