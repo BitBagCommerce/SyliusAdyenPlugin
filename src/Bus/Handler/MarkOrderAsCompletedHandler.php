@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForPayment;
-use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
+use BitBag\SyliusAdyenPlugin\Bus\Command\MarkOrderAsCompleted;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenReference;
 use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
@@ -22,7 +22,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class PreparePaymentHandler implements MessageHandlerInterface
+class MarkOrderAsCompletedHandler implements MessageHandlerInterface
 {
     use OrderFromPaymentTrait;
 
@@ -48,7 +48,7 @@ class PreparePaymentHandler implements MessageHandlerInterface
         $this->dispatcher = $dispatcher;
     }
 
-    public function __invoke(PreparePayment $command): void
+    public function __invoke(MarkOrderAsCompleted $command): void
     {
         $payment = $command->getPayment();
         if (!$this->isAccepted($payment)) {

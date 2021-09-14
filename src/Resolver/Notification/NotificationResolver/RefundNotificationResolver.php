@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor;
+namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\RefundPayment;
 use BitBag\SyliusAdyenPlugin\Repository\AdyenReferenceRepositoryInterface;

@@ -12,7 +12,6 @@ use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TimestampableInterface;
 use Sylius\Component\Resource\Model\TimestampableTrait;
-use Sylius\RefundPlugin\Entity\RefundInterface;
 use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
 
 class AdyenReference implements ResourceInterface, AdyenReferenceInterface, TimestampableInterface
@@ -85,9 +84,9 @@ class AdyenReference implements ResourceInterface, AdyenReferenceInterface, Time
     }
 
     /**
-     * @param RefundInterface|null $refundPayment
+     * @param RefundPaymentInterface|null $refundPayment
      */
-    public function setRefundPayment(?RefundInterface $refundPayment): void
+    public function setRefundPayment(?RefundPaymentInterface $refundPayment): void
     {
         $this->refundPayment = $refundPayment;
     }

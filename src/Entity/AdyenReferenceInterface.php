@@ -24,9 +24,9 @@ interface AdyenReferenceInterface extends ResourceInterface
     public function getRefundPayment(): ?RefundPaymentInterface;
 
     /**
-     * @param RefundInterface|null $refund
+     * @param RefundPaymentInterface|null $refund
      */
-    public function setRefundPayment(?RefundInterface $refund): void;
+    public function setRefundPayment(?RefundPaymentInterface $refund): void;
 
     /**
      * @return PaymentInterface|null

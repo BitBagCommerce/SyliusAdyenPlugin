@@ -12,6 +12,7 @@ use BitBag\SyliusAdyenPlugin\Entity\AdyenReferenceInterface;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
+use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
 use Webmozart\Assert\Assert;
 
 class AdyenReferenceFactory implements AdyenReferenceFactoryInterface
@@ -31,6 +32,18 @@ class AdyenReferenceFactory implements AdyenReferenceFactoryInterface
         $result = $this->createNew();
         $result->setPayment($payment);
         $result->setPspReference($details['pspReference']);
+
+        return $result;
+    }
+
+    public function createForRefund(
+        string $reference, PaymentInterface $payment, RefundPaymentInterface $refundPayment
+    ): AdyenReferenceInterface
+    {
+        $result = $this->createNew();
+        $result->setPayment($payment);
+        $result->setRefundPayment($refundPayment);
+        $result->setPspReference($reference);
 
         return $result;
     }

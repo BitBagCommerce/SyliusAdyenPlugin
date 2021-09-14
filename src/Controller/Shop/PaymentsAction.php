@@ -10,7 +10,8 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
-use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
+use BitBag\SyliusAdyenPlugin\Bus\Command\MarkOrderAsCompleted;
+use BitBag\SyliusAdyenPlugin\Bus\Command\PrepareOrderForPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\TakeOverPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Bus\Query\GetToken;
@@ -47,7 +48,7 @@ class PaymentsAction
     private $paymentCheckoutOrderResolver;
 
     /** @var OrderTokenAssignerInterface */
-    private $orderTokenAssigner;
+    //private $orderTokenAssigner;
 
     /** @var Dispatcher */
     private $dispatcher;
@@ -56,13 +57,13 @@ class PaymentsAction
         AdyenClientProvider $adyenClientProvider,
         UrlGeneratorInterface $urlGenerator,
         PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver,
-        OrderTokenAssignerInterface $orderTokenAssigner,
+        //OrderTokenAssignerInterface $orderTokenAssigner,
         Dispatcher $dispatcher
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->urlGenerator = $urlGenerator;
         $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;
-        $this->orderTokenAssigner = $orderTokenAssigner;
+        //$this->orderTokenAssigner = $orderTokenAssigner;
         $this->dispatcher = $dispatcher;
     }
 
@@ -86,7 +87,9 @@ class PaymentsAction
         if ($request->get('tokenValue') === null) {
             $request->getSession()->set(self::ORDER_ID_KEY, $order->getId());
         }
-        $this->orderTokenAssigner->assignTokenValueIfNotSet($order);
+
+        $this->dispatcher->dispatch(new PrepareOrderForPayment($order));
+        //$this->orderTokenAssigner->assignTokenValueIfNotSet($order);
     }
 
     private function createFraudDetectionData(OrderInterface $order): array
@@ -129,22 +132,22 @@ class PaymentsAction
         $url = $this->prepareTargetUrl($order);
         $paymentMethod = $this->getMethod($payment);
         /**
-         * @var AdyenTokenInterface $token
+         * @var AdyenTokenInterface $customerIdentifier
          */
-        $token = $this->dispatcher->dispatch(new GetToken($paymentMethod, $order));
+        $customerIdentifier = $this->dispatcher->dispatch(new GetToken($paymentMethod, $order));
 
         $client = $this->adyenClientProvider->getForPaymentMethod($paymentMethod);
         $result = $client->submitPayment(
             $order->getTotal(),
             (string) $order->getCurrencyCode(),
-            $payment->getId(),
+            (string) $order->getNumber(),
             $url,
             $this->createPaymentPayload($request, $order),
-            $token
+            $customerIdentifier
         );
 
         $payment->setDetails($result);
-        $this->dispatcher->dispatch(new PreparePayment($payment));
+        $this->dispatcher->dispatch(new MarkOrderAsCompleted($payment));
 
         return new JsonResponse($payment->getDetails() + ['redirect' => $url]);
     }

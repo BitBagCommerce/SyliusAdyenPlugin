@@ -14,8 +14,13 @@ use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
+use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
 
 interface AdyenReferenceFactoryInterface extends FactoryInterface
 {
     public function createForPayment(PaymentInterface $payment): AdyenReferenceInterface;
+
+    public function createForRefund(
+        string $reference, PaymentInterface $payment, RefundPaymentInterface $refundPayment
+    ): AdyenReferenceInterface;
 }

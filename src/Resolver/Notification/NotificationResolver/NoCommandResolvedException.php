@@ -8,11 +8,8 @@
 
 declare(strict_types=1);
 
-namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor;
+namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver;
 
-use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
-
-interface CommandResolver
+class NoCommandResolvedException extends \InvalidArgumentException
 {
-    public function resolve(string $paymentCode, NotificationItemData $notificationData): object;
 }

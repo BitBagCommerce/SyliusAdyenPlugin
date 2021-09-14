@@ -8,16 +8,55 @@
 
 namespace BitBag\SyliusAdyenPlugin\Bus\Command;
 
+use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
+use Webmozart\Assert\Assert;
+
 class CreateReferenceForRefund
 {
-    public function __construct()
+    /**
+     * @var PaymentInterface
+     */
+    private $payment;
+
+    private RefundPaymentInterface $refundPayment;
+    private string $refundReference;
+
+    public function __construct(string $refundReference, RefundPaymentInterface $refundPayment, PaymentInterface $payment)
     {
-        throw new \InvalidArgumentException('NOT IMPLEMENTED YET');
+        $details = $payment->getDetails();
+        Assert::keyExists($details, 'pspReference', 'Payment pspReference is not present');
+
+        $this->refundPayment = $refundPayment;
+        $this->payment = $payment;
+        $this->refundReference = $refundReference;
+    }
+
+    /**
+     * @return RefundPaymentInterface
+     */
+    public function getRefundPayment(): RefundPaymentInterface
+    {
+        return $this->refundPayment;
+    }
+
+    /**
+     * @return PaymentInterface
+     */
+    public function getPayment(): PaymentInterface
+    {
+        return $this->payment;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRefundReference(): string
+    {
+        return $this->refundReference;
     }
 
 
-    public function getPspReference(): string
-    {
-        // TODO: Implement getPspReference() method.
-    }
+
+
 }

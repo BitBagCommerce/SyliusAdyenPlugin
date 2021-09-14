@@ -11,7 +11,7 @@
         <id name="id" column="id" type="integer">
             <generator strategy="AUTO"/>
         </id>
-        <field name="pspReference" type="string" length="64" unique="true"/>
+        <field name="pspReference" type="string" length="64" unique="true" />
 
         <field name="createdAt" column="created_at" type="datetime">
             <gedmo:timestampable on="create"/>
@@ -20,7 +20,7 @@
             <gedmo:timestampable on="update"/>
         </field>
 
-        <one-to-one field="payment" target-entity="Sylius\Component\Payment\Model\PaymentInterface" />
-        <one-to-one field="refund" target-entity="Sylius\RefundPlugin\Entity\RefundInterface" />
+        <many-to-one field="payment" target-entity="Sylius\Component\Payment\Model\PaymentInterface" />
+        <one-to-one field="refundPayment" target-entity="Sylius\RefundPlugin\Entity\RefundPaymentInterface" />
     </entity>
 </doctrine-mapping>

@@ -13,7 +13,7 @@ namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationToCommandResolver;
-use BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\NoCommandResolvedException;
+use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver\NoCommandResolvedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

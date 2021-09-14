@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForPayment;
-use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
+use BitBag\SyliusAdyenPlugin\Bus\Command\MarkOrderAsCompleted;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
@@ -84,7 +84,7 @@ class PaymentDetailsAction
         $result = $client->paymentDetails($request->request->all());
 
         $payment->setDetails($result);
-        $this->dispatcher->dispatch(new PreparePayment($payment));
+        $this->dispatcher->dispatch(new MarkOrderAsCompleted($payment));
 
         return new JsonResponse(
             $payment->getDetails()

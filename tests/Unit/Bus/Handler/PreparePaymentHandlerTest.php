@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Bus\Handler;
 
-use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
-use BitBag\SyliusAdyenPlugin\Bus\Handler\PreparePaymentHandler;
+use BitBag\SyliusAdyenPlugin\Bus\Command\MarkOrderAsCompleted;
+use BitBag\SyliusAdyenPlugin\Bus\Handler\MarkOrderAsCompletedHandler;
 use PHPUnit\Framework\TestCase;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\Order;
@@ -23,7 +23,7 @@ class PreparePaymentHandlerTest extends TestCase
 
     use StateMachineTrait;
 
-    /** @var PreparePaymentHandler */
+    /** @var MarkOrderAsCompletedHandler */
     private $handler;
 
     /** @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository */
@@ -34,7 +34,7 @@ class PreparePaymentHandlerTest extends TestCase
         $this->setupStateMachineMocks();
 
         $this->paymentRepository = $this->createMock(EntityRepository::class);
-        $this->handler = new PreparePaymentHandler($this->stateMachineFactory, $this->paymentRepository);
+        $this->handler = new MarkOrderAsCompletedHandler($this->stateMachineFactory, $this->paymentRepository);
     }
 
     public static function provideForTestFlow(): array
@@ -45,7 +45,7 @@ class PreparePaymentHandlerTest extends TestCase
             ]
         ];
 
-        foreach (PreparePaymentHandler::ALLOWED_EVENT_NAMES as $eventName) {
+        foreach (MarkOrderAsCompletedHandler::ALLOWED_EVENT_NAMES as $eventName) {
             $result[sprintf('valid result code: %s', $eventName)] = [
                 $eventName, true
             ];
@@ -74,7 +74,7 @@ class PreparePaymentHandlerTest extends TestCase
             ->method('apply')
         ;
 
-        $command = new PreparePayment($payment);
+        $command = new MarkOrderAsCompleted($payment);
         ($this->handler)($command);
     }
 }
