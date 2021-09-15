@@ -9,11 +9,12 @@
 namespace BitBag\SyliusAdyenPlugin\Repository;
 
 use BitBag\SyliusAdyenPlugin\Entity\AdyenReferenceInterface;
+use Doctrine\ORM\QueryBuilder;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 
 class AdyenReferenceRepository extends EntityRepository implements AdyenReferenceRepositoryInterface
 {
-    public function getOneByCodeAndReference(string $code, string $pspReference): AdyenReferenceInterface
+    private function getQueryBuilderForCodeAndReference(string $code, string $pspReference): QueryBuilder
     {
         $qb = $this
             ->createQueryBuilder('r')
@@ -25,6 +26,19 @@ class AdyenReferenceRepository extends EntityRepository implements AdyenReferenc
                 'code' => $code
             ])
         ;
+
+        return $qb;
+    }
+
+    public function getOneByCodeAndReference(string $code, string $pspReference): AdyenReferenceInterface
+    {
+        return $this->getQueryBuilderForCodeAndReference($code, $pspReference)->getQuery()->getSingleResult();
+    }
+
+    public function getOneForRefundByCodeAndReference(string $code, string $pspReference): AdyenReferenceInterface
+    {
+        $qb = $this->getQueryBuilderForCodeAndReference($code, $pspReference);
+        $qb->andWhere('r.refundPayment IS NOT NULL');
 
         return $qb->getQuery()->getSingleResult();
     }

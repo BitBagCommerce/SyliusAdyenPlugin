@@ -19,8 +19,14 @@ class CreateReferenceForRefund
      */
     private $payment;
 
-    private RefundPaymentInterface $refundPayment;
-    private string $refundReference;
+    /**
+     * @var RefundPaymentInterface
+     */
+    private $refundPayment;
+    /**
+     * @var string
+     */
+    private $refundReference;
 
     public function __construct(string $refundReference, RefundPaymentInterface $refundPayment, PaymentInterface $payment)
     {

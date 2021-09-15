@@ -14,4 +14,6 @@ interface AdyenReferenceRepositoryInterface
 {
 
     public function getOneByCodeAndReference(string $code, string $pspReference): AdyenReferenceInterface;
+
+    public function getOneForRefundByCodeAndReference(string $code, string $pspReference): AdyenReferenceInterface;
 }

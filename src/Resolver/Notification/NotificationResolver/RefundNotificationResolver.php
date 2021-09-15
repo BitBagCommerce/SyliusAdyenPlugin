@@ -19,7 +19,10 @@ use Doctrine\ORM\NoResultException;
 class RefundNotificationResolver implements CommandResolver
 {
 
-    private AdyenReferenceRepositoryInterface $adyenReferenceRepository;
+    /**
+     * @var AdyenReferenceRepositoryInterface
+     */
+    private $adyenReferenceRepository;
 
     public function __construct(
         AdyenReferenceRepositoryInterface $adyenReferenceRepository
@@ -30,8 +33,8 @@ class RefundNotificationResolver implements CommandResolver
     public function resolve(string $paymentCode, NotificationItemData $notificationData): object
     {
         try {
-            $reference = $this->adyenReferenceRepository->getOneByCodeAndReference(
-                $paymentCode, $notificationData->originalReference ?? $notificationData->pspReference
+            $reference = $this->adyenReferenceRepository->getOneForRefundByCodeAndReference(
+                $paymentCode, (string)$notificationData->pspReference
             );
 
             $refundPayment = $reference->getRefundPayment();
