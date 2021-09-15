@@ -39,7 +39,7 @@ class RefundPaymentRepository implements RefundPaymentRepositoryInterface
             ->andWhere('o.number=:order_number')
             ->setParameters([
                 'id' => $paymentId,
-                'order_number' => $orderNumber
+                'order_number' => $orderNumber,
             ])
         ;
 

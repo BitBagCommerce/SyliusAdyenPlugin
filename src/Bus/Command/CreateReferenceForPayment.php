@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -9,14 +11,11 @@
 namespace BitBag\SyliusAdyenPlugin\Bus\Command;
 
 use Sylius\Component\Core\Model\PaymentInterface;
-use Sylius\RefundPlugin\Entity\RefundInterface;
 use Webmozart\Assert\Assert;
 
 class CreateReferenceForPayment
 {
-    /**
-     * @var PaymentInterface
-     */
+    /** @var PaymentInterface */
     private $payment;
 
     public function __construct(PaymentInterface $payment)
@@ -26,12 +25,8 @@ class CreateReferenceForPayment
         $this->payment = $payment;
     }
 
-    /**
-     * @return PaymentInterface
-     */
     public function getPayment(): PaymentInterface
     {
         return $this->payment;
     }
-
 }

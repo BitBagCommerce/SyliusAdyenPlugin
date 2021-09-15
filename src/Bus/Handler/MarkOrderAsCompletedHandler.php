@@ -13,7 +13,6 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\MarkOrderAsCompleted;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
-use BitBag\SyliusAdyenPlugin\Entity\AdyenReference;
 use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
 use SM\Factory\FactoryInterface;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
@@ -33,9 +32,7 @@ class MarkOrderAsCompletedHandler implements MessageHandlerInterface
 
     /** @var EntityRepository */
     private $paymentRepository;
-    /**
-     * @var Dispatcher
-     */
+    /** @var Dispatcher */
     private $dispatcher;
 
     public function __construct(

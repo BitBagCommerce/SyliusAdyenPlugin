@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -14,18 +16,12 @@ use Webmozart\Assert\Assert;
 
 class CreateReferenceForRefund
 {
-    /**
-     * @var PaymentInterface
-     */
+    /** @var PaymentInterface */
     private $payment;
 
-    /**
-     * @var RefundPaymentInterface
-     */
+    /** @var RefundPaymentInterface */
     private $refundPayment;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $refundReference;
 
     public function __construct(string $refundReference, RefundPaymentInterface $refundPayment, PaymentInterface $payment)
@@ -38,31 +34,18 @@ class CreateReferenceForRefund
         $this->refundReference = $refundReference;
     }
 
-    /**
-     * @return RefundPaymentInterface
-     */
     public function getRefundPayment(): RefundPaymentInterface
     {
         return $this->refundPayment;
     }
 
-    /**
-     * @return PaymentInterface
-     */
     public function getPayment(): PaymentInterface
     {
         return $this->payment;
     }
 
-    /**
-     * @return string
-     */
     public function getRefundReference(): string
     {
         return $this->refundReference;
     }
-
-
-
-
 }

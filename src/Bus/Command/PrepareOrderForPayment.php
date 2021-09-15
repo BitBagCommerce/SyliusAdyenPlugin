@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -19,12 +21,8 @@ class PrepareOrderForPayment
         $this->order = $order;
     }
 
-    /**
-     * @return OrderInterface
-     */
     public function getOrder(): OrderInterface
     {
         return $this->order;
     }
-
 }

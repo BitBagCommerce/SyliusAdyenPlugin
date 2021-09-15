@@ -102,7 +102,7 @@ final class ManagingPaymentMethodAdyenContext extends MinkContext implements Con
     private function resolveCurrentPage()
     {
         return $this->currentPageResolver->getCurrentPageWithForm([
-            $this->createPage, $this->updatePage
+            $this->createPage, $this->updatePage,
         ]);
     }
 }

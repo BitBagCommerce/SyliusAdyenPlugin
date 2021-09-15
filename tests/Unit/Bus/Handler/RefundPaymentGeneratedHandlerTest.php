@@ -25,7 +25,6 @@ use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethod;
 use Sylius\RefundPlugin\Entity\RefundPayment;
 use Sylius\RefundPlugin\Event\RefundPaymentGenerated;
-use Webmozart\Assert\Assert;
 
 class RefundPaymentGeneratedHandlerTest extends TestCase
 {
@@ -48,13 +47,9 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
 
     /** @var RefundPaymentGeneratedHandler */
     private $handler;
-    /**
-     * @var RefundPaymentRepositoryInterface|mixed|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var RefundPaymentRepositoryInterface|mixed|\PHPUnit\Framework\MockObject\MockObject */
     private $refundPaymentRepository;
-    /**
-     * @var Dispatcher|mixed|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var Dispatcher|mixed|\PHPUnit\Framework\MockObject\MockObject */
     private $dispatcher;
 
     protected function setUp(): void
@@ -87,14 +82,14 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
 
         return [
             'no payment provided' => [
-                null
+                null,
             ],
             'payment without payment method' => [
-                $paymentWithoutPaymentMethod
+                $paymentWithoutPaymentMethod,
             ],
             'payment method non-Adyen' => [
-                $paymentWithNonAdyenPaymentMethod
-            ]
+                $paymentWithNonAdyenPaymentMethod,
+            ],
         ];
     }
 
@@ -145,7 +140,7 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
         $payment = new Payment();
         $payment->setMethod($paymentMethod);
         $payment->setDetails([
-            'pspReference' => self::PSP_REFERENCE
+            'pspReference' => self::PSP_REFERENCE,
         ]);
         $payment->setOrder($order);
 
@@ -178,7 +173,7 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
                 $this->equalTo(self::DUMMY_REFERENCE)
             )
             ->willReturn([
-                'pspReference' => self::NEW_PSP_REFERENCE
+                'pspReference' => self::NEW_PSP_REFERENCE,
             ])
         ;
 
@@ -190,7 +185,7 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
         $this->dispatcher
             ->expects($this->once())
             ->method('dispatch')
-            ->with($this->callback(static function(CreateReferenceForRefund $command){
+            ->with($this->callback(static function (CreateReferenceForRefund $command) {
                 return $command->getRefundReference() === self::NEW_PSP_REFERENCE;
             }));
 

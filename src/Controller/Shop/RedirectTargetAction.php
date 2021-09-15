@@ -77,8 +77,8 @@ class RedirectTargetAction
     {
         return [
             'details' => [
-                'redirectResult' => $referenceId
-            ]
+                'redirectResult' => $referenceId,
+            ],
         ];
     }
 

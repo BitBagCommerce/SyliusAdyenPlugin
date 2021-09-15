@@ -76,7 +76,7 @@ class PaymentsAction
         return $this->urlGenerator->generate(
             self::REDIRECT_TARGET_ACTION,
             [
-                'code' => $method->getCode()
+                'code' => $method->getCode(),
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
@@ -105,7 +105,7 @@ class PaymentsAction
             'postalCode' => (string) $billingAddress->getPostcode(),
             'city' => (string) $billingAddress->getCity(),
             'country' => $billingAddress->getCountryCode() ?? self::NO_COUNTRY_AVAILABLE_PLACEHOLDER,
-            'stateOrProvince' => (string) $billingAddress->getProvinceName()
+            'stateOrProvince' => (string) $billingAddress->getProvinceName(),
         ];
     }
 

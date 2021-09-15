@@ -33,7 +33,7 @@ final class CreatePage extends BaseCreatePage implements CreatePageInterface
             'hmacKey' => '#sylius_payment_method_gatewayConfig_config_hmacKey',
             'clientKey' => '#sylius_payment_method_gatewayConfig_config_clientKey',
             'authUser' => '#sylius_payment_method_gatewayConfig_config_authUser',
-            'authPassword' => '#sylius_payment_method_gatewayConfig_config_authPassword'
+            'authPassword' => '#sylius_payment_method_gatewayConfig_config_authPassword',
         ];
     }
 }

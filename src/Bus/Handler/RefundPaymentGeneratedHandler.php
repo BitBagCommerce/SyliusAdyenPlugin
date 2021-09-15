@@ -36,13 +36,9 @@ class RefundPaymentGeneratedHandler implements MessageHandlerInterface
     /** @var PaymentRepositoryInterface */
     private $paymentRepository;
 
-    /**
-     * @var RefundPaymentRepositoryInterface
-     */
+    /** @var RefundPaymentRepositoryInterface */
     private $refundPaymentRepository;
-    /**
-     * @var Dispatcher
-     */
+    /** @var Dispatcher */
     private $dispatcher;
 
     public function __construct(
@@ -63,10 +59,9 @@ class RefundPaymentGeneratedHandler implements MessageHandlerInterface
         string $newReference,
         RefundPaymentGenerated $refundPaymentGenerated,
         PaymentInterface $payment
-    ): void
-    {
+    ): void {
         $refund = $this->refundPaymentRepository->find($refundPaymentGenerated->id());
-        if($refund === null){
+        if ($refund === null) {
             return;
         }
 
@@ -77,8 +72,7 @@ class RefundPaymentGeneratedHandler implements MessageHandlerInterface
         RefundPaymentGenerated $refundPaymentGenerated,
         PaymentMethodInterface $paymentMethod,
         PaymentInterface $payment
-    ): string
-    {
+    ): string {
         Assert::keyExists(
             $payment->getDetails(),
             'pspReference',
@@ -94,11 +88,12 @@ class RefundPaymentGeneratedHandler implements MessageHandlerInterface
             (string) $payment->getDetails()['pspReference'],
             $refundPaymentGenerated->amount(),
             $refundPaymentGenerated->currencyCode(),
-            (string)$orderNumber
+            (string) $orderNumber
         );
 
         Assert::keyExists($result, 'pspReference');
-        return (string)$result['pspReference'];
+
+        return (string) $result['pspReference'];
     }
 
     public function __invoke(RefundPaymentGenerated $refundPaymentGenerated): void

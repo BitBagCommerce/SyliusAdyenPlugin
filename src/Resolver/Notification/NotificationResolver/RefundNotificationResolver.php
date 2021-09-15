@@ -13,16 +13,12 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver;
 use BitBag\SyliusAdyenPlugin\Bus\Command\RefundPayment;
 use BitBag\SyliusAdyenPlugin\Repository\AdyenReferenceRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
-use BitBag\SyliusAdyenPlugin\Resolver\Payment\RefundReferenceResolver;
 use Doctrine\ORM\NoResultException;
 use Webmozart\Assert\Assert;
 
 class RefundNotificationResolver implements CommandResolver
 {
-
-    /**
-     * @var AdyenReferenceRepositoryInterface
-     */
+    /** @var AdyenReferenceRepositoryInterface */
     private $adyenReferenceRepository;
 
     public function __construct(
@@ -35,7 +31,8 @@ class RefundNotificationResolver implements CommandResolver
     {
         try {
             $reference = $this->adyenReferenceRepository->getOneForRefundByCodeAndReference(
-                $paymentCode, (string)$notificationData->pspReference
+                $paymentCode,
+                (string) $notificationData->pspReference
             );
 
             $refundPayment = $reference->getRefundPayment();

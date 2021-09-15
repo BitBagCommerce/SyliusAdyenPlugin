@@ -59,5 +59,5 @@ return [
     SyliusLabs\DoctrineMigrationsExtraBundle\SyliusLabsDoctrineMigrationsExtraBundle::class => ['all' => true],
     BabDev\PagerfantaBundle\BabDevPagerfantaBundle::class => ['all' => true],
     \Sylius\RefundPlugin\SyliusRefundPlugin::class => ['all' => true],
-    \Knp\Bundle\SnappyBundle\KnpSnappyBundle::class => ['all' => true]
+    \Knp\Bundle\SnappyBundle\KnpSnappyBundle::class => ['all' => true],
 ];

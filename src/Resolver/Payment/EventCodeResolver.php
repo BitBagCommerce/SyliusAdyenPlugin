@@ -19,11 +19,11 @@ class EventCodeResolver
     public const CAPTURE = 'capture';
 
     public const PAYMENT_METHOD_TYPES = [
-        'amazonpay' =>  self::AUTHORIZATION,
+        'amazonpay' => self::AUTHORIZATION,
         'applepay' => self::AUTHORIZATION,
         'klarna' => self::AUTHORIZATION,
         'paywithgoogle' => self::AUTHORIZATION,
-        'twint' => self::AUTHORIZATION
+        'twint' => self::AUTHORIZATION,
     ];
 
     public function resolve(NotificationItemData $notificationData): string

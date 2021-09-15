@@ -31,5 +31,4 @@ class PaymentRepository implements PaymentRepositoryInterface
     {
         return $this->baseRepository->find($id);
     }
-
 }

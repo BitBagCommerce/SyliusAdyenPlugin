@@ -29,9 +29,7 @@ class PreparePaymentHandlerTest extends TestCase
 
     /** @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository */
     private $paymentRepository;
-    /**
-     * @var Dispatcher|mixed|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var Dispatcher|mixed|\PHPUnit\Framework\MockObject\MockObject */
     private $dispatcher;
 
     protected function setUp(): void
@@ -41,7 +39,9 @@ class PreparePaymentHandlerTest extends TestCase
         $this->paymentRepository = $this->createMock(EntityRepository::class);
         $this->dispatcher = $this->createMock(Dispatcher::class);
         $this->handler = new MarkOrderAsCompletedHandler(
-            $this->stateMachineFactory, $this->paymentRepository, $this->dispatcher
+            $this->stateMachineFactory,
+            $this->paymentRepository,
+            $this->dispatcher
         );
     }
 
@@ -49,13 +49,13 @@ class PreparePaymentHandlerTest extends TestCase
     {
         $result = [
             'dummy result code' => [
-                self::TESTING_RESULT_CODE, false
-            ]
+                self::TESTING_RESULT_CODE, false,
+            ],
         ];
 
         foreach (MarkOrderAsCompletedHandler::ALLOWED_EVENT_NAMES as $eventName) {
             $result[sprintf('valid result code: %s', $eventName)] = [
-                $eventName, true
+                $eventName, true,
             ];
         }
 
@@ -72,7 +72,7 @@ class PreparePaymentHandlerTest extends TestCase
         $payment = new Payment();
         $payment->setDetails([
             'resultCode' => $resultCode,
-            'pspReference' => '123'
+            'pspReference' => '123',
         ]);
         $order->addPayment($payment);
 

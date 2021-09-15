@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -18,24 +20,16 @@ class AdyenReference implements ResourceInterface, AdyenReferenceInterface, Time
 {
     use TimestampableTrait;
 
-    /**
-     * @var ?int
-     */
+    /** @var ?int */
     protected $id;
 
-    /**
-     * @var ?string
-     */
+    /** @var ?string */
     protected $pspReference;
 
-    /**
-     * @var ?PaymentInterface
-     */
+    /** @var ?PaymentInterface */
     protected $payment;
 
-    /**
-     * @var ?RefundPaymentInterface
-     */
+    /** @var ?RefundPaymentInterface */
     protected $refundPayment;
 
     public function getId(): ?int
@@ -51,25 +45,16 @@ class AdyenReference implements ResourceInterface, AdyenReferenceInterface, Time
         return $this->pspReference;
     }
 
-    /**
-     * @param string $pspReference
-     */
     public function setPspReference(string $pspReference): void
     {
         $this->pspReference = $pspReference;
     }
 
-    /**
-     * @return PaymentInterface|null
-     */
     public function getPayment(): ?PaymentInterface
     {
         return $this->payment;
     }
 
-    /**
-     * @param PaymentInterface|null $payment
-     */
     public function setPayment(?PaymentInterface $payment): void
     {
         $this->payment = $payment;
@@ -80,9 +65,6 @@ class AdyenReference implements ResourceInterface, AdyenReferenceInterface, Time
         return $this->refundPayment;
     }
 
-    /**
-     * @param RefundPaymentInterface|null $refundPayment
-     */
     public function setRefundPayment(?RefundPaymentInterface $refundPayment): void
     {
         $this->refundPayment = $refundPayment;

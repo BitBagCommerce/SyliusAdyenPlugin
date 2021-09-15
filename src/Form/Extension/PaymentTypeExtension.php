@@ -23,7 +23,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class PaymentTypeExtension extends AbstractTypeExtension
 {
-
     /** @var PaymentCheckoutOrderResolverInterface */
     private $paymentCheckoutOrderResolver;
 
@@ -52,7 +51,7 @@ class PaymentTypeExtension extends AbstractTypeExtension
     {
         $adyen = $builder->create('channels', FormType::class, [
             'compound' => true,
-            'mapped' => false
+            'mapped' => false,
         ]);
 
         $paymentMethods = $this->paymentMethodRepository->findAllByChannel($this->channelContext->getChannel());
@@ -61,7 +60,7 @@ class PaymentTypeExtension extends AbstractTypeExtension
             $paymentMethods = $this->getPaymentMethods($client);
             $adyen->add((string) $paymentMethod->getCode(), PaymentMethodChoiceType::class, [
                 'environment' => $client->getEnvironment(),
-                'payment_methods' => $paymentMethods
+                'payment_methods' => $paymentMethods,
             ]);
         }
 

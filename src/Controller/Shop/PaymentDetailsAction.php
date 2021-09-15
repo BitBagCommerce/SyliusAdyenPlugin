@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
-use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\MarkOrderAsCompleted;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
@@ -62,7 +61,7 @@ class PaymentDetailsAction
             self::REDIRECT_TARGET_ACTION,
             [
                 'code' => $method->getCode(),
-                'tokenValue' => $tokenValue
+                'tokenValue' => $tokenValue,
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
@@ -89,7 +88,7 @@ class PaymentDetailsAction
         return new JsonResponse(
             $payment->getDetails()
             + [
-                'redirect' => $this->getTargetUrl($payment, $tokenValue === null ? null : (string) $tokenValue)
+                'redirect' => $this->getTargetUrl($payment, $tokenValue === null ? null : (string) $tokenValue),
             ]
         );
     }

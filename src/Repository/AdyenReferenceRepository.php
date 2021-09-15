@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -23,7 +25,7 @@ class AdyenReferenceRepository extends EntityRepository implements AdyenReferenc
             ->where('r.pspReference = :reference AND pm.code = :code')
             ->setParameters([
                 'reference' => $pspReference,
-                'code' => $code
+                'code' => $code,
             ])
         ;
 

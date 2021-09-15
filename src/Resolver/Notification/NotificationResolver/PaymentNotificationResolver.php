@@ -13,7 +13,6 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Exception\UnmappedAdyenActionException;
 use BitBag\SyliusAdyenPlugin\Repository\AdyenReferenceRepositoryInterface;
-use BitBag\SyliusAdyenPlugin\Repository\PaymentRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 use Doctrine\ORM\NoResultException;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -37,7 +36,8 @@ class PaymentNotificationResolver implements CommandResolver
     {
         try {
             $reference = $this->adyenReferenceRepository->getOneByCodeAndReference(
-                $paymentCode, $originalReference ?? $reference
+                $paymentCode,
+                $originalReference ?? $reference
             );
 
             $result = $reference->getPayment();
@@ -53,7 +53,9 @@ class PaymentNotificationResolver implements CommandResolver
     {
         try {
             $payment = $this->fetchPayment(
-                $paymentCode, (string) $notificationData->pspReference, $notificationData->originalReference
+                $paymentCode,
+                (string) $notificationData->pspReference,
+                $notificationData->originalReference
             );
 
             return $this->dispatcher->getCommandFactory()->createForEvent(

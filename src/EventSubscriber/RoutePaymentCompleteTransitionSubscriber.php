@@ -37,7 +37,7 @@ class RoutePaymentCompleteTransitionSubscriber implements EventSubscriberInterfa
     {
         return [
             SMEvents::PRE_TRANSITION => 'doFilter',
-            SMEvents::TEST_TRANSITION => 'canComplete'
+            SMEvents::TEST_TRANSITION => 'canComplete',
         ];
     }
 
