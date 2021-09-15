@@ -19,14 +19,14 @@ interface AdyenReferenceInterface extends ResourceInterface
     /**
      * @return string
      */
-    public function getPspReference(): string;
+    public function getPspReference(): ?string;
 
     public function getRefundPayment(): ?RefundPaymentInterface;
 
     /**
      * @param RefundPaymentInterface|null $refund
      */
-    public function setRefundPayment(?RefundPaymentInterface $refund): void;
+    public function setRefundPayment(?RefundPaymentInterface $refundPayment): void;
 
     /**
      * @return PaymentInterface|null
@@ -36,7 +36,7 @@ interface AdyenReferenceInterface extends ResourceInterface
     /**
      * @return int
      */
-    public function getId(): int;
+    public function getId(): ?int;
 
     /**
      * @param PaymentInterface|null $payment

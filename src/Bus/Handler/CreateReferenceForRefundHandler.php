@@ -28,7 +28,7 @@ class CreateReferenceForRefundHandler implements MessageHandlerInterface
         $this->adyenReferenceFactory = $adyenReferenceFactory;
     }
 
-    public function __invoke(CreateReferenceForRefund $referenceCommand)
+    public function __invoke(CreateReferenceForRefund $referenceCommand): void
     {
         $object = $this->adyenReferenceFactory->createForRefund(
             $referenceCommand->getRefundReference(),

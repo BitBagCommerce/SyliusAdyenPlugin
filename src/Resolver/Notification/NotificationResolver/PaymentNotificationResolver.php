@@ -17,6 +17,7 @@ use BitBag\SyliusAdyenPlugin\Repository\PaymentRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 use Doctrine\ORM\NoResultException;
 use Sylius\Component\Core\Model\PaymentInterface;
+use Webmozart\Assert\Assert;
 
 class PaymentNotificationResolver implements CommandResolver
 {
@@ -38,7 +39,11 @@ class PaymentNotificationResolver implements CommandResolver
             $reference = $this->adyenReferenceRepository->getOneByCodeAndReference(
                 $paymentCode, $originalReference ?? $reference
             );
-            return $reference->getPayment();
+
+            $result = $reference->getPayment();
+            Assert::notNull($result);
+
+            return $result;
         } catch (NoResultException $ex) {
             throw new NoCommandResolvedException();
         }

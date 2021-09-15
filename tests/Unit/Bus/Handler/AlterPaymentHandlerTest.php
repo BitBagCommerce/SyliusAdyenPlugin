@@ -162,8 +162,6 @@ class AlterPaymentHandlerTest extends TestCase
         $item->setUnitPrice(self::ORDER_AMOUNT);
         $item->setOrder($order);
 
-        $unit = new OrderItemUnit($item);
-
         $setupMocker->bindTo($this)();
 
         /**

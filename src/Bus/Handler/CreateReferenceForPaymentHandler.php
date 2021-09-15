@@ -27,7 +27,7 @@ class CreateReferenceForPaymentHandler implements MessageHandlerInterface
         $this->adyenReferenceFactory = $adyenReferenceFactory;
     }
 
-    public function __invoke(CreateReferenceForPayment $referenceCommand)
+    public function __invoke(CreateReferenceForPayment $referenceCommand): void
     {
         $object = $this->adyenReferenceFactory->createForPayment($referenceCommand->getPayment());
         $this->adyenReferenceRepository->add($object);

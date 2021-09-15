@@ -46,6 +46,10 @@ class RefundPaymentRepository implements RefundPaymentRepositoryInterface
         return $qb->getQuery()->getSingleResult();
     }
 
+    /**
+     * @psalm-suppress MixedReturnStatement
+     * @psalm-suppress MixedInferredReturnType
+     */
     public function find(int $id): ?RefundPaymentInterface
     {
         return $this->baseRepository->find($id);

@@ -15,6 +15,7 @@ use BitBag\SyliusAdyenPlugin\Repository\AdyenReferenceRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 use BitBag\SyliusAdyenPlugin\Resolver\Payment\RefundReferenceResolver;
 use Doctrine\ORM\NoResultException;
+use Webmozart\Assert\Assert;
 
 class RefundNotificationResolver implements CommandResolver
 {
@@ -38,6 +39,8 @@ class RefundNotificationResolver implements CommandResolver
             );
 
             $refundPayment = $reference->getRefundPayment();
+            Assert::notNull($refundPayment);
+
             return new RefundPayment($refundPayment);
         } catch (\InvalidArgumentException | NoResultException $ex) {
             throw new NoCommandResolvedException();

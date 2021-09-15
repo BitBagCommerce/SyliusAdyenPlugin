@@ -31,7 +31,7 @@ class AdyenReferenceFactory implements AdyenReferenceFactoryInterface
 
         $result = $this->createNew();
         $result->setPayment($payment);
-        $result->setPspReference($details['pspReference']);
+        $result->setPspReference((string) $details['pspReference']);
 
         return $result;
     }

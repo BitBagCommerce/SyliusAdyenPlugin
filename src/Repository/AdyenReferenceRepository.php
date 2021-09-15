@@ -30,11 +30,19 @@ class AdyenReferenceRepository extends EntityRepository implements AdyenReferenc
         return $qb;
     }
 
+    /**
+     * @psalm-suppress MixedReturnStatement
+     * @psalm-suppress MixedInferredReturnType
+     */
     public function getOneByCodeAndReference(string $code, string $pspReference): AdyenReferenceInterface
     {
         return $this->getQueryBuilderForCodeAndReference($code, $pspReference)->getQuery()->getSingleResult();
     }
 
+    /**
+     * @psalm-suppress MixedReturnStatement
+     * @psalm-suppress MixedInferredReturnType
+     */
     public function getOneForRefundByCodeAndReference(string $code, string $pspReference): AdyenReferenceInterface
     {
         $qb = $this->getQueryBuilderForCodeAndReference($code, $pspReference);

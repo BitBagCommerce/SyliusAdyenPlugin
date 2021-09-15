@@ -19,12 +19,12 @@ class AdyenReference implements ResourceInterface, AdyenReferenceInterface, Time
     use TimestampableTrait;
 
     /**
-     * @var int
+     * @var ?int
      */
     protected $id;
 
     /**
-     * @var string
+     * @var ?string
      */
     protected $pspReference;
 
@@ -38,10 +38,7 @@ class AdyenReference implements ResourceInterface, AdyenReferenceInterface, Time
      */
     protected $refundPayment;
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -49,7 +46,7 @@ class AdyenReference implements ResourceInterface, AdyenReferenceInterface, Time
     /**
      * @return string
      */
-    public function getPspReference(): string
+    public function getPspReference(): ?string
     {
         return $this->pspReference;
     }
