@@ -10,22 +10,30 @@ declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Bus\Handler;
 
+use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForRefund;
+use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Bus\Handler\RefundPaymentGeneratedHandler;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepository;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentRepositoryInterface;
+use BitBag\SyliusAdyenPlugin\Repository\RefundPaymentRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Payment\RefundReferenceResolver;
 use Payum\Core\Model\GatewayConfig;
 use PHPUnit\Framework\TestCase;
+use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\Payment;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethod;
+use Sylius\RefundPlugin\Entity\RefundPayment;
 use Sylius\RefundPlugin\Event\RefundPaymentGenerated;
+use Webmozart\Assert\Assert;
 
 class RefundPaymentGeneratedHandlerTest extends TestCase
 {
     private const DUMMY_REFERENCE = 'W Szczebrzeszynie chrząszcz brzmi w trzcinie';
 
     private const PSP_REFERENCE = 'Bakłażan';
+
+    private const NEW_PSP_REFERENCE = 'Rzeżucha';
 
     use AdyenClientTrait;
 
@@ -40,20 +48,30 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
 
     /** @var RefundPaymentGeneratedHandler */
     private $handler;
+    /**
+     * @var RefundPaymentRepositoryInterface|mixed|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $refundPaymentRepository;
+    /**
+     * @var Dispatcher|mixed|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $dispatcher;
 
     protected function setUp(): void
     {
         $this->setupAdyenClientMocks();
 
-        $this->refundReferenceResolver = $this->createMock(RefundReferenceResolver::class);
         $this->paymentRepository = $this->createMock(PaymentRepositoryInterface::class);
         $this->paymentMethodRepository = $this->createMock(PaymentMethodRepository::class);
+        $this->refundPaymentRepository = $this->createMock(RefundPaymentRepositoryInterface::class);
+        $this->dispatcher = $this->createMock(Dispatcher::class);
 
         $this->handler = new RefundPaymentGeneratedHandler(
-            $this->refundReferenceResolver,
             $this->adyenClientProvider,
             $this->paymentRepository,
-            $this->paymentMethodRepository
+            $this->paymentMethodRepository,
+            $this->refundPaymentRepository,
+            $this->dispatcher
         );
     }
 
@@ -121,11 +139,15 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
         $paymentMethod = new PaymentMethod();
         $paymentMethod->setGatewayConfig($config);
 
+        $order = new Order();
+        $order->setNumber(self::DUMMY_REFERENCE);
+
         $payment = new Payment();
         $payment->setMethod($paymentMethod);
         $payment->setDetails([
             'pspReference' => self::PSP_REFERENCE
         ]);
+        $payment->setOrder($order);
 
         $this->paymentRepository
             ->method('find')
@@ -146,15 +168,6 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
             1
         );
 
-        $this->refundReferenceResolver
-            ->method('createReference')
-            ->willReturn(self::DUMMY_REFERENCE)
-            ->with(
-                $this->equalTo($command->orderNumber()),
-                $this->equalTo($command->id())
-            )
-        ;
-
         $this->adyenClient
             ->expects($this->once())
             ->method('requestRefund')
@@ -164,7 +177,22 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
                 $this->equalTo($command->currencyCode()),
                 $this->equalTo(self::DUMMY_REFERENCE)
             )
+            ->willReturn([
+                'pspReference' => self::NEW_PSP_REFERENCE
+            ])
         ;
+
+        $this->refundPaymentRepository
+            ->method('find')
+            ->willReturn($this->createMock(RefundPayment::class))
+        ;
+
+        $this->dispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->callback(static function(CreateReferenceForRefund $command){
+                return $command->getRefundReference() === self::NEW_PSP_REFERENCE;
+            }));
 
         ($this->handler)($command);
     }

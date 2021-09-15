@@ -91,7 +91,7 @@ class RefundPaymentGeneratedHandler implements MessageHandlerInterface
             (string) $payment->getDetails()['pspReference'],
             $refundPaymentGenerated->amount(),
             $refundPaymentGenerated->currencyCode(),
-            ''  //todo
+            (string) $payment->getOrder()->getNumber()
         );
 
         Assert::keyExists($result, 'pspReference');
