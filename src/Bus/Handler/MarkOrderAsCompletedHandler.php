@@ -55,6 +55,10 @@ class MarkOrderAsCompletedHandler implements MessageHandlerInterface
         $this->updateOrderState($this->getOrderFromPayment($payment));
         $this->paymentRepository->add($payment);
 
+        if (!isset($payment->getDetails()['pspReference'])) {
+            return;
+        }
+
         $this->dispatcher->dispatch(new CreateReferenceForPayment($payment));
     }
 

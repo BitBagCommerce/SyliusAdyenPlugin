@@ -12,9 +12,11 @@ namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Exception\PaymentMethodForReferenceNotFoundException;
+use BitBag\SyliusAdyenPlugin\Exception\UnprocessablePaymentException;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
-use BitBag\SyliusAdyenPlugin\Repository\PaymentRepositoryInterface;
+use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +29,7 @@ class RedirectTargetAction
 
     public const THANKS_ROUTE_NAME = 'sylius_shop_order_thank_you';
 
-    public const AUTHORIZATION_CODE = 'authorised';
+    public const PAYMENT_PROCEED_CODES = ['authorised', 'received'];
 
     public const MARK_ORDER_AS_COMPLETED_CODE = 'mark_order_as_completed';
 
@@ -37,23 +39,22 @@ class RedirectTargetAction
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
 
-    /** @var PaymentRepositoryInterface */
-    private $paymentRepository;
-
     /** @var Dispatcher */
     private $dispatcher;
+    /** @var OrderRepositoryInterface */
+    private $orderRepository;
 
     public function __construct(
         AdyenClientProvider $adyenClientProvider,
         UrlGeneratorInterface $urlGenerator,
         Dispatcher $dispatcher,
-        PaymentRepositoryInterface $paymentRepository
+        OrderRepositoryInterface $orderRepository
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->urlGenerator = $urlGenerator;
 
-        $this->paymentRepository = $paymentRepository;
         $this->dispatcher = $dispatcher;
+        $this->orderRepository = $orderRepository;
     }
 
     private function getReferenceId(Request $request): ?string
@@ -63,7 +64,7 @@ class RedirectTargetAction
 
     private function handleDetailsResponse(PaymentInterface $payment, array $result): bool
     {
-        if (strtolower((string) $result['resultCode']) !== self::AUTHORIZATION_CODE) {
+        if (!in_array(strtolower((string) $result['resultCode']), self::PAYMENT_PROCEED_CODES, true)) {
             return false;
         }
 
@@ -82,11 +83,19 @@ class RedirectTargetAction
         ];
     }
 
-    private function getPaymentForReference(string $reference): PaymentInterface
+    private function getPaymentForReference(string $orderNumber): PaymentInterface
     {
-        $payment = $this->paymentRepository->find((int) $reference);
-        if (!$payment instanceof PaymentInterface) {
-            throw new PaymentMethodForReferenceNotFoundException($reference);
+        /**
+         * @var ?OrderInterface $order
+         */
+        $order = $this->orderRepository->findOneByNumber($orderNumber);
+        if ($order === null) {
+            throw new PaymentMethodForReferenceNotFoundException($orderNumber);
+        }
+
+        $payment = $order->getLastPayment();
+        if ($payment === null) {
+            throw new UnprocessablePaymentException();
         }
 
         return $payment;
