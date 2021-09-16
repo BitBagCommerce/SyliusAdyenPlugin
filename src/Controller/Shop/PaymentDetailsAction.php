@@ -61,7 +61,7 @@ class PaymentDetailsAction
             self::REDIRECT_TARGET_ACTION,
             [
                 'code' => $method->getCode(),
-                'tokenValue' => $tokenValue
+                'tokenValue' => $tokenValue,
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
@@ -88,7 +88,7 @@ class PaymentDetailsAction
         return new JsonResponse(
             $payment->getDetails()
             + [
-                'redirect' => $this->getTargetUrl($payment, $tokenValue === null ? null : (string) $tokenValue)
+                'redirect' => $this->getTargetUrl($payment, $tokenValue === null ? null : (string) $tokenValue),
             ]
         );
     }

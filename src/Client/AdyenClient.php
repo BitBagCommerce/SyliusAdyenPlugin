@@ -28,7 +28,7 @@ class AdyenClient implements AdyenClientInterface
         'environment' => 'test',
         'authUser' => null,
         'authPassword' => null,
-        'clientKey' => null
+        'clientKey' => null,
     ];
 
     /** @var ArrayObject */
@@ -53,7 +53,7 @@ class AdyenClient implements AdyenClientInterface
             'hmacKey',
             'authUser',
             'authPassword',
-            'clientKey'
+            'clientKey',
         ]);
 
         $this->options = $options;
@@ -92,11 +92,11 @@ class AdyenClient implements AdyenClientInterface
         $payload = [
             'amount' => [
                 'value' => $amount,
-                'currency' => $currencyCode
+                'currency' => $currencyCode,
             ],
             'merchantAccount' => $this->options['merchantAccount'],
             'countryCode' => $countryCode,
-            'shopperLocale' => $locale
+            'shopperLocale' => $locale,
         ];
 
         $payload = $this->enableOneOffPayment($payload, $adyenToken);
@@ -177,17 +177,17 @@ class AdyenClient implements AdyenClientInterface
         $payload = [
             'amount' => [
                 'value' => $amount,
-                'currency' => $currencyCode
+                'currency' => $currencyCode,
             ],
             'reference' => (string) $reference,
             'merchantAccount' => $this->options['merchantAccount'],
             'returnUrl' => $redirectUrl,
             'paymentMethod' => $receivedPayload['paymentMethod'],
             'additionalData' => [
-                'allow3DS2' => true
+                'allow3DS2' => true,
             ],
             'channel' => 'web',
-            'origin' => $this->getOrigin($redirectUrl)
+            'origin' => $this->getOrigin($redirectUrl),
         ];
 
         if (isset($receivedPayload['browserInfo'])) {
@@ -209,9 +209,9 @@ class AdyenClient implements AdyenClientInterface
             'merchantAccount' => $this->options['merchantAccount'],
             'modificationAmount' => [
                 'value' => $amount,
-                'currency' => $currencyCode
+                'currency' => $currencyCode,
             ],
-            'originalReference' => $pspReference
+            'originalReference' => $pspReference,
         ];
 
         $params = $this->versionResolver->appendVersionConstraints($params);
@@ -224,7 +224,7 @@ class AdyenClient implements AdyenClientInterface
     ): array {
         $params = [
             'merchantAccount' => $this->options['merchantAccount'],
-            'originalReference' => $pspReference
+            'originalReference' => $pspReference,
         ];
 
         $params = $this->versionResolver->appendVersionConstraints($params);
@@ -239,7 +239,7 @@ class AdyenClient implements AdyenClientInterface
         $params = [
             'merchantAccount' => $this->options['merchantAccount'],
             'recurringDetailReference' => $paymentReference,
-            'shopperReference' => $shopperReference
+            'shopperReference' => $shopperReference,
         ];
 
         $params = $this->versionResolver->appendVersionConstraints($params);
@@ -253,10 +253,10 @@ class AdyenClient implements AdyenClientInterface
             'merchantAccount' => $this->options['merchantAccount'],
             'modificationAmount' => [
                 'value' => $amount,
-                'currency' => $currencyCode
+                'currency' => $currencyCode,
             ],
             'reference' => $reference,
-            'originalReference' => $pspReference
+            'originalReference' => $pspReference,
         ];
 
         $params = $this->versionResolver->appendVersionConstraints($params);

@@ -24,7 +24,7 @@ class FilterManualRefundConfirmationSubscriber implements EventSubscriberInterfa
     public static function getSubscribedEvents(): array
     {
         return [
-            SMEvents::TEST_TRANSITION => 'filter'
+            SMEvents::TEST_TRANSITION => 'filter',
         ];
     }
 

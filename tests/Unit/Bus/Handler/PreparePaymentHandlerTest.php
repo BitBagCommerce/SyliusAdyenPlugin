@@ -41,13 +41,13 @@ class PreparePaymentHandlerTest extends TestCase
     {
         $result = [
             'dummy result code' => [
-                self::TESTING_RESULT_CODE, false
-            ]
+                self::TESTING_RESULT_CODE, false,
+            ],
         ];
 
         foreach (PreparePaymentHandler::ALLOWED_EVENT_NAMES as $eventName) {
             $result[sprintf('valid result code: %s', $eventName)] = [
-                $eventName, true
+                $eventName, true,
             ];
         }
 
@@ -63,7 +63,7 @@ class PreparePaymentHandlerTest extends TestCase
 
         $payment = new Payment();
         $payment->setDetails([
-            'resultCode' => $resultCode
+            'resultCode' => $resultCode,
         ]);
         $order->addPayment($payment);
 

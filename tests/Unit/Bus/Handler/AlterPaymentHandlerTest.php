@@ -61,7 +61,7 @@ class AlterPaymentHandlerTest extends TestCase
 
         $paymentWithoutReference = clone $paymentWithoutAdyenConfiguration;
         $paymentWithoutReference->getMethod()->getGatewayConfig()->setConfig([
-            AdyenClientProvider::FACTORY_NAME => 1
+            AdyenClientProvider::FACTORY_NAME => 1,
         ]);
 
         return [
@@ -118,7 +118,7 @@ class AlterPaymentHandlerTest extends TestCase
                             $this->equalTo(self::ORDER_CURRENCY_CODE)
                         )
                     ;
-                }
+                },
             ],
             'cancel payment' => [
                 CancelPayment::class,
@@ -131,8 +131,8 @@ class AlterPaymentHandlerTest extends TestCase
                             $this->equalTo(self::PSP_REFERENCE)
                         )
                     ;
-                }
-            ]
+                },
+            ],
         ];
     }
 
@@ -143,7 +143,7 @@ class AlterPaymentHandlerTest extends TestCase
     {
         $config = new GatewayConfig();
         $config->setConfig([
-            AdyenClientProvider::FACTORY_NAME => 1
+            AdyenClientProvider::FACTORY_NAME => 1,
         ]);
 
         $paymentMethod = new PaymentMethod();

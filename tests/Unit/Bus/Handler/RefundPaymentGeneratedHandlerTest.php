@@ -69,14 +69,14 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
 
         return [
             'no payment provided' => [
-                null
+                null,
             ],
             'payment without payment method' => [
-                $paymentWithoutPaymentMethod
+                $paymentWithoutPaymentMethod,
             ],
             'payment method non-Adyen' => [
-                $paymentWithNonAdyenPaymentMethod
-            ]
+                $paymentWithNonAdyenPaymentMethod,
+            ],
         ];
     }
 
@@ -124,7 +124,7 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
         $payment = new Payment();
         $payment->setMethod($paymentMethod);
         $payment->setDetails([
-            'pspReference' => self::PSP_REFERENCE
+            'pspReference' => self::PSP_REFERENCE,
         ]);
 
         $this->paymentRepository

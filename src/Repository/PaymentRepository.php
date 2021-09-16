@@ -46,7 +46,7 @@ class PaymentRepository implements PaymentRepositoryInterface
             ->andWhere('p.id=:id')
             ->setParameters([
                 'code' => $code,
-                'id' => $id
+                'id' => $id,
             ])
         ;
 

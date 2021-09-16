@@ -36,7 +36,7 @@ final class ConfigurationType extends AbstractType
                     new NotBlank([
                         'message' => 'bitbag_sylius_adyen_plugin.environment.not_blank',
                         'groups' => ['sylius'],
-                    ])
+                    ]),
                 ],
             ])
             ->add('merchantAccount', TextType::class, [
@@ -45,7 +45,7 @@ final class ConfigurationType extends AbstractType
                     new NotBlank([
                         'message' => 'bitbag_sylius_adyen_plugin.merchant_account.not_blank',
                         'groups' => ['sylius'],
-                    ])
+                    ]),
                 ],
             ])
             ->add('apiKey', CredentialType::class, [
@@ -54,8 +54,8 @@ final class ConfigurationType extends AbstractType
                     new NotBlank([
                         'message' => 'bitbag_sylius_adyen_plugin.api_key.not_blank',
                         'groups' => ['sylius'],
-                    ])
-                ]
+                    ]),
+                ],
             ])
             ->add('clientKey', CredentialType::class, [
                 'label' => 'bitbag_sylius_adyen_plugin.ui.client_key',
@@ -63,8 +63,8 @@ final class ConfigurationType extends AbstractType
                     new NotBlank([
                         'message' => 'bitbag_sylius_adyen_plugin.merchant_account.not_blank',
                         'groups' => ['sylius'],
-                    ])
-                ]
+                    ]),
+                ],
             ])
             ->add('hmacKey', CredentialType::class, [
                 'label' => 'bitbag_sylius_adyen_plugin.ui.hmac_key',
@@ -72,7 +72,7 @@ final class ConfigurationType extends AbstractType
                     new NotBlank([
                         'message' => 'bitbag_sylius_adyen_plugin.hmac_key.not_blank',
                         'groups' => ['sylius'],
-                    ])
+                    ]),
                 ],
             ])
             ->add('authUser', CredentialType::class, [
@@ -81,7 +81,7 @@ final class ConfigurationType extends AbstractType
                     new NotBlank([
                         'message' => 'bitbag_sylius_adyen_plugin.auth_user.not_blank',
                         'groups' => ['sylius'],
-                    ])
+                    ]),
                 ],
             ])
             ->add('authPassword', CredentialType::class, [
@@ -90,11 +90,11 @@ final class ConfigurationType extends AbstractType
                     new NotBlank([
                         'message' => 'bitbag_sylius_adyen_plugin.auth_password.not_blank',
                         'groups' => ['sylius'],
-                    ])
+                    ]),
                 ],
             ])
             ->add(AdyenClientProvider::FACTORY_NAME, HiddenType::class, [
-                'data' => true
+                'data' => true,
             ]);
     }
 
@@ -102,8 +102,8 @@ final class ConfigurationType extends AbstractType
     {
         $resolver->setDefault('constraints', [
             new AdyenCredentials([
-                'groups' => ['sylius']
-            ])
+                'groups' => ['sylius'],
+            ]),
         ]);
     }
 }

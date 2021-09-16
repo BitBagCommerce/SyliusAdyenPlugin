@@ -17,10 +17,10 @@ use Adyen\Service;
 class HttpClientStub implements ClientInterface
 {
     /** @var ?callable */
-    private static $jsonHandler = null;
+    private static $jsonHandler;
 
     /** @var ?callable */
-    private static $postHandler = null;
+    private static $postHandler;
 
     public function setJsonHandler(?callable $jsonHandler): void
     {

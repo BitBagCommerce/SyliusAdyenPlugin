@@ -27,7 +27,7 @@ class AdyenTokenRepository extends EntityRepository implements AdyenTokenReposit
     ): ?AdyenTokenInterface {
         return $this->findOneBy([
             'paymentMethod' => $paymentMethod,
-            'customer' => $customer
+            'customer' => $customer,
         ]);
     }
 }
