@@ -17,8 +17,14 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class CreateReferenceForPaymentHandler implements MessageHandlerInterface
 {
-    private RepositoryInterface $adyenReferenceRepository;
-    private AdyenReferenceFactoryInterface $adyenReferenceFactory;
+    /**
+     * @var RepositoryInterface
+     */
+    private $adyenReferenceRepository;
+    /**
+     * @var AdyenReferenceFactoryInterface
+     */
+    private $adyenReferenceFactory;
 
     public function __construct(
         RepositoryInterface $adyenReferenceRepository,

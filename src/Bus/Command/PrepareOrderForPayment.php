@@ -14,7 +14,10 @@ use Sylius\Component\Core\Model\OrderInterface;
 
 class PrepareOrderForPayment
 {
-    private OrderInterface $order;
+    /**
+     * @var OrderInterface
+     */
+    private $order;
 
     public function __construct(OrderInterface $order)
     {

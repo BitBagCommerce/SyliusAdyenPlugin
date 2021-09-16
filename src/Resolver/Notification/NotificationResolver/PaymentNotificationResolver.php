@@ -22,7 +22,10 @@ class PaymentNotificationResolver implements CommandResolver
 {
     /** @var Dispatcher */
     private $dispatcher;
-    private AdyenReferenceRepositoryInterface $adyenReferenceRepository;
+    /**
+     * @var AdyenReferenceRepositoryInterface
+     */
+    private $adyenReferenceRepository;
 
     public function __construct(
         Dispatcher $dispatcher,
