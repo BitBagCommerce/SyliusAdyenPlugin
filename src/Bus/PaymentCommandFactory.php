@@ -24,7 +24,7 @@ class PaymentCommandFactory
 {
     public const MAPPING = [
         'authorisation' => AuthorizePayment::class,
-        'prepare' => MarkOrderAsCompleted::class,
+        'mark_order_as_completed' => MarkOrderAsCompleted::class,
         'capture' => CapturePayment::class,
     ];
 

@@ -18,7 +18,7 @@ use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\Payment;
 
-class PreparePaymentHandlerTest extends TestCase
+class MarkOrderAsCompletedHandlerTest extends TestCase
 {
     private const TESTING_RESULT_CODE = 'Chrząszcz';
 

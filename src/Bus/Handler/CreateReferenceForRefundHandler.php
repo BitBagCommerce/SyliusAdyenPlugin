@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -8,7 +10,6 @@
 
 namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
-use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForRefund;
 use BitBag\SyliusAdyenPlugin\Factory\AdyenReferenceFactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -16,20 +17,15 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class CreateReferenceForRefundHandler implements MessageHandlerInterface
 {
-    /**
-     * @var RepositoryInterface
-     */
+    /** @var RepositoryInterface */
     private $adyenReferenceRepository;
-    /**
-     * @var AdyenReferenceFactoryInterface
-     */
+    /** @var AdyenReferenceFactoryInterface */
     private $adyenReferenceFactory;
 
     public function __construct(
         RepositoryInterface $adyenReferenceRepository,
         AdyenReferenceFactoryInterface $adyenReferenceFactory
-    )
-    {
+    ) {
         $this->adyenReferenceRepository = $adyenReferenceRepository;
         $this->adyenReferenceFactory = $adyenReferenceFactory;
     }
@@ -43,5 +39,4 @@ class CreateReferenceForRefundHandler implements MessageHandlerInterface
         );
         $this->adyenReferenceRepository->add($object);
     }
-
 }

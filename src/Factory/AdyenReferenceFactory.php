@@ -18,9 +18,7 @@ use Webmozart\Assert\Assert;
 
 class AdyenReferenceFactory implements AdyenReferenceFactoryInterface
 {
-    /**
-     * @var FactoryInterface
-     */
+    /** @var FactoryInterface */
     private $baseFactory;
 
     public function __construct(FactoryInterface $baseFactory)

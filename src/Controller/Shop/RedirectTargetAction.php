@@ -29,7 +29,7 @@ class RedirectTargetAction
 
     public const AUTHORIZATION_CODE = 'authorised';
 
-    public const PREPARATION_CODE = 'prepare';
+    public const MARK_ORDER_AS_COMPLETED_CODE = 'mark_order_as_completed';
 
     /** @var AdyenClientProvider */
     private $adyenClientProvider;
@@ -67,7 +67,7 @@ class RedirectTargetAction
             return false;
         }
 
-        $command = $this->dispatcher->getCommandFactory()->createForEvent(self::PREPARATION_CODE, $payment);
+        $command = $this->dispatcher->getCommandFactory()->createForEvent(self::MARK_ORDER_AS_COMPLETED_CODE, $payment);
         $this->dispatcher->dispatch($command);
 
         return true;

@@ -16,9 +16,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class PrepareOrderForPaymentHandler implements MessageHandlerInterface
 {
-    /**
-     * @var OrderNumberAssignerInterface
-     */
+    /** @var OrderNumberAssignerInterface */
     private $orderNumberAssigner;
 
     public function __construct(OrderNumberAssignerInterface $orderNumberAssigner)
