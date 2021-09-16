@@ -19,6 +19,7 @@ use Payum\Core\Model\GatewayConfig;
 use PHPUnit\Framework\TestCase;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\OrderItem;
+use Sylius\Component\Core\Model\OrderItemUnit;
 use Sylius\Component\Core\Model\Payment;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethod;
@@ -160,6 +161,7 @@ class AlterPaymentHandlerTest extends TestCase
         $item = new OrderItem();
         $item->setUnitPrice(self::ORDER_AMOUNT);
         $item->setOrder($order);
+        $item->addUnit(new OrderItemUnit($item));
 
         $setupMocker->bindTo($this)();
 
