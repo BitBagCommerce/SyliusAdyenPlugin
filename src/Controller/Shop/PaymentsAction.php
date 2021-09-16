@@ -22,7 +22,6 @@ use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterfac
 use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
 use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\TokenAssigner\OrderTokenAssignerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -47,9 +46,6 @@ class PaymentsAction
     /** @var PaymentCheckoutOrderResolverInterface */
     private $paymentCheckoutOrderResolver;
 
-    /** @var OrderTokenAssignerInterface */
-    //private $orderTokenAssigner;
-
     /** @var Dispatcher */
     private $dispatcher;
 
@@ -57,13 +53,11 @@ class PaymentsAction
         AdyenClientProvider $adyenClientProvider,
         UrlGeneratorInterface $urlGenerator,
         PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver,
-        //OrderTokenAssignerInterface $orderTokenAssigner,
         Dispatcher $dispatcher
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->urlGenerator = $urlGenerator;
         $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;
-        //$this->orderTokenAssigner = $orderTokenAssigner;
         $this->dispatcher = $dispatcher;
     }
 
@@ -89,7 +83,6 @@ class PaymentsAction
         }
 
         $this->dispatcher->dispatch(new PrepareOrderForPayment($order));
-        //$this->orderTokenAssigner->assignTokenValueIfNotSet($order);
     }
 
     private function createFraudDetectionData(OrderInterface $order): array
