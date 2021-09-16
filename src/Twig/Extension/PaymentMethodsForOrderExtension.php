@@ -29,7 +29,7 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
     use GatewayConfigFromPaymentTrait;
 
     public const CONFIGURATION_KEYS_WHITELIST = [
-        'environment', 'merchantAccount', 'clientKey'
+        'environment', 'merchantAccount', 'clientKey',
     ];
 
     /** @var AdyenClientProvider */
@@ -54,7 +54,7 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('adyen_payment_configuration', [$this, 'adyenPaymentConfiguration'])
+            new TwigFunction('adyen_payment_configuration', [$this, 'adyenPaymentConfiguration']),
         ];
     }
 

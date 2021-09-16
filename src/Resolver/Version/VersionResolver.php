@@ -47,13 +47,13 @@ class VersionResolver
         return [
             'merchantApplication' => [
                 'name' => 'adyen-sylius',
-                'version' => $this->getPluginVersion()
+                'version' => $this->getPluginVersion(),
             ],
             'externalPlatform' => [
                 'name' => 'Sylius',
                 'version' => Kernel::VERSION,
-                'integrator' => 'BitBag'
-            ]
+                'integrator' => 'BitBag',
+            ],
         ];
     }
 

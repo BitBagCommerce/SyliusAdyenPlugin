@@ -63,11 +63,11 @@ class AdyenCredentialsValidator extends ConstraintValidator
         $this->validateArguments($merchantAccount, $apiKey);
 
         $payload = [
-            'merchantAccount' => $merchantAccount
+            'merchantAccount' => $merchantAccount,
         ];
         $options = [
             'environment' => $environment,
-            'apiKey' => $apiKey
+            'apiKey' => $apiKey,
         ];
 
         try {

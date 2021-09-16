@@ -63,11 +63,11 @@ class PaymentFinalizationHandlerTest extends TestCase
     {
         return [
             'capture action' => [
-                CapturePayment::class
+                CapturePayment::class,
             ],
             'authorize action' => [
-                AuthorizePayment::class
-            ]
+                AuthorizePayment::class,
+            ],
         ];
     }
 

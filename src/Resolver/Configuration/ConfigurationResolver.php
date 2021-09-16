@@ -26,7 +26,7 @@ class ConfigurationResolver
             'authPassword' => '',
             'environment' => AdyenClientInterface::TEST_ENVIRONMENT,
             'adyen' => 0,
-            'merchantAccount' => ''
+            'merchantAccount' => '',
         ]);
         $resolver->setRequired($resolver->getDefinedOptions());
 

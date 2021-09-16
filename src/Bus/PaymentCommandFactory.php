@@ -25,7 +25,7 @@ class PaymentCommandFactory
     public const MAPPING = [
         'authorisation' => AuthorizePayment::class,
         'prepare' => PreparePayment::class,
-        'capture' => CapturePayment::class
+        'capture' => CapturePayment::class,
     ];
 
     /** @var array */

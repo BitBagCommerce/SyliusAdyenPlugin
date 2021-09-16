@@ -55,11 +55,11 @@ class GetTokenHandlerTest extends TestCase
     {
         return [
             'for already existing' => [
-                true
+                true,
             ],
             'for non-existing' => [
-                false
-            ]
+                false,
+            ],
         ];
     }
 

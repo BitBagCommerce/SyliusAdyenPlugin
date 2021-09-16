@@ -37,7 +37,7 @@ class FilterHttpAuthenticationForNotificationProcessor implements EventSubscribe
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => 'filterAuthentication'
+            KernelEvents::REQUEST => 'filterAuthentication',
         ];
     }
 
