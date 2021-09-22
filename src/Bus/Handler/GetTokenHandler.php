@@ -18,6 +18,8 @@ use BitBag\SyliusAdyenPlugin\Exception\OrderWithoutCustomerException;
 use BitBag\SyliusAdyenPlugin\Repository\AdyenTokenRepositoryInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Webmozart\Assert\Assert;
 
 class GetTokenHandler implements MessageHandlerInterface
@@ -27,21 +29,42 @@ class GetTokenHandler implements MessageHandlerInterface
 
     /** @var Dispatcher */
     private $dispatcher;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
 
     public function __construct(
         AdyenTokenRepositoryInterface $adyenTokenRepository,
-        Dispatcher $dispatcher
+        Dispatcher $dispatcher,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->adyenTokenRepository = $adyenTokenRepository;
         $this->dispatcher = $dispatcher;
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    private function getUser(): ?UserInterface
+    {
+        $token = $this->tokenStorage->getToken();
+
+        if ($token === null) {
+            return null;
+        }
+
+        $user = $token->getUser();
+
+        return $user instanceof UserInterface ? $user : null;
     }
 
     /**
      * @psalm-suppress MixedReturnStatement
      * @psalm-suppress MixedInferredReturnType
      */
-    public function __invoke(GetToken $getTokenQuery): AdyenTokenInterface
+    public function __invoke(GetToken $getTokenQuery): ?AdyenTokenInterface
     {
+        if ($this->getUser() === null) {
+            return null;
+        }
+
         $customer = $getTokenQuery->getOrder()->getCustomer();
         if ($customer === null) {
             throw new OrderWithoutCustomerException($getTokenQuery->getOrder());

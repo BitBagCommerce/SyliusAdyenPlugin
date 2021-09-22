@@ -142,12 +142,28 @@ class AdyenClient implements AdyenClientInterface
         return (array) $this->getCheckout()->paymentsDetails($receivedPayload);
     }
 
+    private function isTokenizationSupported(array $payload, ?AdyenTokenInterface $customerIdentifier): bool
+    {
+        if ($customerIdentifier === null) {
+            return false;
+        }
+
+        if (
+            isset($payload['paymentMethod']['type'])
+            && $payload['paymentMethod']['type'] !== 'scheme'
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
     private function enableOneOffPayment(
         array $payload,
         ?AdyenTokenInterface $customerIdentifier,
         bool $store = false
     ): array {
-        if ($customerIdentifier === null) {
+        if (!$this->isTokenizationSupported($payload, $customerIdentifier)) {
             return $payload;
         }
 
@@ -157,7 +173,7 @@ class AdyenClient implements AdyenClientInterface
 
         $payload['recurringProcessingModel'] = 'CardOnFile';
         $payload['shopperInteraction'] = 'Ecommerce';
-        $payload['shopperReference'] = $customerIdentifier->getIdentifier();
+        $payload['shopperReference'] = ($customerIdentifier === null ? '' : $customerIdentifier->getIdentifier());
 
         return $payload;
     }
@@ -194,7 +210,11 @@ class AdyenClient implements AdyenClientInterface
             $payload['browserInfo'] = (array) $receivedPayload['browserInfo'];
         }
 
-        $payload = $this->enableOneOffPayment($payload, $customerIdentifier, true);
+        $payload = $this->enableOneOffPayment(
+            $payload,
+            $customerIdentifier,
+            (bool) ($receivedPayload['storePaymentMethod'] ?? false)
+        );
         $payload = $this->versionResolver->appendVersionConstraints($payload);
 
         return (array) $this->getCheckout()->payments($payload);
