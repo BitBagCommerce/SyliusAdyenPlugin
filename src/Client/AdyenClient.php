@@ -31,6 +31,8 @@ class AdyenClient implements AdyenClientInterface
         'clientKey' => null,
     ];
 
+    public const CREDIT_CARD_TYPE = 'scheme';
+
     /** @var ArrayObject */
     private $options;
 
@@ -122,7 +124,7 @@ class AdyenClient implements AdyenClientInterface
 
         return sprintf(
             $pattern,
-            $components['scheme'] ?? '',
+            $components[self::CREDIT_CARD_TYPE] ?? '',
             $components['host'] ?? '',
             $components['port'] ?? 0
         );
@@ -148,10 +150,7 @@ class AdyenClient implements AdyenClientInterface
             return false;
         }
 
-        if (
-            isset($payload['paymentMethod']['type'])
-            && $payload['paymentMethod']['type'] !== 'scheme'
-        ) {
+        if (isset($payload['paymentMethod']['type']) && $payload['paymentMethod']['type'] !== self::CREDIT_CARD_TYPE) {
             return false;
         }
 

@@ -16,7 +16,7 @@ use BitBag\SyliusAdyenPlugin\Factory\AdyenTokenFactoryInterface;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class CreateTokenHandler implements MessageHandlerInterface
+final class CreateTokenHandler implements MessageHandlerInterface
 {
     /** @var AdyenTokenFactoryInterface */
     private $tokenFactory;

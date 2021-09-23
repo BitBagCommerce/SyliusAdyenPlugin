@@ -17,7 +17,7 @@ use SM\Factory\FactoryInterface;
 use Sylius\RefundPlugin\StateResolver\RefundPaymentTransitions;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class RefundPaymentHandler implements MessageHandlerInterface
+final class RefundPaymentHandler implements MessageHandlerInterface
 {
     /** @var FactoryInterface */
     private $stateMachineFactory;

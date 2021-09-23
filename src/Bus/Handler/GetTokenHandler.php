@@ -22,13 +22,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\User\UserInterface;
 use Webmozart\Assert\Assert;
 
-class GetTokenHandler implements MessageHandlerInterface
+final class GetTokenHandler implements MessageHandlerInterface
 {
     /** @var AdyenTokenRepositoryInterface */
     private $adyenTokenRepository;
 
     /** @var Dispatcher */
     private $dispatcher;
+
     /** @var TokenStorageInterface */
     private $tokenStorage;
 

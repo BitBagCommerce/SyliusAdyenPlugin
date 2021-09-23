@@ -22,7 +22,7 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Webmozart\Assert\Assert;
 
-class AlterPaymentHandler implements MessageHandlerInterface
+final class AlterPaymentHandler implements MessageHandlerInterface
 {
     use GatewayConfigFromPaymentTrait;
 
