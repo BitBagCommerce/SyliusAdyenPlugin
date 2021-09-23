@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
     const $paymentMethods = $form.querySelectorAll(' input[type=radio]');
     const $adyenLayers = $form.querySelectorAll('.adyen-method-grid, .dropin-container');
-    let $paymentSubmit = null;
     let isAdyenSelected = false;
 
     const showAdyenGrid = (code) => {
@@ -25,14 +24,11 @@ document.addEventListener('DOMContentLoaded', (e) => {
         }
 
         isAdyenSelected = true;
-        $paymentSubmit.classList.add('adyen');
         adyenMethod.querySelector('.adyen-method-grid, .dropin-container').style.display = '';
     }
 
     const hideAdyen = () => {
         isAdyenSelected = false;
-
-        $paymentSubmit.classList.remove('adyen')
 
         $adyenLayers.forEach((adyenLayer) => {
             adyenLayer.style.display = 'none';
@@ -47,7 +43,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
     });
 
     const init = () => {
-        $paymentSubmit = $form.querySelector('#next-step, #sylius-pay-link')
 
         hideAdyen();
         $paymentMethods.forEach(($paymentMethod) => {

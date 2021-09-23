@@ -21,7 +21,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class MarkOrderAsCompletedHandler implements MessageHandlerInterface
+final class MarkOrderAsCompletedHandler implements MessageHandlerInterface
 {
     use OrderFromPaymentTrait;
 

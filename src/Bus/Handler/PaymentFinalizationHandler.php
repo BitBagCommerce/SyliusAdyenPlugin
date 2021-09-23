@@ -19,7 +19,7 @@ use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Payment\PaymentTransitions;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class PaymentFinalizationHandler implements MessageHandlerInterface
+final class PaymentFinalizationHandler implements MessageHandlerInterface
 {
     use OrderFromPaymentTrait;
 

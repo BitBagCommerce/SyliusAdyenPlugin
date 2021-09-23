@@ -6,20 +6,20 @@
  */
 
 (() => {
-    const instantiate = (container) => {
+    const instantiate = ($container) => {
 
         let checkout = null;
         let configuration = {}
+        const _showLoader = (show) => {
+            const $form = $container.closest('form');
+            show ? $form.classList.add('loading') : $form.classList.remove('loading');
+        }
 
         const _successfulFetchCallback = (dropin, data) => {
             if (data.action) {
+                _showLoader(false);
                 dropin.handleAction(data.action);
                 return;
-            }
-
-            const $form = container.closest('form');
-            if ($form) {
-                $form.classList.add('loading');
             }
 
             window.location.replace(data.redirect)
@@ -33,6 +33,8 @@
                     'Content-Type': 'application/json'
                 }
             }
+
+            _showLoader(true);
 
             fetch(url, options)
                 .then(response => response.json())
@@ -85,7 +87,7 @@
             });
         };
 
-        configuration = JSON.parse(container.attributes['data-dropin'].value);
+        configuration = JSON.parse($container.attributes['data-dropin'].value);
 
         checkout = init();
 
@@ -94,7 +96,7 @@
                 showRemovePaymentMethodButton: true,
                 onDisableStoredPaymentMethod: disableStoredPaymentMethodHandler
             })
-            .mount(container);
+            .mount($container);
     };
 
     document.addEventListener('DOMContentLoaded', (e) => {

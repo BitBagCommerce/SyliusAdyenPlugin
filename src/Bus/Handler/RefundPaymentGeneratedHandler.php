@@ -23,7 +23,7 @@ use Sylius\RefundPlugin\Event\RefundPaymentGenerated;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Webmozart\Assert\Assert;
 
-class RefundPaymentGeneratedHandler implements MessageHandlerInterface
+final class RefundPaymentGeneratedHandler implements MessageHandlerInterface
 {
     use GatewayConfigFromPaymentTrait;
 

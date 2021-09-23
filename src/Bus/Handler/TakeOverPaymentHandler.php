@@ -18,7 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class TakeOverPaymentHandler implements MessageHandlerInterface
+final class TakeOverPaymentHandler implements MessageHandlerInterface
 {
     use PayableOrderPaymentTrait;
     use PaymentFromOrderTrait;

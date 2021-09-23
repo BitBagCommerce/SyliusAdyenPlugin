@@ -31,6 +31,8 @@ class AdyenClient implements AdyenClientInterface
         'clientKey' => null,
     ];
 
+    public const CREDIT_CARD_TYPE = 'scheme';
+
     /** @var ArrayObject */
     private $options;
 
@@ -122,7 +124,7 @@ class AdyenClient implements AdyenClientInterface
 
         return sprintf(
             $pattern,
-            $components['scheme'] ?? '',
+            $components[self::CREDIT_CARD_TYPE] ?? '',
             $components['host'] ?? '',
             $components['port'] ?? 0
         );
@@ -142,12 +144,25 @@ class AdyenClient implements AdyenClientInterface
         return (array) $this->getCheckout()->paymentsDetails($receivedPayload);
     }
 
+    private function isTokenizationSupported(array $payload, ?AdyenTokenInterface $customerIdentifier): bool
+    {
+        if ($customerIdentifier === null) {
+            return false;
+        }
+
+        if (isset($payload['paymentMethod']['type']) && $payload['paymentMethod']['type'] !== self::CREDIT_CARD_TYPE) {
+            return false;
+        }
+
+        return true;
+    }
+
     private function enableOneOffPayment(
         array $payload,
         ?AdyenTokenInterface $customerIdentifier,
         bool $store = false
     ): array {
-        if ($customerIdentifier === null) {
+        if (!$this->isTokenizationSupported($payload, $customerIdentifier)) {
             return $payload;
         }
 
@@ -157,7 +172,7 @@ class AdyenClient implements AdyenClientInterface
 
         $payload['recurringProcessingModel'] = 'CardOnFile';
         $payload['shopperInteraction'] = 'Ecommerce';
-        $payload['shopperReference'] = $customerIdentifier->getIdentifier();
+        $payload['shopperReference'] = ($customerIdentifier === null ? '' : $customerIdentifier->getIdentifier());
 
         return $payload;
     }
@@ -194,7 +209,11 @@ class AdyenClient implements AdyenClientInterface
             $payload['browserInfo'] = (array) $receivedPayload['browserInfo'];
         }
 
-        $payload = $this->enableOneOffPayment($payload, $customerIdentifier, true);
+        $payload = $this->enableOneOffPayment(
+            $payload,
+            $customerIdentifier,
+            (bool) ($receivedPayload['storePaymentMethod'] ?? false)
+        );
         $payload = $this->versionResolver->appendVersionConstraints($payload);
 
         return (array) $this->getCheckout()->payments($payload);

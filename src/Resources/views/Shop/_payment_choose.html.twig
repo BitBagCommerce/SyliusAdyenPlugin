@@ -25,31 +25,21 @@
             {% for method in available_methods.vars.payment_methods -%}
 
                 {% set to_render = [] %}
-                {# credit cards #}
+
                 {% if method.brands is defined %}
                     {% for sub_brand in method.brands %}
                         {% set to_render = to_render|merge([["https://checkoutshopper-" ~ available_methods.vars.environment ~ ".adyen.com/checkoutshopper/images/logos/medium/" ~ sub_brand ~ ".png"]]) %}
                     {% endfor %}
                 {% endif %}
 
-                {# dotpay #}
-                {% if method.details is defined and method.details[0].items is defined %}
-                    {% for sub_brand in method.details[0].items %}
-                        {% set to_render = to_render|merge([["https://checkoutshopper-" ~ available_methods.vars.environment ~ ".adyen.com/checkoutshopper/images/logos/dotpay/" ~ sub_brand.id ~ ".svg", sub_brand.name]]) %}
-                    {% endfor %}
-                {% endif %}
-
-                {# fallback #}
                 {% if to_render is empty %}
                     {% set to_render = [["https://checkoutshopper-" ~ available_methods.vars.environment ~ ".adyen.com/checkoutshopper/images/logos/medium/" ~ method.type ~ ".png"]] %}
                 {% endif %}
 
                 {% for item in to_render %}
                     {% set title = item[1] is defined ? item[1] : method.name %}
-                    <div class="online-payment__item online-payment__item--{{ method.type }}">
-                        <button type="submit" title="{{ title }}">
-                            <img class="online-payment__image" src="{{ item[0] }}" alt="{{ title }}">
-                        </button>
+                    <div class="online-payment__item online-payment__item--{{ method.type }}" title="{{ title }}">
+                        <img class="online-payment__image" src="{{ item[0] }}" alt="{{ title }}">
                     </div>
                 {% endfor %}
             {%- endfor %}
