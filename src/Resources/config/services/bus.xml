@@ -107,6 +107,7 @@
 
             <argument type="service" id="bitbag_sylius_adyen_plugin.repository.adyen_token"/>
             <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
+            <argument type="service" id="security.token_storage"/>
 
             <tag name="messenger.message_handler"/>
         </service>

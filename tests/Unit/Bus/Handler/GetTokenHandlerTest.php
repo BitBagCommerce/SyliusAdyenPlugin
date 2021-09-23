@@ -20,6 +20,9 @@ use PHPUnit\Framework\TestCase;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
+use Sylius\Component\User\Model\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class GetTokenHandlerTest extends TestCase
 {
@@ -31,17 +34,22 @@ class GetTokenHandlerTest extends TestCase
 
     /** @var GetTokenHandler */
     private $handler;
+    /** @var \PHPUnit\Framework\MockObject\MockObject|TokenStorageInterface */
+    private $tokenStorage;
 
     protected function setUp(): void
     {
         $this->adyenTokenRepository = $this->createMock(AdyenTokenRepositoryInterface::class);
         $this->dispatcher = $this->createMock(Dispatcher::class);
+        $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
 
-        $this->handler = new GetTokenHandler($this->adyenTokenRepository, $this->dispatcher);
+        $this->handler = new GetTokenHandler($this->adyenTokenRepository, $this->dispatcher, $this->tokenStorage);
     }
 
     public function testForTokenWithoutCustomer(): void
     {
+        $this->makeUserAuthenticated();
+
         $this->expectException(\InvalidArgumentException::class);
 
         $token = new GetToken(
@@ -63,8 +71,30 @@ class GetTokenHandlerTest extends TestCase
         ];
     }
 
-    private function setupMocks(bool $existingToken, PaymentMethodInterface $paymentMethod, CustomerInterface $customer)
+    private function makeUserAuthenticated(): void
     {
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->method('getUser')
+            ->willReturn(
+                $this->createMock(UserInterface::class)
+            )
+        ;
+
+        $this
+            ->tokenStorage
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+    }
+
+    private function setupMocks(
+        bool $existingToken,
+        PaymentMethodInterface $paymentMethod,
+        CustomerInterface $customer
+    ): void {
+        $this->makeUserAuthenticated();
+
         $repositoryMethod = $this->adyenTokenRepository
             ->method('findOneByPaymentMethodAndCustomer')
             ->with($this->equalTo($paymentMethod), $this->equalTo($customer))
@@ -111,5 +141,13 @@ class GetTokenHandlerTest extends TestCase
 
         $result = ($this->handler)($query);
         $this->assertInstanceOf(AdyenToken::class, $result);
+    }
+
+    public function testForAnonymous(): void
+    {
+        $query = $this->createMock(GetToken::class);
+
+        $result = ($this->handler)($query);
+        $this->assertNull($result);
     }
 }
