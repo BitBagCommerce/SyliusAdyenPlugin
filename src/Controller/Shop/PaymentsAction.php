@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
-use BitBag\SyliusAdyenPlugin\Bus\Command\MarkOrderAsCompleted;
+use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentStatusReceived;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PrepareOrderForPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\TakeOverPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
@@ -140,7 +140,7 @@ class PaymentsAction
         );
 
         $payment->setDetails($result);
-        $this->dispatcher->dispatch(new MarkOrderAsCompleted($payment));
+        $this->dispatcher->dispatch(new PaymentStatusReceived($payment));
 
         return new JsonResponse($payment->getDetails() + ['redirect' => $url]);
     }

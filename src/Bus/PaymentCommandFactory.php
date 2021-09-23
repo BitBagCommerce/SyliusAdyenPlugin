@@ -12,8 +12,8 @@ namespace BitBag\SyliusAdyenPlugin\Bus;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\AuthorizePayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\CapturePayment;
-use BitBag\SyliusAdyenPlugin\Bus\Command\MarkOrderAsCompleted;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentLifecycleCommand;
+use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentStatusReceived;
 use BitBag\SyliusAdyenPlugin\Exception\UnmappedAdyenActionException;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 use BitBag\SyliusAdyenPlugin\Resolver\Payment\EventCodeResolver;
@@ -24,7 +24,7 @@ class PaymentCommandFactory
 {
     public const MAPPING = [
         'authorisation' => AuthorizePayment::class,
-        'mark_order_as_completed' => MarkOrderAsCompleted::class,
+        'payment_status_received' => PaymentStatusReceived::class,
         'capture' => CapturePayment::class,
     ];
 

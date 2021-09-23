@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForPayment;
-use BitBag\SyliusAdyenPlugin\Bus\Command\MarkOrderAsCompleted;
+use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentStatusReceived;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
 use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
 use SM\Factory\FactoryInterface;
@@ -21,7 +21,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-final class MarkOrderAsCompletedHandler implements MessageHandlerInterface
+final class PaymentStatusReceivedHandler implements MessageHandlerInterface
 {
     use OrderFromPaymentTrait;
 
@@ -32,40 +32,46 @@ final class MarkOrderAsCompletedHandler implements MessageHandlerInterface
 
     /** @var EntityRepository */
     private $paymentRepository;
+
     /** @var Dispatcher */
     private $dispatcher;
+
+    private EntityRepository $orderRepository;
 
     public function __construct(
         FactoryInterface $stateMachineFactory,
         EntityRepository $paymentRepository,
+        EntityRepository $orderRepository,
         Dispatcher $dispatcher
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
         $this->paymentRepository = $paymentRepository;
         $this->dispatcher = $dispatcher;
+        $this->orderRepository = $orderRepository;
     }
 
-    public function __invoke(MarkOrderAsCompleted $command): void
+    public function __invoke(PaymentStatusReceived $command): void
     {
         $payment = $command->getPayment();
-        if (!$this->isAccepted($payment)) {
-            return;
+
+        if ($this->isAccepted($payment)) {
+            $this->updateOrderState($this->getOrderFromPayment($payment));
         }
 
-        $this->updateOrderState($this->getOrderFromPayment($payment));
-        $this->paymentRepository->add($payment);
-
-        if (!isset($payment->getDetails()['pspReference'])) {
-            return;
+        try {
+            $this->dispatcher->dispatch(new CreateReferenceForPayment($payment));
+            $this->paymentRepository->add($payment);
+        } catch (\InvalidArgumentException $ex) {
+            // probably redirect, we don't have a pspReference at this stage
         }
-
-        $this->dispatcher->dispatch(new CreateReferenceForPayment($payment));
     }
 
     private function updateOrderState(OrderInterface $order): void
     {
         $sm = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
         $sm->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE, true);
+
+        $this->orderRepository->add($order);
     }
 
     private function isAccepted(PaymentInterface $payment): bool

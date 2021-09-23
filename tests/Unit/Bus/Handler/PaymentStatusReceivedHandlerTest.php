@@ -10,37 +10,43 @@ declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Bus\Handler;
 
-use BitBag\SyliusAdyenPlugin\Bus\Command\MarkOrderAsCompleted;
+use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentStatusReceived;
 use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
-use BitBag\SyliusAdyenPlugin\Bus\Handler\MarkOrderAsCompletedHandler;
+use BitBag\SyliusAdyenPlugin\Bus\Handler\PaymentStatusReceivedHandler;
 use PHPUnit\Framework\TestCase;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\Payment;
 
-class MarkOrderAsCompletedHandlerTest extends TestCase
+class PaymentStatusReceivedHandlerTest extends TestCase
 {
     private const TESTING_RESULT_CODE = 'Chrząszcz';
 
     use StateMachineTrait;
 
-    /** @var MarkOrderAsCompletedHandler */
+    /** @var PaymentStatusReceivedHandler */
     private $handler;
 
     /** @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository */
     private $paymentRepository;
+
     /** @var Dispatcher|mixed|\PHPUnit\Framework\MockObject\MockObject */
     private $dispatcher;
+
+    /** @var \PHPUnit\Framework\MockObject\MockObject|EntityRepository */
+    private $orderRepository;
 
     protected function setUp(): void
     {
         $this->setupStateMachineMocks();
 
         $this->paymentRepository = $this->createMock(EntityRepository::class);
+        $this->orderRepository = $this->createMock(EntityRepository::class);
         $this->dispatcher = $this->createMock(Dispatcher::class);
-        $this->handler = new MarkOrderAsCompletedHandler(
+        $this->handler = new PaymentStatusReceivedHandler(
             $this->stateMachineFactory,
             $this->paymentRepository,
+            $this->orderRepository,
             $this->dispatcher
         );
     }
@@ -53,7 +59,7 @@ class MarkOrderAsCompletedHandlerTest extends TestCase
             ],
         ];
 
-        foreach (MarkOrderAsCompletedHandler::ALLOWED_EVENT_NAMES as $eventName) {
+        foreach (PaymentStatusReceivedHandler::ALLOWED_EVENT_NAMES as $eventName) {
             $result[sprintf('valid result code: %s', $eventName)] = [
                 $eventName, true,
             ];
@@ -83,11 +89,11 @@ class MarkOrderAsCompletedHandlerTest extends TestCase
         ;
 
         $this->dispatcher
-            ->expects(clone $invocation)
+            ->expects($this->once())
             ->method('dispatch')
         ;
 
-        $command = new MarkOrderAsCompleted($payment);
+        $command = new PaymentStatusReceived($payment);
         ($this->handler)($command);
     }
 }

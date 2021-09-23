@@ -31,7 +31,7 @@ class RedirectTargetAction
 
     public const PAYMENT_PROCEED_CODES = ['authorised', 'received'];
 
-    public const MARK_ORDER_AS_COMPLETED_CODE = 'mark_order_as_completed';
+    public const PAYMENT_STATUS_RECEIVED_CODE = 'payment_status_received';
 
     /** @var AdyenClientProvider */
     private $adyenClientProvider;
@@ -68,7 +68,7 @@ class RedirectTargetAction
             return false;
         }
 
-        $command = $this->dispatcher->getCommandFactory()->createForEvent(self::MARK_ORDER_AS_COMPLETED_CODE, $payment);
+        $command = $this->dispatcher->getCommandFactory()->createForEvent(self::PAYMENT_STATUS_RECEIVED_CODE, $payment);
         $this->dispatcher->dispatch($command);
 
         return true;

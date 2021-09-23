@@ -12,6 +12,7 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\PrepareOrderForPayment;
 use Sylius\Bundle\OrderBundle\NumberAssigner\OrderNumberAssignerInterface;
+use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class PrepareOrderForPaymentHandler implements MessageHandlerInterface
@@ -19,13 +20,19 @@ class PrepareOrderForPaymentHandler implements MessageHandlerInterface
     /** @var OrderNumberAssignerInterface */
     private $orderNumberAssigner;
 
-    public function __construct(OrderNumberAssignerInterface $orderNumberAssigner)
-    {
+    private EntityRepository $orderRepository;
+
+    public function __construct(
+        OrderNumberAssignerInterface $orderNumberAssigner,
+        EntityRepository $orderRepository
+    ) {
         $this->orderNumberAssigner = $orderNumberAssigner;
+        $this->orderRepository = $orderRepository;
     }
 
     public function __invoke(PrepareOrderForPayment $command): void
     {
         $this->orderNumberAssigner->assignNumber($command->getOrder());
+        $this->orderRepository->add($command->getOrder());
     }
 }
