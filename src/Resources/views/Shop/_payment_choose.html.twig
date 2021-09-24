@@ -26,7 +26,7 @@
 
                 {% set to_render = [] %}
 
-                {% if method.brands is defined %}
+                {% if method.brands is defined and method.type == 'scheme' %}
                     {% for sub_brand in method.brands %}
                         {% set to_render = to_render|merge([["https://checkoutshopper-" ~ available_methods.vars.environment ~ ".adyen.com/checkoutshopper/images/logos/medium/" ~ sub_brand ~ ".png"]]) %}
                     {% endfor %}
