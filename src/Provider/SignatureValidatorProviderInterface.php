@@ -8,13 +8,11 @@
 
 declare(strict_types=1);
 
-namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct;
+namespace BitBag\SyliusAdyenPlugin\Provider;
 
-class NotificationRequest
+use BitBag\SyliusAdyenPlugin\Client\SignatureValidator;
+
+interface SignatureValidatorProviderInterface
 {
-    /** @var ?bool */
-    public $live;
-
-    /** @var ?NotificationItem[] */
-    public $notificationItems;
+    public function getValidatorForCode(string $code): SignatureValidator;
 }

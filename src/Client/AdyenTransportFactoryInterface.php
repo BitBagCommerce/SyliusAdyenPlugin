@@ -8,13 +8,11 @@
 
 declare(strict_types=1);
 
-namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct;
+namespace BitBag\SyliusAdyenPlugin\Client;
 
-class NotificationRequest
+use Adyen\Client;
+
+interface AdyenTransportFactoryInterface
 {
-    /** @var ?bool */
-    public $live;
-
-    /** @var ?NotificationItem[] */
-    public $notificationItems;
+    public function create(array $options): Client;
 }

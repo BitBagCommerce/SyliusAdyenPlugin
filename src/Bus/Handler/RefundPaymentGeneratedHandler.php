@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForRefund;
-use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
-use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
+use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProviderInterface;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Repository\RefundPaymentRepositoryInterface;
@@ -27,7 +27,7 @@ final class RefundPaymentGeneratedHandler implements MessageHandlerInterface
 {
     use GatewayConfigFromPaymentTrait;
 
-    /** @var AdyenClientProvider */
+    /** @var AdyenClientProviderInterface */
     private $adyenClientProvider;
 
     /** @var PaymentMethodRepositoryInterface */
@@ -38,15 +38,16 @@ final class RefundPaymentGeneratedHandler implements MessageHandlerInterface
 
     /** @var RefundPaymentRepositoryInterface */
     private $refundPaymentRepository;
-    /** @var Dispatcher */
+
+    /** @var DispatcherInterface */
     private $dispatcher;
 
     public function __construct(
-        AdyenClientProvider $adyenClientProvider,
+        AdyenClientProviderInterface $adyenClientProvider,
         PaymentRepositoryInterface $paymentRepository,
         PaymentMethodRepositoryInterface $paymentMethodRepository,
         RefundPaymentRepositoryInterface $refundPaymentRepository,
-        Dispatcher $dispatcher
+        DispatcherInterface $dispatcher
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->paymentMethodRepository = $paymentMethodRepository;
@@ -103,7 +104,7 @@ final class RefundPaymentGeneratedHandler implements MessageHandlerInterface
 
         if ($payment === null
             || $paymentMethod === null
-            || !isset($this->getGatewayConfig($paymentMethod)->getConfig()[AdyenClientProvider::FACTORY_NAME])
+            || !isset($this->getGatewayConfig($paymentMethod)->getConfig()[AdyenClientProviderInterface::FACTORY_NAME])
         ) {
             return;
         }

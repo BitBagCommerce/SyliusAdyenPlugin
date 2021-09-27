@@ -10,35 +10,26 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Bus;
 
-use BitBag\SyliusAdyenPlugin\Bus\Command\AuthorizePayment;
-use BitBag\SyliusAdyenPlugin\Bus\Command\CapturePayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentLifecycleCommand;
-use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentStatusReceived;
 use BitBag\SyliusAdyenPlugin\Exception\UnmappedAdyenActionException;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
-use BitBag\SyliusAdyenPlugin\Resolver\Payment\EventCodeResolver;
+use BitBag\SyliusAdyenPlugin\Resolver\Payment\EventCodeResolverInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Webmozart\Assert\Assert;
 
-class PaymentCommandFactory
+final class PaymentCommandFactory implements PaymentCommandFactoryInterface
 {
-    public const MAPPING = [
-        'authorisation' => AuthorizePayment::class,
-        'payment_status_received' => PaymentStatusReceived::class,
-        'capture' => CapturePayment::class,
-    ];
-
     /** @var array */
     private $mapping = [];
 
-    /** @var EventCodeResolver */
+    /** @var EventCodeResolverInterface */
     private $eventCodeResolver;
 
     public function __construct(
-        EventCodeResolver $eventCodeResolver,
+        EventCodeResolverInterface $eventCodeResolver,
         array $mapping = []
     ) {
-        $this->mapping = array_merge_recursive(self::MAPPING, $mapping);
+        $this->mapping = array_merge_recursive(PaymentCommandFactoryInterface::MAPPING, $mapping);
         $this->eventCodeResolver = $eventCodeResolver;
     }
 

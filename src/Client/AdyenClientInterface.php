@@ -18,6 +18,18 @@ interface AdyenClientInterface
 
     public const LIVE_ENVIRONMENT = 'live';
 
+    public const DEFAULT_OPTIONS = [
+        'apiKey' => null,
+        'merchantAccount' => null,
+        'hmacKey' => null,
+        'environment' => 'test',
+        'authUser' => null,
+        'authPassword' => null,
+        'clientKey' => null,
+    ];
+
+    public const CREDIT_CARD_TYPE = 'scheme';
+
     public function getAvailablePaymentMethods(
         string $locale,
         string $countryCode,

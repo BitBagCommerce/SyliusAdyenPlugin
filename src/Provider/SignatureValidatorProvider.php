@@ -15,7 +15,7 @@ use BitBag\SyliusAdyenPlugin\Exception\AdyenNotConfiguredException;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 
-class SignatureValidatorProvider
+final class SignatureValidatorProvider implements SignatureValidatorProviderInterface
 {
     use GatewayConfigFromPaymentTrait;
 

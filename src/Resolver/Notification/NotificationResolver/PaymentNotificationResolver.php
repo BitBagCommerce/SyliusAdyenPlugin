@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver;
 
-use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Exception\UnmappedAdyenActionException;
 use BitBag\SyliusAdyenPlugin\Repository\AdyenReferenceRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
@@ -18,15 +18,15 @@ use Doctrine\ORM\NoResultException;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Webmozart\Assert\Assert;
 
-class PaymentNotificationResolver implements CommandResolver
+final class PaymentNotificationResolver implements CommandResolver
 {
-    /** @var Dispatcher */
+    /** @var DispatcherInterface */
     private $dispatcher;
     /** @var AdyenReferenceRepositoryInterface */
     private $adyenReferenceRepository;
 
     public function __construct(
-        Dispatcher $dispatcher,
+        DispatcherInterface $dispatcher,
         AdyenReferenceRepositoryInterface $adyenReferenceRepository
     ) {
         $this->dispatcher = $dispatcher;

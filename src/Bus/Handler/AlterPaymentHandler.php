@@ -14,7 +14,7 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\AlterPaymentCommand;
 use BitBag\SyliusAdyenPlugin\Bus\Command\CancelPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\RequestCapture;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
-use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
+use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProviderInterface;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -26,10 +26,10 @@ final class AlterPaymentHandler implements MessageHandlerInterface
 {
     use GatewayConfigFromPaymentTrait;
 
-    /** @var AdyenClientProvider */
+    /** @var AdyenClientProviderInterface */
     private $adyenClientProvider;
 
-    public function __construct(AdyenClientProvider $adyenClientProvider)
+    public function __construct(AdyenClientProviderInterface $adyenClientProvider)
     {
         $this->adyenClientProvider = $adyenClientProvider;
     }
@@ -48,7 +48,7 @@ final class AlterPaymentHandler implements MessageHandlerInterface
         if (
             $method === null
             || $method->getGatewayConfig() === null
-            || !isset($this->getGatewayConfig($method)->getConfig()[AdyenClientProvider::FACTORY_NAME])
+            || !isset($this->getGatewayConfig($method)->getConfig()[AdyenClientProviderInterface::FACTORY_NAME])
         ) {
             return false;
         }

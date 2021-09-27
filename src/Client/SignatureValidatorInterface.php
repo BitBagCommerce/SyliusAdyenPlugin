@@ -8,13 +8,9 @@
 
 declare(strict_types=1);
 
-namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct;
+namespace BitBag\SyliusAdyenPlugin\Client;
 
-class NotificationRequest
+interface SignatureValidatorInterface
 {
-    /** @var ?bool */
-    public $live;
-
-    /** @var ?NotificationItem[] */
-    public $notificationItems;
+    public function isValid(array $params): bool;
 }

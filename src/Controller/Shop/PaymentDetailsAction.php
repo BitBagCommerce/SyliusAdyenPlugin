@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentStatusReceived;
-use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
-use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
+use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProviderInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
 use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
@@ -29,7 +29,7 @@ class PaymentDetailsAction
 
     public const REDIRECT_TARGET_ACTION = 'bitbag_adyen_thank_you';
 
-    /** @var AdyenClientProvider */
+    /** @var AdyenClientProviderInterface */
     private $adyenClientProvider;
 
     /** @var PaymentCheckoutOrderResolverInterface */
@@ -38,14 +38,14 @@ class PaymentDetailsAction
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
 
-    /** @var Dispatcher */
+    /** @var DispatcherInterface */
     private $dispatcher;
 
     public function __construct(
-        AdyenClientProvider $adyenClientProvider,
+        AdyenClientProviderInterface $adyenClientProvider,
         PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver,
         UrlGeneratorInterface $urlGenerator,
-        Dispatcher $dispatcher
+        DispatcherInterface $dispatcher
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;

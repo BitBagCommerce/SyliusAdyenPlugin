@@ -10,10 +10,11 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Twig\Extension;
 
-use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Bus\Query\GetToken;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
+use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProviderInterface;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
@@ -38,13 +39,13 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
     /** @var PaymentMethodRepositoryInterface */
     private $paymentMethodRepository;
 
-    /** @var Dispatcher */
+    /** @var DispatcherInterface */
     private $dispatcher;
 
     public function __construct(
         AdyenClientProvider $adyenClientProvider,
         PaymentMethodRepositoryInterface $paymentMethodRepository,
-        Dispatcher $dispatcher
+        DispatcherInterface $dispatcher
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->paymentMethodRepository = $paymentMethodRepository;
@@ -77,7 +78,7 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         $paymentMethod = $this->getPaymentMethod($order, $code);
         $token = $this->getToken($paymentMethod, $order);
 
-        if (!isset($this->getGatewayConfig($paymentMethod)->getConfig()[AdyenClientProvider::FACTORY_NAME])) {
+        if (!isset($this->getGatewayConfig($paymentMethod)->getConfig()[AdyenClientProviderInterface::FACTORY_NAME])) {
             return null;
         }
 

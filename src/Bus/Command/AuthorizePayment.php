@@ -13,7 +13,7 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Command;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Payment\PaymentTransitions;
 
-class AuthorizePayment implements PaymentFinalizationCommand
+final class AuthorizePayment implements PaymentFinalizationCommand
 {
     /** @var PaymentInterface */
     private $payment;

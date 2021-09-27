@@ -10,14 +10,14 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Repository;
 
-use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
+use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProviderInterface;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 
-class PaymentMethodRepository implements PaymentMethodRepositoryInterface
+final class PaymentMethodRepository implements PaymentMethodRepositoryInterface
 {
     /** @var EntityRepository */
     private $baseRepository;
@@ -46,7 +46,7 @@ class PaymentMethodRepository implements PaymentMethodRepositoryInterface
             ->innerJoin('o.gatewayConfig', 'gatewayConfig')
             ->where('gatewayConfig.factoryName = :factoryName')
             ->andWhere('o.code = :code')
-            ->setParameter('factoryName', AdyenClientProvider::FACTORY_NAME)
+            ->setParameter('factoryName', AdyenClientProviderInterface::FACTORY_NAME)
             ->setParameter('code', $code)
             ->getQuery()
             ->getSingleResult()
@@ -73,7 +73,7 @@ class PaymentMethodRepository implements PaymentMethodRepositoryInterface
             ->andWhere(':channel MEMBER OF o.channels')
             ->andWhere('gatewayConfig.factoryName = :factoryName')
             ->setParameter('channel', $channel)
-            ->setParameter('factoryName', AdyenClientProvider::FACTORY_NAME)
+            ->setParameter('factoryName', AdyenClientProviderInterface::FACTORY_NAME)
             ->addOrderBy('o.position')
         ;
     }

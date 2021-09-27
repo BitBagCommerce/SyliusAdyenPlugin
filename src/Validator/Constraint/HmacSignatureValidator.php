@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -8,10 +6,12 @@ declare(strict_types=1);
  * an email on hello@bitbag.io.
  */
 
+declare(strict_types=1);
+
 namespace BitBag\SyliusAdyenPlugin\Validator\Constraint;
 
 use Adyen\Exception\HMACKeyValidationException;
-use BitBag\SyliusAdyenPlugin\Provider\SignatureValidatorProvider;
+use BitBag\SyliusAdyenPlugin\Provider\SignatureValidatorProviderInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -23,7 +23,7 @@ class HmacSignatureValidator extends ConstraintValidator
 {
     public const PAYMENT_METHOD_FIELD_NAME = 'paymentCode';
 
-    /** @var SignatureValidatorProvider */
+    /** @var SignatureValidatorProviderInterface */
     private $signatureValidatorProvider;
 
     /** @var PropertyAccessorInterface */
@@ -33,7 +33,7 @@ class HmacSignatureValidator extends ConstraintValidator
     private $normalizer;
 
     public function __construct(
-        SignatureValidatorProvider $signatureValidatorProvider,
+        SignatureValidatorProviderInterface $signatureValidatorProvider,
         PropertyAccessorInterface $propertyAccessor,
         NormalizerInterface $normalizer
     ) {

@@ -12,13 +12,13 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentStatusReceived;
-use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
 use SM\Factory\FactoryInterface;
-use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 final class PaymentStatusReceivedHandler implements MessageHandlerInterface
@@ -30,19 +30,20 @@ final class PaymentStatusReceivedHandler implements MessageHandlerInterface
     /** @var FactoryInterface */
     private $stateMachineFactory;
 
-    /** @var EntityRepository */
+    /** @var RepositoryInterface */
     private $paymentRepository;
 
-    /** @var Dispatcher */
+    /** @var DispatcherInterface */
     private $dispatcher;
 
-    private EntityRepository $orderRepository;
+    /** @var RepositoryInterface */
+    private $orderRepository;
 
     public function __construct(
         FactoryInterface $stateMachineFactory,
-        EntityRepository $paymentRepository,
-        EntityRepository $orderRepository,
-        Dispatcher $dispatcher
+        RepositoryInterface $paymentRepository,
+        RepositoryInterface $orderRepository,
+        DispatcherInterface $dispatcher
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
         $this->paymentRepository = $paymentRepository;

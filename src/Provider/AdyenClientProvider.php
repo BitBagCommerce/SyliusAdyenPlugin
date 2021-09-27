@@ -22,10 +22,8 @@ use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Resource\Exception\UpdateHandlingException;
 
-class AdyenClientProvider
+final class AdyenClientProvider implements AdyenClientProviderInterface
 {
-    public const FACTORY_NAME = 'adyen';
-
     use GatewayConfigFromPaymentTrait;
 
     /** @var PaymentMethodRepositoryInterface */
@@ -70,7 +68,7 @@ class AdyenClientProvider
     public function getForPaymentMethod(PaymentMethodInterface $paymentMethod): AdyenClientInterface
     {
         $gatewayConfig = $this->getGatewayConfig($paymentMethod);
-        $isAdyen = isset($gatewayConfig->getConfig()[self::FACTORY_NAME]);
+        $isAdyen = isset($gatewayConfig->getConfig()[AdyenClientProviderInterface::FACTORY_NAME]);
         if (!$isAdyen) {
             throw new NonAdyenPaymentMethodException($paymentMethod);
         }

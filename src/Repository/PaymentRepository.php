@@ -13,7 +13,7 @@ namespace BitBag\SyliusAdyenPlugin\Repository;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\PaymentInterface;
 
-class PaymentRepository implements PaymentRepositoryInterface
+final class PaymentRepository implements PaymentRepositoryInterface
 {
     /** @var EntityRepository */
     private $baseRepository;

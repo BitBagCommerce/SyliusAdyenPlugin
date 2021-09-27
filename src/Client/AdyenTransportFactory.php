@@ -16,7 +16,7 @@ use Adyen\HttpClient\ClientInterface;
 use Adyen\HttpClient\CurlClient;
 use BitBag\SyliusAdyenPlugin\Resolver\Configuration\ConfigurationResolver;
 
-class AdyenTransportFactory
+final class AdyenTransportFactory implements AdyenTransportFactoryInterface
 {
     /** @var ClientInterface */
     private $adyenHttpClient;

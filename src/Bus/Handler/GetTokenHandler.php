@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\CreateToken;
-use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Bus\Query\GetToken;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use BitBag\SyliusAdyenPlugin\Exception\OrderWithoutCustomerException;
@@ -27,7 +27,7 @@ final class GetTokenHandler implements MessageHandlerInterface
     /** @var AdyenTokenRepositoryInterface */
     private $adyenTokenRepository;
 
-    /** @var Dispatcher */
+    /** @var DispatcherInterface */
     private $dispatcher;
 
     /** @var TokenStorageInterface */
@@ -35,7 +35,7 @@ final class GetTokenHandler implements MessageHandlerInterface
 
     public function __construct(
         AdyenTokenRepositoryInterface $adyenTokenRepository,
-        Dispatcher $dispatcher,
+        DispatcherInterface $dispatcher,
         TokenStorageInterface $tokenStorage
     ) {
         $this->adyenTokenRepository = $adyenTokenRepository;

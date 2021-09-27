@@ -13,7 +13,7 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Query;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 
-class GetToken
+final class GetToken
 {
     /** @var OrderInterface */
     private $order;

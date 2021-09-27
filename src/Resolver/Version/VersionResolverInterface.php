@@ -8,13 +8,9 @@
 
 declare(strict_types=1);
 
-namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct;
+namespace BitBag\SyliusAdyenPlugin\Resolver\Version;
 
-class NotificationRequest
+interface VersionResolverInterface
 {
-    /** @var ?bool */
-    public $live;
-
-    /** @var ?NotificationItem[] */
-    public $notificationItems;
+    public function appendVersionConstraints(array $payload): array;
 }

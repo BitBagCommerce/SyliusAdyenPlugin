@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
-use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Exception\PaymentMethodForReferenceNotFoundException;
 use BitBag\SyliusAdyenPlugin\Exception\UnprocessablePaymentException;
-use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
+use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProviderInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
@@ -33,21 +33,22 @@ class RedirectTargetAction
 
     public const PAYMENT_STATUS_RECEIVED_CODE = 'payment_status_received';
 
-    /** @var AdyenClientProvider */
+    /** @var AdyenClientProviderInterface */
     private $adyenClientProvider;
 
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
 
-    /** @var Dispatcher */
+    /** @var DispatcherInterface */
     private $dispatcher;
+
     /** @var OrderRepositoryInterface */
     private $orderRepository;
 
     public function __construct(
-        AdyenClientProvider $adyenClientProvider,
+        AdyenClientProviderInterface $adyenClientProvider,
         UrlGeneratorInterface $urlGenerator,
-        Dispatcher $dispatcher,
+        DispatcherInterface $dispatcher,
         OrderRepositoryInterface $orderRepository
     ) {
         $this->adyenClientProvider = $adyenClientProvider;

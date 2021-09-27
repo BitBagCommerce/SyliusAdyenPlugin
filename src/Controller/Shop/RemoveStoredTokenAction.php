@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
 use BitBag\SyliusAdyenPlugin\Exception\TokenRemovalFailureException;
-use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
+use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProviderInterface;
 use BitBag\SyliusAdyenPlugin\Repository\AdyenTokenRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
@@ -31,14 +31,14 @@ class RemoveStoredTokenAction
     /** @var PaymentMethodRepositoryInterface */
     private $paymentMethodRepository;
 
-    /** @var AdyenClientProvider */
+    /** @var AdyenClientProviderInterface */
     private $adyenClientProvider;
 
     public function __construct(
         TokenStorageInterface $storage,
         AdyenTokenRepositoryInterface $adyenTokenRepository,
         PaymentMethodRepositoryInterface $paymentMethodRepository,
-        AdyenClientProvider $adyenClientProvider
+        AdyenClientProviderInterface $adyenClientProvider
     ) {
         $this->tokenStorage = $storage;
         $this->adyenTokenRepository = $adyenTokenRepository;

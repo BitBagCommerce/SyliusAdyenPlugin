@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class FilterHttpAuthenticationForNotificationProcessor implements EventSubscriberInterface
+final class FilterHttpAuthenticationForNotificationProcessor implements EventSubscriberInterface
 {
     use GatewayConfigFromPaymentTrait;
 

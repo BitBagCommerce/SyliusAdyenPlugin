@@ -12,7 +12,7 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Command;
 
 use Sylius\Component\Core\Model\OrderInterface;
 
-class RequestCapture implements AlterPaymentCommand
+final class RequestCapture implements AlterPaymentCommand
 {
     /** @var OrderInterface */
     private $payment;

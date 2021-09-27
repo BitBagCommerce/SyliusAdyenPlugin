@@ -1,12 +1,12 @@
 <?php
-
-declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
  * You can find more information about us on https://bitbag.io and write us
  * an email on hello@bitbag.io.
  */
+
+declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Resolver\Notification;
 
@@ -15,27 +15,27 @@ use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItem;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationRequest;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class NotificationResolver
+final class NotificationResolver implements NotificationResolverInterface
 {
     /**
      * Adyen passes booleans as strings
      */
     private const DENORMALIZATION_FORMAT = 'xml';
 
-    /** @var Serializer */
-    private $serializer;
+    /** @var DenormalizerInterface */
+    private $denormalizer;
 
     /** @var ValidatorInterface */
     private $validator;
 
     public function __construct(
-        Serializer $serializer,
+        DenormalizerInterface $denormalizer,
         ValidatorInterface $validator
     ) {
-        $this->serializer = $serializer;
+        $this->denormalizer = $denormalizer;
         $this->validator = $validator;
     }
 
@@ -46,7 +46,7 @@ class NotificationResolver
     {
         $payload = $request->request->all();
 
-        $objects = $this->serializer->denormalize(
+        $objects = $this->denormalizer->denormalize(
             $payload,
             NotificationRequest::class,
             self::DENORMALIZATION_FORMAT

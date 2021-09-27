@@ -13,10 +13,10 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentFinalizationCommand;
 use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
 use SM\Factory\FactoryInterface;
-use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Payment\PaymentTransitions;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 final class PaymentFinalizationHandler implements MessageHandlerInterface
@@ -26,12 +26,12 @@ final class PaymentFinalizationHandler implements MessageHandlerInterface
     /** @var FactoryInterface */
     private $stateMachineFactory;
 
-    /** @var EntityRepository */
+    /** @var RepositoryInterface */
     private $orderRepository;
 
     public function __construct(
         FactoryInterface $stateMachineFactory,
-        EntityRepository $orderRepository
+        RepositoryInterface $orderRepository
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
         $this->orderRepository = $orderRepository;

@@ -15,7 +15,7 @@ use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 
-class AdyenTokenFactory implements AdyenTokenFactoryInterface
+final class AdyenTokenFactory implements AdyenTokenFactoryInterface
 {
     /** @var FactoryInterface */
     private $baseFactory;

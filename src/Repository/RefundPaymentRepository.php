@@ -13,7 +13,7 @@ namespace BitBag\SyliusAdyenPlugin\Repository;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
 
-class RefundPaymentRepository implements RefundPaymentRepositoryInterface
+final class RefundPaymentRepository implements RefundPaymentRepositoryInterface
 {
     /** @var EntityRepository */
     private $baseRepository;

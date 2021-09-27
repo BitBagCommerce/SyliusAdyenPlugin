@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
-use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver\NoCommandResolvedException;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationToCommandResolver;
@@ -21,7 +21,7 @@ class ProcessNotificationsAction
 {
     public const EXPECTED_ADYEN_RESPONSE = '[accepted]';
 
-    /** @var Dispatcher */
+    /** @var DispatcherInterface */
     private $dispatcher;
 
     /** @var NotificationToCommandResolver */
@@ -31,7 +31,7 @@ class ProcessNotificationsAction
     private $notificationResolver;
 
     public function __construct(
-        Dispatcher $dispatcher,
+        DispatcherInterface $dispatcher,
         NotificationToCommandResolver $notificationCommandResolver,
         NotificationResolver $notificationResolver
     ) {

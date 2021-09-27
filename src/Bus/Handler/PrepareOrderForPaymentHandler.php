@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -8,23 +6,26 @@ declare(strict_types=1);
  * an email on hello@bitbag.io.
  */
 
+declare(strict_types=1);
+
 namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\PrepareOrderForPayment;
 use Sylius\Bundle\OrderBundle\NumberAssigner\OrderNumberAssignerInterface;
-use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class PrepareOrderForPaymentHandler implements MessageHandlerInterface
+final class PrepareOrderForPaymentHandler implements MessageHandlerInterface
 {
     /** @var OrderNumberAssignerInterface */
     private $orderNumberAssigner;
 
-    private EntityRepository $orderRepository;
+    /** @var RepositoryInterface */
+    private $orderRepository;
 
     public function __construct(
         OrderNumberAssignerInterface $orderNumberAssigner,
-        EntityRepository $orderRepository
+        RepositoryInterface $orderRepository
     ) {
         $this->orderNumberAssigner = $orderNumberAssigner;
         $this->orderRepository = $orderRepository;

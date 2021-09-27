@@ -16,36 +16,24 @@ use Adyen\Service\Modification;
 use Adyen\Service\Recurring;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use BitBag\SyliusAdyenPlugin\Exception\PaymentMethodsResponseMissing;
-use BitBag\SyliusAdyenPlugin\Resolver\Version\VersionResolver;
+use BitBag\SyliusAdyenPlugin\Resolver\Version\VersionResolverInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 
-class AdyenClient implements AdyenClientInterface
+final class AdyenClient implements AdyenClientInterface
 {
-    public const DEFAULT_OPTIONS = [
-        'apiKey' => null,
-        'merchantAccount' => null,
-        'hmacKey' => null,
-        'environment' => 'test',
-        'authUser' => null,
-        'authPassword' => null,
-        'clientKey' => null,
-    ];
-
-    public const CREDIT_CARD_TYPE = 'scheme';
-
     /** @var ArrayObject */
     private $options;
 
     /** @var Client */
     private $transport;
 
-    /** @var VersionResolver */
+    /** @var VersionResolverInterface */
     private $versionResolver;
 
     public function __construct(
         array $options,
-        AdyenTransportFactory $adyenTransportFactory,
-        VersionResolver $versionResolver
+        AdyenTransportFactoryInterface $adyenTransportFactory,
+        VersionResolverInterface $versionResolver
     ) {
         $options = ArrayObject::ensureArrayObject($options);
         $options->defaults(self::DEFAULT_OPTIONS);

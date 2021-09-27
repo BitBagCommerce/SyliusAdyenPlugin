@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -8,13 +6,15 @@ declare(strict_types=1);
  * an email on hello@bitbag.io.
  */
 
+declare(strict_types=1);
+
 namespace BitBag\SyliusAdyenPlugin\Repository;
 
 use BitBag\SyliusAdyenPlugin\Entity\AdyenReferenceInterface;
 use Doctrine\ORM\QueryBuilder;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 
-class AdyenReferenceRepository extends EntityRepository implements AdyenReferenceRepositoryInterface
+final class AdyenReferenceRepository extends EntityRepository implements AdyenReferenceRepositoryInterface
 {
     private function getQueryBuilderForCodeAndReference(string $code, string $pspReference): QueryBuilder
     {

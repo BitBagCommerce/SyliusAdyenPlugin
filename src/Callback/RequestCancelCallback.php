@@ -16,7 +16,7 @@ use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\OrderPaymentTransitions;
 
-class RequestCancelCallback
+final class RequestCancelCallback
 {
     /** @var Dispatcher */
     private $dispatcher;

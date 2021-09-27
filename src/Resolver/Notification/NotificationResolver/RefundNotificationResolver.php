@@ -16,7 +16,7 @@ use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 use Doctrine\ORM\NoResultException;
 use Webmozart\Assert\Assert;
 
-class RefundNotificationResolver implements CommandResolver
+final class RefundNotificationResolver implements CommandResolver
 {
     /** @var AdyenReferenceRepositoryInterface */
     private $adyenReferenceRepository;
