@@ -11,12 +11,12 @@ declare(strict_types=1);
 namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForRefund;
-use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Bus\Handler\RefundPaymentGeneratedHandler;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepository;
+use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Repository\RefundPaymentRepositoryInterface;
-use BitBag\SyliusAdyenPlugin\Resolver\Payment\RefundReferenceResolver;
 use Payum\Core\Model\GatewayConfig;
 use PHPUnit\Framework\TestCase;
 use Sylius\Component\Core\Model\Order;
@@ -36,9 +36,6 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
 
     use AdyenClientTrait;
 
-    /** @var RefundReferenceResolver|\PHPUnit\Framework\MockObject\MockObject */
-    private $refundReferenceResolver;
-
     /** @var PaymentRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject */
     private $paymentRepository;
 
@@ -47,9 +44,11 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
 
     /** @var RefundPaymentGeneratedHandler */
     private $handler;
+
     /** @var RefundPaymentRepositoryInterface|mixed|\PHPUnit\Framework\MockObject\MockObject */
     private $refundPaymentRepository;
-    /** @var Dispatcher|mixed|\PHPUnit\Framework\MockObject\MockObject */
+
+    /** @var DispatcherInterface|mixed|\PHPUnit\Framework\MockObject\MockObject */
     private $dispatcher;
 
     protected function setUp(): void
@@ -57,9 +56,9 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
         $this->setupAdyenClientMocks();
 
         $this->paymentRepository = $this->createMock(PaymentRepositoryInterface::class);
-        $this->paymentMethodRepository = $this->createMock(PaymentMethodRepository::class);
+        $this->paymentMethodRepository = $this->createMock(PaymentMethodRepositoryInterface::class);
         $this->refundPaymentRepository = $this->createMock(RefundPaymentRepositoryInterface::class);
-        $this->dispatcher = $this->createMock(Dispatcher::class);
+        $this->dispatcher = $this->createMock(DispatcherInterface::class);
 
         $this->handler = new RefundPaymentGeneratedHandler(
             $this->adyenClientProvider,

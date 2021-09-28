@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentStatusReceived;
-use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Bus\Handler\PaymentStatusReceivedHandler;
 use PHPUnit\Framework\TestCase;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
@@ -30,7 +30,7 @@ class PaymentStatusReceivedHandlerTest extends TestCase
     /** @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository */
     private $paymentRepository;
 
-    /** @var Dispatcher|mixed|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var DispatcherInterface|mixed|\PHPUnit\Framework\MockObject\MockObject */
     private $dispatcher;
 
     /** @var \PHPUnit\Framework\MockObject\MockObject|EntityRepository */
@@ -42,7 +42,7 @@ class PaymentStatusReceivedHandlerTest extends TestCase
 
         $this->paymentRepository = $this->createMock(EntityRepository::class);
         $this->orderRepository = $this->createMock(EntityRepository::class);
-        $this->dispatcher = $this->createMock(Dispatcher::class);
+        $this->dispatcher = $this->createMock(DispatcherInterface::class);
         $this->handler = new PaymentStatusReceivedHandler(
             $this->stateMachineFactory,
             $this->paymentRepository,

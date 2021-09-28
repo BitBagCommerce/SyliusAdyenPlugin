@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\CreateToken;
-use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Bus\Handler\GetTokenHandler;
 use BitBag\SyliusAdyenPlugin\Bus\Query\GetToken;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenToken;
@@ -29,7 +29,7 @@ class GetTokenHandlerTest extends TestCase
     /** @var AdyenTokenRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject */
     private $adyenTokenRepository;
 
-    /** @var Dispatcher|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var DispatcherInterface|\PHPUnit\Framework\MockObject\MockObject */
     private $dispatcher;
 
     /** @var GetTokenHandler */
@@ -40,7 +40,7 @@ class GetTokenHandlerTest extends TestCase
     protected function setUp(): void
     {
         $this->adyenTokenRepository = $this->createMock(AdyenTokenRepositoryInterface::class);
-        $this->dispatcher = $this->createMock(Dispatcher::class);
+        $this->dispatcher = $this->createMock(DispatcherInterface::class);
         $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
 
         $this->handler = new GetTokenHandler($this->adyenTokenRepository, $this->dispatcher, $this->tokenStorage);
@@ -52,11 +52,9 @@ class GetTokenHandlerTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
 
-        $token = new GetToken(
-            $this->createMock(PaymentMethodInterface::class),
-            $this->createMock(OrderInterface::class)
+        ($this->handler)(
+            $this->createGetTokenQueryMock()
         );
-        ($this->handler)($token);
     }
 
     public static function provideForTestQuery(): array
@@ -145,9 +143,17 @@ class GetTokenHandlerTest extends TestCase
 
     public function testForAnonymous(): void
     {
-        $query = $this->createMock(GetToken::class);
-
-        $result = ($this->handler)($query);
+        $result = ($this->handler)(
+            $this->createGetTokenQueryMock()
+        );
         $this->assertNull($result);
+    }
+
+    private function createGetTokenQueryMock(): GetToken
+    {
+        return new GetToken(
+            $this->createMock(PaymentMethodInterface::class),
+            $this->createMock(OrderInterface::class)
+        );
     }
 }
