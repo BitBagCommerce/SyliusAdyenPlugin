@@ -8,11 +8,11 @@
 
 declare(strict_types=1);
 
-namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor;
+namespace BitBag\SyliusAdyenPlugin\Provider;
 
-use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
+use BitBag\SyliusAdyenPlugin\Client\SignatureValidator;
 
-interface CommandResolver
+interface SignatureValidatorProviderInterface
 {
-    public function resolve(string $paymentCode, NotificationItemData $notificationData): object;
+    public function getValidatorForCode(string $code): SignatureValidator;
 }

@@ -10,18 +10,18 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
-use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
+use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentStatusReceived;
+use BitBag\SyliusAdyenPlugin\Bus\Command\PrepareOrderForPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\TakeOverPayment;
-use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Bus\Query\GetToken;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use BitBag\SyliusAdyenPlugin\Exception\UnboundAddressFromOrderException;
-use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
+use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProviderInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
 use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\TokenAssigner\OrderTokenAssignerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -37,7 +37,7 @@ class PaymentsAction
 
     public const ORDER_ID_KEY = 'sylius_order_id';
 
-    /** @var AdyenClientProvider */
+    /** @var AdyenClientProviderInterface */
     private $adyenClientProvider;
 
     /** @var UrlGeneratorInterface */
@@ -46,23 +46,18 @@ class PaymentsAction
     /** @var PaymentCheckoutOrderResolverInterface */
     private $paymentCheckoutOrderResolver;
 
-    /** @var OrderTokenAssignerInterface */
-    private $orderTokenAssigner;
-
-    /** @var Dispatcher */
+    /** @var DispatcherInterface */
     private $dispatcher;
 
     public function __construct(
-        AdyenClientProvider $adyenClientProvider,
+        AdyenClientProviderInterface $adyenClientProvider,
         UrlGeneratorInterface $urlGenerator,
         PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver,
-        OrderTokenAssignerInterface $orderTokenAssigner,
-        Dispatcher $dispatcher
+        DispatcherInterface $dispatcher
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->urlGenerator = $urlGenerator;
         $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;
-        $this->orderTokenAssigner = $orderTokenAssigner;
         $this->dispatcher = $dispatcher;
     }
 
@@ -86,7 +81,8 @@ class PaymentsAction
         if ($request->get('tokenValue') === null) {
             $request->getSession()->set(self::ORDER_ID_KEY, $order->getId());
         }
-        $this->orderTokenAssigner->assignTokenValueIfNotSet($order);
+
+        $this->dispatcher->dispatch(new PrepareOrderForPayment($order));
     }
 
     private function createFraudDetectionData(OrderInterface $order): array
@@ -129,22 +125,22 @@ class PaymentsAction
         $url = $this->prepareTargetUrl($order);
         $paymentMethod = $this->getMethod($payment);
         /**
-         * @var AdyenTokenInterface $token
+         * @var AdyenTokenInterface $customerIdentifier
          */
-        $token = $this->dispatcher->dispatch(new GetToken($paymentMethod, $order));
+        $customerIdentifier = $this->dispatcher->dispatch(new GetToken($paymentMethod, $order));
 
         $client = $this->adyenClientProvider->getForPaymentMethod($paymentMethod);
         $result = $client->submitPayment(
             $order->getTotal(),
             (string) $order->getCurrencyCode(),
-            $payment->getId(),
+            (string) $order->getNumber(),
             $url,
             $this->createPaymentPayload($request, $order),
-            $token
+            $customerIdentifier
         );
 
         $payment->setDetails($result);
-        $this->dispatcher->dispatch(new PreparePayment($payment));
+        $this->dispatcher->dispatch(new PaymentStatusReceived($payment));
 
         return new JsonResponse($payment->getDetails() + ['redirect' => $url]);
     }

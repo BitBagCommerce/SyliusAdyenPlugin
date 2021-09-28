@@ -13,7 +13,7 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Version;
 use PackageVersions\FallbackVersions;
 use Sylius\Bundle\CoreBundle\Application\Kernel;
 
-class VersionResolver
+final class VersionResolver implements VersionResolverInterface
 {
     private const PACKAGE_NAME = 'bitbag/sylius-adyen-plugin';
 

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\EventSubscriber;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\RequestCapture;
-use BitBag\SyliusAdyenPlugin\Bus\Dispatcher;
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Exception\UnprocessablePaymentException;
 use BitBag\SyliusAdyenPlugin\PaymentTransitions;
 use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
@@ -20,15 +20,15 @@ use SM\Event\TransitionEvent;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class RoutePaymentCompleteTransitionSubscriber implements EventSubscriberInterface
+final class RoutePaymentCompleteTransitionSubscriber implements EventSubscriberInterface
 {
     use OrderFromPaymentTrait;
 
-    /** @var Dispatcher */
+    /** @var DispatcherInterface */
     private $dispatcher;
 
     public function __construct(
-        Dispatcher $dispatcher
+        DispatcherInterface $dispatcher
     ) {
         $this->dispatcher = $dispatcher;
     }

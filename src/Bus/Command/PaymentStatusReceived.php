@@ -12,7 +12,7 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Command;
 
 use Sylius\Component\Core\Model\PaymentInterface;
 
-class PreparePayment implements PaymentLifecycleCommand
+final class PaymentStatusReceived implements PaymentLifecycleCommand
 {
     /** @var PaymentInterface */
     private $payment;

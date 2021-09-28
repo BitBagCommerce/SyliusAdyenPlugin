@@ -12,7 +12,7 @@ namespace BitBag\SyliusAdyenPlugin\Form\Extension;
 
 use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
 use BitBag\SyliusAdyenPlugin\Form\Type\PaymentMethodChoiceType;
-use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
+use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProviderInterface;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use Sylius\Bundle\CoreBundle\Form\Type\Checkout\PaymentType;
@@ -21,7 +21,7 @@ use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class PaymentTypeExtension extends AbstractTypeExtension
+final class PaymentTypeExtension extends AbstractTypeExtension
 {
     /** @var PaymentCheckoutOrderResolverInterface */
     private $paymentCheckoutOrderResolver;
@@ -32,14 +32,14 @@ class PaymentTypeExtension extends AbstractTypeExtension
     /** @var ChannelContextInterface */
     private $channelContext;
 
-    /** @var AdyenClientProvider */
+    /** @var AdyenClientProviderInterface */
     private $adyenClientProvider;
 
     public function __construct(
         PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver,
         PaymentMethodRepositoryInterface $paymentMethodRepository,
         ChannelContextInterface $channelContext,
-        AdyenClientProvider $adyenClientProvider
+        AdyenClientProviderInterface $adyenClientProvider
     ) {
         $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;
         $this->paymentMethodRepository = $paymentMethodRepository;

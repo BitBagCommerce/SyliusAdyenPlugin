@@ -15,7 +15,7 @@ use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 
-class AdyenTokenRepository extends EntityRepository implements AdyenTokenRepositoryInterface
+final class AdyenTokenRepository extends EntityRepository implements AdyenTokenRepositoryInterface
 {
     /**
      * @psalm-suppress MixedReturnStatement

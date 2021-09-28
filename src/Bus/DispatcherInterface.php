@@ -8,9 +8,14 @@
 
 declare(strict_types=1);
 
-namespace BitBag\SyliusAdyenPlugin\Client;
+namespace BitBag\SyliusAdyenPlugin\Bus;
 
-final class PaymentStatuses
+interface DispatcherInterface
 {
-    public const PAYMENT_AUTHORISED = 'Authorised';
+    /**
+     * @return mixed
+     */
+    public function dispatch(object $action);
+
+    public function getCommandFactory(): PaymentCommandFactoryInterface;
 }

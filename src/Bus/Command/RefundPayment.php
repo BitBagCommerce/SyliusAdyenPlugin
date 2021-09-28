@@ -12,7 +12,7 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Command;
 
 use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
 
-class RefundPayment
+final class RefundPayment
 {
     /** @var RefundPaymentInterface */
     private $refundPayment;

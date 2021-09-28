@@ -22,10 +22,8 @@ use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Resource\Exception\UpdateHandlingException;
 
-class AdyenClientProvider
+final class AdyenClientProvider implements AdyenClientProviderInterface
 {
-    public const FACTORY_NAME = 'adyen';
-
     use GatewayConfigFromPaymentTrait;
 
     /** @var PaymentMethodRepositoryInterface */

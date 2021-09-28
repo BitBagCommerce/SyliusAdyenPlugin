@@ -10,6 +10,10 @@ use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->import('vendor/sylius-labs/coding-standard/ecs.php');
     $services = $containerConfigurator->services();
+
+    $services->set(\PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer::class)
+        ->call('configure', [['elements' => ['method'=>'one']]]);
+
     $services->set(ArraySyntaxFixer::class)
         ->call('configure', [[
             'syntax' => 'short',

@@ -12,20 +12,8 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Payment;
 
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 
-class EventCodeResolver
+final class EventCodeResolver implements EventCodeResolverInterface
 {
-    public const AUTHORIZATION = 'authorisation';
-
-    public const CAPTURE = 'capture';
-
-    public const PAYMENT_METHOD_TYPES = [
-        'amazonpay' => self::AUTHORIZATION,
-        'applepay' => self::AUTHORIZATION,
-        'klarna' => self::AUTHORIZATION,
-        'paywithgoogle' => self::AUTHORIZATION,
-        'twint' => self::AUTHORIZATION,
-    ];
-
     public function resolve(NotificationItemData $notificationData): string
     {
         if ($notificationData->eventCode !== self::AUTHORIZATION) {

@@ -12,7 +12,7 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Command;
 
 use Sylius\Component\Core\Model\OrderInterface;
 
-class TakeOverPayment
+final class TakeOverPayment
 {
     /** @var OrderInterface */
     private $order;

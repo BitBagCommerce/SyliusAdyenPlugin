@@ -13,7 +13,7 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Command;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 
-class CreateToken
+final class CreateToken
 {
     /** @var CustomerInterface */
     private $customer;

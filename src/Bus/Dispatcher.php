@@ -13,25 +13,25 @@ namespace BitBag\SyliusAdyenPlugin\Bus;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class Dispatcher
+final class Dispatcher implements DispatcherInterface
 {
     use HandleTrait;
 
     /** @var MessageBusInterface */
     private $messageBus;
 
-    /** @var PaymentCommandFactory */
+    /** @var PaymentCommandFactoryInterface */
     private $commandFactory;
 
     public function __construct(
         MessageBusInterface $messageBus,
-        PaymentCommandFactory $commandFactory
+        PaymentCommandFactoryInterface $commandFactory
     ) {
         $this->messageBus = $messageBus;
         $this->commandFactory = $commandFactory;
     }
 
-    public function getCommandFactory(): PaymentCommandFactory
+    public function getCommandFactory(): PaymentCommandFactoryInterface
     {
         return $this->commandFactory;
     }

@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Resolver\Notification;
 
-use BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\CommandResolver;
-use BitBag\SyliusAdyenPlugin\Resolver\Notification\Processor\NoCommandResolvedException;
+use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver\CommandResolver;
+use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver\NoCommandResolvedException;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 
-class NotificationToCommandResolver
+final class NotificationToCommandResolver implements NotificationToCommandResolverInterface
 {
     /** @var iterable<int, CommandResolver> */
     private $commandResolvers;

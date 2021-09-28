@@ -13,7 +13,7 @@ namespace BitBag\SyliusAdyenPlugin\Client;
 use Adyen\Service\NotificationReceiver;
 use Adyen\Util\HmacSignature;
 
-class SignatureValidator
+final class SignatureValidator implements SignatureValidatorInterface
 {
     /** @var string */
     private $key;

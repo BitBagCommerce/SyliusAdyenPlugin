@@ -15,6 +15,4 @@ use Sylius\Component\Core\Model\PaymentInterface;
 interface PaymentRepositoryInterface
 {
     public function find(int $id): ?PaymentInterface;
-
-    public function getOneByCodeAndId(string $code, int $id): PaymentInterface;
 }

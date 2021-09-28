@@ -10,31 +10,45 @@ declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Bus\Handler;
 
-use BitBag\SyliusAdyenPlugin\Bus\Command\PreparePayment;
-use BitBag\SyliusAdyenPlugin\Bus\Handler\PreparePaymentHandler;
+use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentStatusReceived;
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
+use BitBag\SyliusAdyenPlugin\Bus\Handler\PaymentStatusReceivedHandler;
 use PHPUnit\Framework\TestCase;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\Payment;
 
-class PreparePaymentHandlerTest extends TestCase
+class PaymentStatusReceivedHandlerTest extends TestCase
 {
     private const TESTING_RESULT_CODE = 'Chrząszcz';
 
     use StateMachineTrait;
 
-    /** @var PreparePaymentHandler */
+    /** @var PaymentStatusReceivedHandler */
     private $handler;
 
     /** @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository */
     private $paymentRepository;
+
+    /** @var DispatcherInterface|mixed|\PHPUnit\Framework\MockObject\MockObject */
+    private $dispatcher;
+
+    /** @var \PHPUnit\Framework\MockObject\MockObject|EntityRepository */
+    private $orderRepository;
 
     protected function setUp(): void
     {
         $this->setupStateMachineMocks();
 
         $this->paymentRepository = $this->createMock(EntityRepository::class);
-        $this->handler = new PreparePaymentHandler($this->stateMachineFactory, $this->paymentRepository);
+        $this->orderRepository = $this->createMock(EntityRepository::class);
+        $this->dispatcher = $this->createMock(DispatcherInterface::class);
+        $this->handler = new PaymentStatusReceivedHandler(
+            $this->stateMachineFactory,
+            $this->paymentRepository,
+            $this->orderRepository,
+            $this->dispatcher
+        );
     }
 
     public static function provideForTestFlow(): array
@@ -45,7 +59,7 @@ class PreparePaymentHandlerTest extends TestCase
             ],
         ];
 
-        foreach (PreparePaymentHandler::ALLOWED_EVENT_NAMES as $eventName) {
+        foreach (PaymentStatusReceivedHandler::ALLOWED_EVENT_NAMES as $eventName) {
             $result[sprintf('valid result code: %s', $eventName)] = [
                 $eventName, true,
             ];
@@ -64,17 +78,22 @@ class PreparePaymentHandlerTest extends TestCase
         $payment = new Payment();
         $payment->setDetails([
             'resultCode' => $resultCode,
+            'pspReference' => '123',
         ]);
         $order->addPayment($payment);
 
+        $invocation = $shouldPass ? $this->once() : $this->never();
         $this->stateMachine
-            ->expects(
-                $shouldPass ? $this->once() : $this->never()
-            )
+            ->expects($invocation)
             ->method('apply')
         ;
 
-        $command = new PreparePayment($payment);
+        $this->dispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+        ;
+
+        $command = new PaymentStatusReceived($payment);
         ($this->handler)($command);
     }
 }

@@ -17,7 +17,7 @@ use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
 use Sylius\RefundPlugin\StateResolver\RefundPaymentTransitions;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class FilterManualRefundConfirmationSubscriber implements EventSubscriberInterface
+final class FilterManualRefundConfirmationSubscriber implements EventSubscriberInterface
 {
     use GatewayConfigFromPaymentTrait;
 

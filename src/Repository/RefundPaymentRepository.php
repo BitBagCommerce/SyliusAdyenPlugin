@@ -13,7 +13,7 @@ namespace BitBag\SyliusAdyenPlugin\Repository;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
 
-class RefundPaymentRepository implements RefundPaymentRepositoryInterface
+final class RefundPaymentRepository implements RefundPaymentRepositoryInterface
 {
     /** @var EntityRepository */
     private $baseRepository;
@@ -44,5 +44,14 @@ class RefundPaymentRepository implements RefundPaymentRepositoryInterface
         ;
 
         return $qb->getQuery()->getSingleResult();
+    }
+
+    /**
+     * @psalm-suppress MixedReturnStatement
+     * @psalm-suppress MixedInferredReturnType
+     */
+    public function find(int $id): ?RefundPaymentInterface
+    {
+        return $this->baseRepository->find($id);
     }
 }
