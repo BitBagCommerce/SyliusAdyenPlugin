@@ -123,7 +123,7 @@
 
         <service
             class="BitBag\SyliusAdyenPlugin\Bus\Handler\CreateReferenceForPaymentHandler"
-            id="bit_bag.sylius_adyen_plugin.bus.handler.create_reference_for_payment_handler"
+            id="bitbag.sylius_adyen_plugin.bus.handler.create_reference_for_payment_handler"
         >
             <argument type="service" id="bitbag_sylius_adyen_plugin.repository.adyen_reference"/>
             <argument type="service" id="bitbag.sylius_adyen_plugin.factory.adyen_reference_factory"/>
@@ -133,7 +133,7 @@
 
         <service
                 class="BitBag\SyliusAdyenPlugin\Bus\Handler\CreateReferenceForRefundHandler"
-                id="bit_bag.sylius_adyen_plugin.bus.handler.create_reference_for_refund_handler"
+                id="bitbag.sylius_adyen_plugin.bus.handler.create_reference_for_refund_handler"
         >
             <argument type="service" id="bitbag_sylius_adyen_plugin.repository.adyen_reference"/>
             <argument type="service" id="bitbag.sylius_adyen_plugin.factory.adyen_reference_factory"/>
@@ -143,7 +143,7 @@
 
         <service
             class="BitBag\SyliusAdyenPlugin\Bus\Handler\PrepareOrderForPaymentHandler"
-            id="bit_bag.sylius_adyen_plugin.bus.handler.prepare_order_for_payment_handler"
+            id="bitbag.sylius_adyen_plugin.bus.handler.prepare_order_for_payment_handler"
         >
             <argument type="service" id="sylius.order_number_assigner"/>
             <argument type="service" id="sylius.repository.order"/>

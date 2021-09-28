@@ -37,9 +37,6 @@ class AdyenReference implements ResourceInterface, AdyenReferenceInterface, Time
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getPspReference(): ?string
     {
         return $this->pspReference;

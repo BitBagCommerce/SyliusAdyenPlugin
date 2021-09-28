@@ -16,9 +16,6 @@ use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
 
 interface AdyenReferenceInterface extends ResourceInterface
 {
-    /**
-     * @return string
-     */
     public function getPspReference(): ?string;
 
     public function getRefundPayment(): ?RefundPaymentInterface;
@@ -27,9 +24,6 @@ interface AdyenReferenceInterface extends ResourceInterface
 
     public function getPayment(): ?PaymentInterface;
 
-    /**
-     * @return int
-     */
     public function getId(): ?int;
 
     public function setPayment(?PaymentInterface $payment): void;

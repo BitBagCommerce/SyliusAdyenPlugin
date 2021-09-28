@@ -68,7 +68,7 @@ final class AdyenClientProvider implements AdyenClientProviderInterface
     public function getForPaymentMethod(PaymentMethodInterface $paymentMethod): AdyenClientInterface
     {
         $gatewayConfig = $this->getGatewayConfig($paymentMethod);
-        $isAdyen = isset($gatewayConfig->getConfig()[AdyenClientProviderInterface::FACTORY_NAME]);
+        $isAdyen = isset($gatewayConfig->getConfig()[self::FACTORY_NAME]);
         if (!$isAdyen) {
             throw new NonAdyenPaymentMethodException($paymentMethod);
         }
