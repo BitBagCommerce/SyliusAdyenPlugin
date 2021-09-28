@@ -29,7 +29,7 @@ final class PaymentCommandFactory implements PaymentCommandFactoryInterface
         EventCodeResolverInterface $eventCodeResolver,
         array $mapping = []
     ) {
-        $this->mapping = array_merge_recursive(PaymentCommandFactoryInterface::MAPPING, $mapping);
+        $this->mapping = array_merge_recursive(self::MAPPING, $mapping);
         $this->eventCodeResolver = $eventCodeResolver;
     }
 
