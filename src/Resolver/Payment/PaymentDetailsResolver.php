@@ -26,9 +26,7 @@ final class PaymentDetailsResolver implements PaymentDetailsResolverInterface
     /** @var AdyenClientProviderInterface */
     private $adyenClientProvider;
 
-    /**
-     * @var PaymentRepositoryInterface
-     */
+    /** @var PaymentRepositoryInterface */
     private $paymentRepository;
 
     public function __construct(

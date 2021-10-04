@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Webmozart\Assert\Assert;
 
 class FailedResponseProcessor extends AbstractProcessor
 {
@@ -25,10 +27,15 @@ class FailedResponseProcessor extends AbstractProcessor
 
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
+    /** @var TranslatorInterface */
+    private $translator;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
-    {
+    public function __construct(
+        UrlGeneratorInterface $urlGenerator,
+        TranslatorInterface $translator
+    ) {
         $this->urlGenerator = $urlGenerator;
+        $this->translator = $translator;
     }
 
     public function accepts(Request $request, ?PaymentInterface $payment): bool
@@ -42,12 +49,18 @@ class FailedResponseProcessor extends AbstractProcessor
          * @var Session $session
          */
         $session = $request->getSession();
-        $session->getFlashBag()->add('error', 'bitbag_sylius_adyen_plugin.ui.payment_failed');
+        $session->getFlashBag()->add(
+            'error',
+            $this->translator->trans('bitbag_sylius_adyen_plugin.ui.payment_failed')
+        );
+
+        $order = $payment->getOrder();
+        Assert::notNull($order);
 
         return new RedirectResponse(
             $this->urlGenerator->generate(
                 self::FAILURE_REDIRECT_TARGET,
-                ['tokenValue'=>$payment->getOrder()->getTokenValue()]
+                ['tokenValue' => $order->getTokenValue()]
             )
         );
     }

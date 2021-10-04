@@ -20,7 +20,7 @@ use Webmozart\Assert\Assert;
 
 final class PaymentResponseProcessor implements PaymentResponseProcessorInterface
 {
-    private const DEFAULT_REDIRECT_ROUTE = 'sylius_shop_homepage';
+    private const DEFAULT_REDIRECT_ROUTE = 'sylius_shop_order_thank_you';
 
     /** @var Processor[] */
     private $processors;
