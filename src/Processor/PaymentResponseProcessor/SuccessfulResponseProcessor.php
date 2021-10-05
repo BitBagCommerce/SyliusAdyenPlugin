@@ -28,6 +28,10 @@ class SuccessfulResponseProcessor extends AbstractProcessor
 
     public const PAYMENT_PROCEED_CODES = ['authorised', 'received'];
 
+    public const ORDER_ID_KEY = 'sylius_order_id';
+
+    public const TOKEN_VALUE_KEY = 'tokenValue';
+
     /** @var DispatcherInterface */
     private $dispatcher;
 
@@ -65,11 +69,11 @@ class SuccessfulResponseProcessor extends AbstractProcessor
 
     private function shouldTheAlternativeThanksPageBeShown(Request $request): bool
     {
-        if ($request->query->get('tokenValue') !== null) {
+        if ($request->query->get(self::TOKEN_VALUE_KEY) !== null) {
             return true;
         }
 
-        if ($request->getSession()->get('sylius_order_id') !== null) {
+        if ($request->getSession()->get(self::ORDER_ID_KEY) !== null) {
             return false;
         }
 
