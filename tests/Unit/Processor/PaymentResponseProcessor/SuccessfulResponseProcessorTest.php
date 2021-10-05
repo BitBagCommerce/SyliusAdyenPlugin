@@ -39,15 +39,22 @@ class SuccessfulResponseProcessorTest extends AbstractProcessorTest
     public static function provideForTestRedirect(): array
     {
         return [
-            'generic' => [RequestMother::createWithSessionForDefinedOrderId(), 'thank-you'],
-            'alternative' => [RequestMother::createWithSessionForSpecifiedQueryToken(), '/orders/'],
+            'generic' => [
+                RequestMother::createWithSessionForDefinedOrderId(),
+                'thank-you'
+            ],
+            'alternative' => [
+                RequestMother::createWithSessionForSpecifiedQueryToken(),
+                '/orders/',
+                true
+            ],
         ];
     }
 
     /**
      * @dataProvider provideForTestRedirect
      */
-    public function testRedirect(Request $request, string $expectedUrlEnding)
+    public function testRedirect(Request $request, string $expectedUrlEnding, bool $expectFlash = false)
     {
         $payment = $this->createMock(PaymentInterface::class);
 
@@ -57,8 +64,13 @@ class SuccessfulResponseProcessorTest extends AbstractProcessorTest
         $result = $this->processor->process('Szczebrzeszyn', $request, $payment);
 
         $this->assertIsPaymentScheduledForFinalization();
-
         $this->assertStringEndsWith($expectedUrlEnding, (string) $result->getTargetUrl());
+
+        if (!$expectFlash) {
+            return;
+        }
+
+        $this->assertNotEmpty($request->getSession()->getFlashbag()->get('info'));
     }
 
     private function assertIsPaymentScheduledForFinalization(): void
