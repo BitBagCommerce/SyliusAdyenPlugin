@@ -27,6 +27,7 @@ class FailedResponseProcessor extends AbstractProcessor
 
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
+
     /** @var TranslatorInterface */
     private $translator;
 
