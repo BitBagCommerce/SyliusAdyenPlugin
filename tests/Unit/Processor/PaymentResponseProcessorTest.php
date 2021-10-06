@@ -1,0 +1,79 @@
+<?php
+/*
+ * This file has been created by developers from BitBag.
+ * Feel free to contact us once you face any issues or want to start
+ * You can find more information about us on https://bitbag.io and write us
+ * an email on hello@bitbag.io.
+ */
+
+declare(strict_types=1);
+
+namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Processor;
+
+use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor;
+use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\ProcessorInterface;
+use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessorInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\BitBag\SyliusAdyenPlugin\Unit\Processor\PaymentResponseProcessor\AbstractProcessorTest;
+
+class PaymentResponseProcessorTest extends KernelTestCase
+{
+    private const URL_ENDING = 'thank-you';
+
+    protected function setUp(): void
+    {
+        self::bootKernel();
+    }
+
+    private function getPaymentResponseProcessor(array $processors = []): PaymentResponseProcessorInterface
+    {
+        return new PaymentResponseProcessor(
+            $processors,
+            AbstractProcessorTest::getRouter(self::$container)
+        );
+    }
+
+    private function getProcessor(bool $accepts, ?Response $response = null): ProcessorInterface
+    {
+        $result = $this->createMock(ProcessorInterface::class);
+        if ($accepts) {
+            $result
+                ->method('accepts')
+                ->willReturn($accepts)
+            ;
+        }
+
+        if ($response !== null) {
+            $result
+                ->method('process')
+                ->willReturn($response)
+            ;
+        }
+
+        return $result;
+    }
+
+    public function testForNoAcceptingProcessor(): void
+    {
+        $tested = $this->getPaymentResponseProcessor([$this->getProcessor(false)]);
+
+        $result = $tested->process('code', Request::create('/'), null);
+
+        $this->assertInstanceOf(Response::class, $result);
+        $this->assertStringEndsWith(self::URL_ENDING, $result->getTargetUrl());
+    }
+
+    public function testAcceptingProcessor(): void
+    {
+        $response = new Response();
+        $payment = $this->createMock(PaymentInterface::class);
+
+        $tested = $this->getPaymentResponseProcessor([$this->getProcessor(true, $response)]);
+
+        $result = $tested->process('code', Request::create('/'), $payment);
+        $this->assertEquals($response, $result);
+    }
+}

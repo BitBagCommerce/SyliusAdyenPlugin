@@ -42,10 +42,8 @@
                 class="BitBag\SyliusAdyenPlugin\Controller\Shop\RedirectTargetAction"
                 id="bitbag.sylius_adyen_plugin.controller.shop.redirect_target_action"
         >
-            <argument type="service" id="bitbag.sylius_adyen_plugin.provider.adyen_client_provider"/>
-            <argument type="service" id="router.default"/>
-            <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
-            <argument type="service" id="sylius.repository.order"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.processor.payment_response_processor"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.resolver.payment.payment_details_resolver"/>
 
             <tag name="controller.service_arguments"/>
         </service>
