@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Processor\PaymentResponseProcessor;
 
-use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\Processor;
+use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\ProcessorInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -25,7 +25,7 @@ abstract class AbstractProcessorTest extends KernelTestCase
 {
     protected const DEFAULT_ROUTE_LOCALE = 'en_US';
 
-    /** @var Processor */
+    /** @var ProcessorInterface */
     protected $processor;
 
     abstract public static function provideForTestAccepts(): array;

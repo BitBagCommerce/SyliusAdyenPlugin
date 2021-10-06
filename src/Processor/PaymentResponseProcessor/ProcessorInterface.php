@@ -14,7 +14,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-interface Processor
+interface ProcessorInterface
 {
     public function accepts(Request $request, ?PaymentInterface $payment): bool;
 

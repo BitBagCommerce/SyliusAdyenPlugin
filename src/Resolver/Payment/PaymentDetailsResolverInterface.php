@@ -8,7 +8,6 @@
 
 declare(strict_types=1);
 
-
 namespace BitBag\SyliusAdyenPlugin\Resolver\Payment;
 
 use Sylius\Component\Core\Model\PaymentInterface;

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Processor;
 
 use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor;
-use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\Processor;
+use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\ProcessorInterface;
 use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessorInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -36,9 +36,9 @@ class PaymentResponseProcessorTest extends KernelTestCase
         );
     }
 
-    private function getProcessor(bool $accepts, ?Response $response = null): Processor
+    private function getProcessor(bool $accepts, ?Response $response = null): ProcessorInterface
     {
-        $result = $this->createMock(Processor::class);
+        $result = $this->createMock(ProcessorInterface::class);
         if ($accepts) {
             $result
                 ->method('accepts')

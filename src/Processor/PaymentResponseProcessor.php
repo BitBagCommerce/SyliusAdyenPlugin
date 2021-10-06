@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Processor;
 
-use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\Processor;
+use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\ProcessorInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +22,7 @@ final class PaymentResponseProcessor implements PaymentResponseProcessorInterfac
 {
     private const DEFAULT_REDIRECT_ROUTE = 'sylius_shop_order_thank_you';
 
-    /** @var Processor[] */
+    /** @var ProcessorInterface[] */
     private $processors;
 
     /** @var UrlGeneratorInterface */
@@ -31,7 +31,7 @@ final class PaymentResponseProcessor implements PaymentResponseProcessorInterfac
     /**
      * PaymentResponseProcessor constructor.
      *
-     * @param Processor[] $processors
+     * @param ProcessorInterface[] $processors
      */
     public function __construct(
         iterable $processors,

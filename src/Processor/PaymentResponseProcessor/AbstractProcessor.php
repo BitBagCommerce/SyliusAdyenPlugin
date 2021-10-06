@@ -12,7 +12,7 @@ namespace BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor;
 
 use Sylius\Component\Core\Model\PaymentInterface;
 
-abstract class AbstractProcessor implements Processor
+abstract class AbstractProcessor implements ProcessorInterface
 {
     protected function isResultCodeSupportedForPayment(?PaymentInterface $payment, array $resultCodes): bool
     {
