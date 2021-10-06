@@ -57,5 +57,15 @@
             <tag name="serializer.normalizer"/>
         </service>
 
+        <service
+            class="BitBag\SyliusAdyenPlugin\Resolver\Payment\PaymentDetailsResolver"
+            id="bitbag.sylius_adyen_plugin.resolver.payment.payment_details_resolver"
+        >
+
+            <argument type="service" id="sylius.repository.order"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.provider.adyen_client_provider"/>
+            <argument type="service" id="sylius.repository.payment"/>
+        </service>
+
     </services>
 </container>
