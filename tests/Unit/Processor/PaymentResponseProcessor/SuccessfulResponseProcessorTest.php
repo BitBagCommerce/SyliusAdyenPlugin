@@ -41,12 +41,12 @@ class SuccessfulResponseProcessorTest extends AbstractProcessorTest
         return [
             'generic' => [
                 RequestMother::createWithSessionForDefinedOrderId(),
-                'thank-you'
+                'thank-you',
             ],
             'alternative' => [
                 RequestMother::createWithSessionForSpecifiedQueryToken(),
                 '/orders/',
-                true
+                true,
             ],
         ];
     }

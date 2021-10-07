@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Resolver\Product;
 
-
 use Liip\ImagineBundle\Templating\FilterTrait;
 use Sylius\Component\Core\Model\ProductImageInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
@@ -33,7 +32,7 @@ class ThumbnailUrlResolver implements ThumbnailUrlResolverInterface
 
         $image = array_shift($result);
 
-        if($image === false){
+        if ($image === false) {
             return null;
         }
 
@@ -43,7 +42,7 @@ class ThumbnailUrlResolver implements ThumbnailUrlResolverInterface
     public function resolve(ProductVariantInterface $productVariant): ?string
     {
         $image = $this->getProductImage($productVariant);
-        if($image === null){
+        if ($image === null) {
             return null;
         }
 

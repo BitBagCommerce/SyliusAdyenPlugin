@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Resolver\Product;
 
-
 use Sylius\Component\Core\Model\ProductVariantInterface;
 
 interface ThumbnailUrlResolverInterface
