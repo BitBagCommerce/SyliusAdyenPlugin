@@ -11,17 +11,50 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Normalizer;
 
 
+use BitBag\SyliusAdyenPlugin\Resolver\Order\PriceResolverInterface;
+use BitBag\SyliusAdyenPlugin\Resolver\Product\ThumbnailUrlResolver;
+use BitBag\SyliusAdyenPlugin\Resolver\Product\ThumbnailUrlResolverInterface;
+use Sylius\Component\Core\Model\OrderItemInterface;
+use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Order\Model\OrderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Exception\CircularReferenceException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Exception\LogicException;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Webmozart\Assert\Assert;
 
 class OrderToLineItemsNormalizer implements ContextAwareNormalizerInterface
 {
     public const NORMALIZER_ENABLED = 'order_to_line_items_normalizer';
+    const DEFAULT_DESCRIPTION_LOCALE = 'en';
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
+    /**
+     * @var ThumbnailUrlResolverInterface
+     */
+    private $thumbnailUrlResolver;
+
+    public function __construct(
+        RequestStack $requestStack,
+        UrlGeneratorInterface $urlGenerator,
+        ThumbnailUrlResolverInterface $thumbnailUrlResolver
+    )
+    {
+        $this->requestStack = $requestStack;
+        $this->urlGenerator = $urlGenerator;
+        $this->thumbnailUrlResolver = $thumbnailUrlResolver;
+    }
 
 
     public function supportsNormalization($data, string $format = null, array $context = [])
@@ -34,50 +67,41 @@ class OrderToLineItemsNormalizer implements ContextAwareNormalizerInterface
     }
 
     /**
-     *
-    amountExcludingTax
-    Item amount excluding the tax, in minor units.
-
-    amountIncludingTax
-    Item amount including the tax, in minor units.
-
-    description
-    Description of the line item.
-
-    id
-    ID of the line item.
-
-    imageUrl
-    Link to the picture of the purchased item.
-
-    itemCategory
-    Item category, used by the RatePay payment method.
-
-    productUrl
-    Link to the purchased item.
-
-    quantity
-    Number of items.
-
-    taxAmount
-    Tax amount, in minor units.
-
-    taxPercentage
-    Tax percentage, in minor units.
-     */
-
-    /**
      * @param OrderInterface $object
      */
     public function normalize($object, string $format = null, array $context = [])
     {
         $result = [];
 
+        $locale =
+            $this->requestStack->getMainRequest()
+            ? $this->requestStack->getMainRequest()->getLocale()
+            : self::DEFAULT_DESCRIPTION_LOCALE
+        ;
+
+        /**
+         * @var OrderItemInterface $item
+         */
         foreach($object->getItems() as $item){
+
+            $amountWithoutTax = $item->getTotal() - $item->getTaxTotal();
+            $product = $item->getVariant()->getProduct();
+
             $result[] = [
+                'description' => $item->getVariant()->getTranslation($locale)->getName(),
                 'amountIncludingTax' => $item->getTotal(),
-                'amountExcludingTax' =>
-            ]
+                'amountExcludingTax' => $amountWithoutTax,
+                'taxAmount' => $item->getTaxTotal(),
+                'taxPercentage' => (int)round((($item->getTotal()/$amountWithoutTax)-1)*100),
+                'quantity' => $item->getQuantity(),
+                'id' => $item->getId(),
+                'productUrl' => $this->urlGenerator->generate('sylius_shop_product_show', [
+                    'slug'=>$product->getSlug()
+                ]),
+                'imageUrl' => $this->thumbnailUrlResolver->resolve($item->getVariant())
+            ];
         }
+
+        return $result;
     }
 }

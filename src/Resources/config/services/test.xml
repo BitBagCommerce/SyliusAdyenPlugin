@@ -8,7 +8,20 @@
             id="bit_bag.sylius_adyen_plugin.controller.test_controller"
         >
             <argument type="service" id="sylius.context.cart.composite"/>
-            <argument type="service" id="bitbag.sylius_adyen_plugin.resolver.order.price_resolver"/>
+            <argument type="service" id="serializer"/>
+
+            <tag name="controller.service_arguments"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Normalizer\OrderToLineItemsNormalizer"
+            id="bitbag.sylius_adyen_plugin.normalizer.order_to_line_items_normalizer"
+        >
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="router"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.resolver.product.thumbnail_url_resolver"/>
+
+            <tag name="serializer.normalizer"/>
         </service>
 
     </services>

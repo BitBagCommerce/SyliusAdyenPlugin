@@ -9,12 +9,13 @@
 namespace BitBag\SyliusAdyenPlugin\Controller;
 
 
-use BitBag\SyliusAdyenPlugin\Resolver\Order\PriceResolverInterface;
+use BitBag\SyliusAdyenPlugin\Normalizer\OrderToLineItemsNormalizer;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class TestController
 {
@@ -23,17 +24,17 @@ class TestController
      */
     private CartContextInterface $cartContext;
     /**
-     * @var PriceResolverInterface
+     * @var NormalizerInterface
      */
-    private PriceResolverInterface $priceResolver;
+    private NormalizerInterface $normalizer;
 
     public function __construct(
         CartContextInterface $cartContext,
-        PriceResolverInterface $priceResolver
+        NormalizerInterface $normalizer
     )
     {
         $this->cartContext = $cartContext;
-        $this->priceResolver = $priceResolver;
+        $this->normalizer = $normalizer;
     }
 
 
@@ -41,16 +42,13 @@ class TestController
     {
         $order = $this->cartContext->getCart();
 
-        $units = $order->getItems()->toArray();
-        /**
-         * @var OrderItemInterface $item
-         */
-        $item = end($units);
-        $orderItemUnit = $item->getUnits()->current();
-
-        $net = $this->priceResolver->getNetPrice($orderItemUnit);
-
-        return new JsonResponse($net);
+        return new JsonResponse(
+            $this->normalizer->normalize(
+                $order,
+                null,
+                [OrderToLineItemsNormalizer::NORMALIZER_ENABLED=>true]
+            )
+        );
     }
 
 }
