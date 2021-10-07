@@ -13,7 +13,7 @@ use Sylius\Component\Core\Model\OrderItemUnitInterface;
 
 interface PriceResolverInterface
 {
-    public function getNetPrice(OrderItemUnitInterface $orderItemUnit): float;
+    public function getNetPrice(OrderItemUnitInterface $orderItemUnit): int;
 
-    public function getPrice(OrderItemUnitInterface $orderItemUnit): float;
+    public function getPrice(OrderItemUnitInterface $orderItemUnit): int;
 }

@@ -7,3 +7,7 @@ bitbag_adyen_localized:
   prefix: /{_locale}
   requirements:
     _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
+
+bitbag_test:
+  path: /test
+  controller: bit_bag.sylius_adyen_plugin.controller.test_controller

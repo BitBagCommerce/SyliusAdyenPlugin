@@ -9,32 +9,54 @@
 namespace BitBag\SyliusAdyenPlugin\Resolver\Order;
 
 
+use Sylius\Component\Addressing\Matcher\ZoneMatcherInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\Model\OrderItemUnitInterface;
+use Sylius\Component\Taxation\Resolver\TaxRateResolverInterface;
 
 final class PriceResolver implements PriceResolverInterface
 {
     /**
-     * @var ChannelContextInterface
+     * @var ZoneMatcherInterface
      */
-    private ChannelContextInterface $channelContext;
+    private $zoneMatcher;
+    /**
+     * @var TaxRateResolverInterface
+     */
+    private $taxRateResolver;
 
-    public function __construct(ChannelContextInterface $channelContext)
+    public function __construct(
+        ZoneMatcherInterface $zoneMatcher,
+        TaxRateResolverInterface $taxRateResolver
+    )
     {
-        $this->channelContext = $channelContext;
+        ;
+        $this->zoneMatcher = $zoneMatcher;
+        $this->taxRateResolver = $taxRateResolver;
     }
 
 
-    public function getNetPrice(OrderItemUnitInterface $orderItemUnit): float
+    public function getNetPrice(OrderItemUnitInterface $orderItemUnit): int
     {
-        $this->channelContext->getChannel()
-        //
+        $order = $orderItemUnit->getOrderItem()->getOrder();
+        $item = $orderItemUnit->getOrderItem();
 
-        return 0.0;
+        $zone = $this->zoneMatcher->match($order->getBillingAddress());
+        $taxRate = $this->taxRateResolver->resolve($orderItemUnit->getOrderItem()->getVariant(), ['zone' => $zone]);
+
+        if ($taxRate === null) {
+            return $item->getUnitPrice();
+        }
+
+        if ($taxRate->isIncludedInPrice()) {
+            return $item->getUnitPrice();
+        }
+
+        return (int) round($item->getUnitPrice() + ($item->getTaxTotal() / $item->getQuantity()));
     }
 
-    public function getPrice(OrderItemUnitInterface $orderItemUnit): float
+    public function getPrice(OrderItemUnitInterface $orderItemUnit): int
     {
         $taxAdjustment = $orderItemUnit->getAdjustments(AdjustmentInterface::TAX_ADJUSTMENT);
 
