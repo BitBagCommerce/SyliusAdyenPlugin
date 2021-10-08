@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller;
 
-use BitBag\SyliusAdyenPlugin\Normalizer\OrderToLineItemsNormalizer;
+use BitBag\SyliusAdyenPlugin\Normalizer\OrderItemToLineItemNormalizer;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,9 +36,9 @@ class TestController
 
         return new JsonResponse(
             $this->normalizer->normalize(
-                $order,
+                $order->getItems()->first(),
                 null,
-                [OrderToLineItemsNormalizer::NORMALIZER_ENABLED => true]
+                [OrderItemToLineItemNormalizer::NORMALIZER_ENABLED => true]
             )
         );
     }

@@ -18,6 +18,10 @@ use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use BitBag\SyliusAdyenPlugin\Exception\PaymentMethodsResponseMissing;
 use BitBag\SyliusAdyenPlugin\Resolver\Version\VersionResolverInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
+use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\RefundPlugin\Event\RefundPaymentGenerated;
+use Webmozart\Assert\Assert;
 
 final class AdyenClient implements AdyenClientInterface
 {
@@ -27,13 +31,15 @@ final class AdyenClient implements AdyenClientInterface
     /** @var Client */
     private $transport;
 
-    /** @var VersionResolverInterface */
-    private $versionResolver;
+    /**
+     * @var ClientPayloadFactoryInterface
+     */
+    private $clientPayloadFactory;
 
     public function __construct(
         array $options,
         AdyenTransportFactoryInterface $adyenTransportFactory,
-        VersionResolverInterface $versionResolver
+        ClientPayloadFactoryInterface $clientPayloadFactory
     ) {
         $options = ArrayObject::ensureArrayObject($options);
         $options->defaults(self::DEFAULT_OPTIONS);
@@ -48,7 +54,7 @@ final class AdyenClient implements AdyenClientInterface
 
         $this->options = $options;
         $this->transport = $adyenTransportFactory->create($options->getArrayCopy());
-        $this->versionResolver = $versionResolver;
+        $this->clientPayloadFactory = $clientPayloadFactory;
     }
 
     private function getCheckout(): Checkout
@@ -73,26 +79,13 @@ final class AdyenClient implements AdyenClientInterface
     }
 
     public function getAvailablePaymentMethods(
-        string $locale,
-        string $countryCode,
-        int $amount,
-        string $currencyCode,
+        OrderInterface $order,
         ?AdyenTokenInterface $adyenToken = null
     ): array {
-        $payload = [
-            'amount' => [
-                'value' => $amount,
-                'currency' => $currencyCode,
-            ],
-            'merchantAccount' => $this->options['merchantAccount'],
-            'countryCode' => $countryCode,
-            'shopperLocale' => $locale,
-        ];
 
-        $payload = $this->enableOneOffPayment($payload, $adyenToken);
-        $payload = $this->versionResolver->appendVersionConstraints($payload);
-
-        $paymentMethods = (array) $this->getCheckout()->paymentMethods($payload);
+        $paymentMethods = (array) $this->getCheckout()->paymentMethods(
+            $this->clientPayloadFactory->createForAvailablePaymentMethods($this->options, $order, $adyenToken)
+        );
 
         if (!isset($paymentMethods['paymentMethods'])) {
             throw new PaymentMethodsResponseMissing();
@@ -101,172 +94,74 @@ final class AdyenClient implements AdyenClientInterface
         return $paymentMethods;
     }
 
-    private function getOrigin(string $url): string
-    {
-        $components = parse_url($url);
-
-        $pattern = '%s://%s';
-        if (isset($components['port'])) {
-            $pattern .= ':%d';
-        }
-
-        return sprintf(
-            $pattern,
-            $components[self::CREDIT_CARD_TYPE] ?? '',
-            $components['host'] ?? '',
-            $components['port'] ?? 0
-        );
-    }
-
     public function paymentDetails(
         array $receivedPayload,
+        OrderInterface $order,
         ?AdyenTokenInterface $adyenToken = null
     ): array {
-        if (!isset($receivedPayload['details'])) {
-            throw new \InvalidArgumentException();
-        }
+        Assert::keyExists($receivedPayload, 'details');
 
-        $receivedPayload = $this->enableOneOffPayment($receivedPayload, $adyenToken);
-        $receivedPayload = $this->versionResolver->appendVersionConstraints($receivedPayload);
+        $payload = $this->clientPayloadFactory->createForPaymentDetails(
+            $receivedPayload['details'], $order, $adyenToken
+        );
 
-        return (array) $this->getCheckout()->paymentsDetails($receivedPayload);
-    }
-
-    private function isTokenizationSupported(array $payload, ?AdyenTokenInterface $customerIdentifier): bool
-    {
-        if ($customerIdentifier === null) {
-            return false;
-        }
-
-        if (isset($payload['paymentMethod']['type']) && $payload['paymentMethod']['type'] !== self::CREDIT_CARD_TYPE) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private function enableOneOffPayment(
-        array $payload,
-        ?AdyenTokenInterface $customerIdentifier,
-        bool $store = false
-    ): array {
-        if (!$this->isTokenizationSupported($payload, $customerIdentifier)) {
-            return $payload;
-        }
-
-        if ($store) {
-            $payload['storePaymentMethod'] = true;
-        }
-
-        $payload['recurringProcessingModel'] = 'CardOnFile';
-        $payload['shopperInteraction'] = 'Ecommerce';
-        $payload['shopperReference'] = ($customerIdentifier === null ? '' : $customerIdentifier->getIdentifier());
-
-        return $payload;
+        return (array) $this->getCheckout()->paymentsDetails($payload);
     }
 
     public function submitPayment(
-        int $amount,
-        string $currencyCode,
-        $reference,
         string $redirectUrl,
         array $receivedPayload,
+        OrderInterface $order,
         ?AdyenTokenInterface $customerIdentifier = null
     ): array {
         if (!isset($receivedPayload['paymentMethod'])) {
             throw new \InvalidArgumentException();
         }
 
-        $payload = [
-            'amount' => [
-                'value' => $amount,
-                'currency' => $currencyCode,
-            ],
-            'reference' => (string) $reference,
-            'merchantAccount' => $this->options['merchantAccount'],
-            'returnUrl' => $redirectUrl,
-            'paymentMethod' => $receivedPayload['paymentMethod'],
-            'additionalData' => [
-                'allow3DS2' => true,
-            ],
-            'channel' => 'web',
-            'origin' => $this->getOrigin($redirectUrl),
-        ];
-
-        if (isset($receivedPayload['browserInfo'])) {
-            $payload['browserInfo'] = (array) $receivedPayload['browserInfo'];
-        }
-
-        $payload = $this->enableOneOffPayment(
-            $payload,
-            $customerIdentifier,
-            (bool) ($receivedPayload['storePaymentMethod'] ?? false)
+        $payload = $this->clientPayloadFactory->createForSubmitPayment(
+            $this->options,
+            $redirectUrl,
+            $receivedPayload,
+            $order,
+            $customerIdentifier
         );
-        $payload = $this->versionResolver->appendVersionConstraints($payload);
 
         return (array) $this->getCheckout()->payments($payload);
     }
 
     public function requestCapture(
-        string $pspReference,
-        int $amount,
-        string $currencyCode
+        PaymentInterface $payment
     ): array {
-        $params = [
-            'merchantAccount' => $this->options['merchantAccount'],
-            'modificationAmount' => [
-                'value' => $amount,
-                'currency' => $currencyCode,
-            ],
-            'originalReference' => $pspReference,
-        ];
 
-        $params = $this->versionResolver->appendVersionConstraints($params);
+        $params = $this->clientPayloadFactory->createForCapture($this->options, $payment);
 
         return (array) $this->getModification()->capture($params);
     }
 
     public function requestCancellation(
-        string $pspReference
+        PaymentInterface $payment
     ): array {
-        $params = [
-            'merchantAccount' => $this->options['merchantAccount'],
-            'originalReference' => $pspReference,
-        ];
-
-        $params = $this->versionResolver->appendVersionConstraints($params);
+        $params = $this->clientPayloadFactory->createForCancel($this->options, $payment);
 
         return (array) $this->getModification()->cancel($params);
     }
 
     public function removeStoredToken(
         string $paymentReference,
-        string $shopperReference
+        AdyenTokenInterface $adyenToken
     ): array {
-        $params = [
-            'merchantAccount' => $this->options['merchantAccount'],
-            'recurringDetailReference' => $paymentReference,
-            'shopperReference' => $shopperReference,
-        ];
 
-        $params = $this->versionResolver->appendVersionConstraints($params);
+        $params = $this->clientPayloadFactory->createForTokenRemove($this->options, $paymentReference, $adyenToken);
 
         return (array) $this->getRecurring()->disable($params);
     }
 
-    public function requestRefund(string $pspReference, int $amount, string $currencyCode, string $reference): array
+    public function requestRefund(
+        PaymentInterface $payment,
+        RefundPaymentGenerated $refund
+    ): array
     {
-        $params = [
-            'merchantAccount' => $this->options['merchantAccount'],
-            'modificationAmount' => [
-                'value' => $amount,
-                'currency' => $currencyCode,
-            ],
-            'reference' => $reference,
-            'originalReference' => $pspReference,
-        ];
-
-        $params = $this->versionResolver->appendVersionConstraints($params);
+        $params = $this->clientPayloadFactory->createForRefund($this->options, $payment, $refund);
 
         return (array) $this->getModification()->refund($params);
     }

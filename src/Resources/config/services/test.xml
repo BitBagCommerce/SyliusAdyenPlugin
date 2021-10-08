@@ -14,8 +14,8 @@
         </service>
 
         <service
-            class="BitBag\SyliusAdyenPlugin\Normalizer\OrderToLineItemsNormalizer"
-            id="bitbag.sylius_adyen_plugin.normalizer.order_to_line_items_normalizer"
+            class="BitBag\SyliusAdyenPlugin\Normalizer\OrderItemToLineItemNormalizer"
+            id="bitbag.sylius_adyen_plugin.normalizer.order_item_to_line_item_normalizer"
         >
             <argument type="service" id="request_stack"/>
             <argument type="service" id="router"/>

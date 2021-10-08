@@ -80,7 +80,7 @@ class RemoveStoredTokenAction
 
         $client = $this->adyenClientProvider->getForPaymentMethod($paymentMethod);
 
-        $client->removeStoredToken($paymentReference, (string) $token->getIdentifier());
+        $client->removeStoredToken($paymentReference, $token);
 
         return new Response();
     }

@@ -12,14 +12,14 @@ namespace BitBag\SyliusAdyenPlugin\Normalizer;
 
 use BitBag\SyliusAdyenPlugin\Resolver\Product\ThumbnailUrlResolverInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
-use Sylius\Component\Order\Model\OrderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
+use Webmozart\Assert\Assert;
 
-class OrderToLineItemsNormalizer implements ContextAwareNormalizerInterface
+class OrderItemToLineItemNormalizer implements ContextAwareNormalizerInterface
 {
-    public const NORMALIZER_ENABLED = 'order_to_line_items_normalizer';
+    public const NORMALIZER_ENABLED = 'order_item_to_line_item_normalizer';
 
     private const DEFAULT_DESCRIPTION_LOCALE = 'en';
 
@@ -36,7 +36,8 @@ class OrderToLineItemsNormalizer implements ContextAwareNormalizerInterface
         RequestStack $requestStack,
         UrlGeneratorInterface $urlGenerator,
         ThumbnailUrlResolverInterface $thumbnailUrlResolver
-    ) {
+    )
+    {
         $this->requestStack = $requestStack;
         $this->urlGenerator = $urlGenerator;
         $this->thumbnailUrlResolver = $thumbnailUrlResolver;
@@ -48,44 +49,39 @@ class OrderToLineItemsNormalizer implements ContextAwareNormalizerInterface
             return false;
         }
 
-        return $data instanceof OrderInterface;
+        return $data instanceof OrderItemInterface;
     }
 
     /**
-     * @param OrderInterface $object
+     * @param OrderItemInterface $object
      */
     public function normalize($object, string $format = null, array $context = [])
     {
-        $result = [];
 
         $locale =
             $this->requestStack->getMainRequest()
-            ? $this->requestStack->getMainRequest()->getLocale()
-            : self::DEFAULT_DESCRIPTION_LOCALE
+                ? $this->requestStack->getMainRequest()->getLocale()
+                : self::DEFAULT_DESCRIPTION_LOCALE
         ;
 
-        /**
-         * @var OrderItemInterface $item
-         */
-        foreach ($object->getItems() as $item) {
-            $amountWithoutTax = $item->getTotal() - $item->getTaxTotal();
-            $product = $item->getVariant()->getProduct();
+        $amountWithoutTax = $object->getTotal() - $object->getTaxTotal();
+        $productVariant = $object->getVariant();
 
-            $result[] = [
-                'description' => $item->getVariant()->getTranslation($locale)->getName(),
-                'amountIncludingTax' => $item->getTotal(),
-                'amountExcludingTax' => $amountWithoutTax,
-                'taxAmount' => $item->getTaxTotal(),
-                'taxPercentage' => (int) round((($item->getTotal() / $amountWithoutTax) - 1) * 100),
-                'quantity' => $item->getQuantity(),
-                'id' => $item->getId(),
-                'productUrl' => $this->urlGenerator->generate('sylius_shop_product_show', [
-                    'slug' => $product->getSlug(),
-                ]),
-                'imageUrl' => $this->thumbnailUrlResolver->resolve($item->getVariant()),
-            ];
-        }
+        Assert::notNull($productVariant);
+        $product = $productVariant->getProduct();
 
-        return $result;
+        return [
+            'description' => $productVariant->getTranslation($locale)->getName(),
+            'amountIncludingTax' => $object->getTotal(),
+            'amountExcludingTax' => $amountWithoutTax,
+            'taxAmount' => $object->getTaxTotal(),
+            'taxPercentage' => (int)round((($object->getTotal() / $amountWithoutTax) - 1) * 100),
+            'quantity' => $object->getQuantity(),
+            'id' => $object->getId(),
+            'productUrl' => $this->urlGenerator->generate('sylius_shop_product_show', [
+                'slug' => $product->getSlug(),
+            ]),
+            'imageUrl' => $this->thumbnailUrlResolver->resolve($productVariant),
+        ];
     }
 }
