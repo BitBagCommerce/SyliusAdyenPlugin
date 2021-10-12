@@ -14,13 +14,10 @@ use BitBag\SyliusAdyenPlugin\Resolver\Product\ThumbnailUrlResolverInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Webmozart\Assert\Assert;
 
-class OrderItemToLineItemNormalizer implements ContextAwareNormalizerInterface
+final class OrderItemToLineItemNormalizer extends AbstractPaymentNormalizer
 {
-    public const NORMALIZER_ENABLED = 'order_item_to_line_item_normalizer';
-
     private const DEFAULT_DESCRIPTION_LOCALE = 'en';
 
     /** @var RequestStack */
@@ -36,33 +33,30 @@ class OrderItemToLineItemNormalizer implements ContextAwareNormalizerInterface
         RequestStack $requestStack,
         UrlGeneratorInterface $urlGenerator,
         ThumbnailUrlResolverInterface $thumbnailUrlResolver
-    )
-    {
+    ) {
         $this->requestStack = $requestStack;
         $this->urlGenerator = $urlGenerator;
         $this->thumbnailUrlResolver = $thumbnailUrlResolver;
     }
 
+    /**
+     * @param mixed|OrderItemInterface $data
+     */
     public function supportsNormalization($data, string $format = null, array $context = [])
     {
-        if (!isset($context[self::NORMALIZER_ENABLED])) {
-            return false;
-        }
-
-        return $data instanceof OrderItemInterface;
+        return parent::supportsNormalization($data, $format, $context) && $data instanceof OrderItemInterface;
     }
 
     /**
-     * @param OrderItemInterface $object
+     * @param mixed $object
+     *
+     * @return array
      */
     public function normalize($object, string $format = null, array $context = [])
     {
+        Assert::isInstanceOf($object, OrderItemInterface::class);
 
-        $locale =
-            $this->requestStack->getMainRequest()
-                ? $this->requestStack->getMainRequest()->getLocale()
-                : self::DEFAULT_DESCRIPTION_LOCALE
-        ;
+        $locale = $this->getLocale();
 
         $amountWithoutTax = $object->getTotal() - $object->getTaxTotal();
         $productVariant = $object->getVariant();
@@ -70,18 +64,31 @@ class OrderItemToLineItemNormalizer implements ContextAwareNormalizerInterface
         Assert::notNull($productVariant);
         $product = $productVariant->getProduct();
 
+        Assert::notNull($product);
+
         return [
             'description' => $productVariant->getTranslation($locale)->getName(),
             'amountIncludingTax' => $object->getTotal(),
             'amountExcludingTax' => $amountWithoutTax,
             'taxAmount' => $object->getTaxTotal(),
-            'taxPercentage' => (int)round((($object->getTotal() / $amountWithoutTax) - 1) * 100),
+            'taxPercentage' => (int) round((($object->getTotal() / $amountWithoutTax) - 1) * 100),
             'quantity' => $object->getQuantity(),
             'id' => $object->getId(),
             'productUrl' => $this->urlGenerator->generate('sylius_shop_product_show', [
-                'slug' => $product->getSlug(),
-            ]),
+                'slug' => (string) $product->getSlug(),
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
             'imageUrl' => $this->thumbnailUrlResolver->resolve($productVariant),
         ];
+    }
+
+    private function getLocale(): string
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if ($request === null) {
+            return self::DEFAULT_DESCRIPTION_LOCALE;
+        }
+
+        return $request->getLocale();
     }
 }

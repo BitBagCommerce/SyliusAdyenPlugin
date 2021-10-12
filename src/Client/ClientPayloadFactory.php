@@ -10,34 +10,29 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Client;
 
-
-use BitBag\SyliusAdyenPlugin\Client\ClientPayloadFactory\OrderDataAssemblerInterface;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
-use BitBag\SyliusAdyenPlugin\Exception\UnboundAddressFromOrderException;
+use BitBag\SyliusAdyenPlugin\Normalizer\AbstractPaymentNormalizer;
 use BitBag\SyliusAdyenPlugin\Resolver\Version\VersionResolverInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\RefundPlugin\Event\RefundPaymentGenerated;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Webmozart\Assert\Assert;
 
 final class ClientPayloadFactory implements ClientPayloadFactoryInterface
 {
-    /**
-     * @var VersionResolverInterface
-     */
+    /** @var VersionResolverInterface */
     private $versionResolver;
-    /**
-     * @var OrderDataAssemblerInterface
-     */
-    private $orderDataAssembler;
+    /** @var NormalizerInterface */
+    private $normalizer;
 
     public function __construct(
         VersionResolverInterface $versionResolver,
-        OrderDataAssemblerInterface $orderDataAssembler
-    )
-    {
+        NormalizerInterface $normalizer
+    ) {
         $this->versionResolver = $versionResolver;
-        $this->orderDataAssembler = $orderDataAssembler;
+        $this->normalizer = $normalizer;
     }
 
     private function getOrigin(string $url): string
@@ -97,15 +92,14 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         ArrayObject $options,
         OrderInterface $order,
         ?AdyenTokenInterface $adyenToken = null
-    ): array
-    {
+    ): array {
         $address = $order->getBillingAddress();
         $countryCode = $address !== null ? (string) $address->getCountryCode() : '';
 
         $payload = [
             'amount' => [
                 'value' => $order->getTotal(),
-                'currency' => (string)$order->getLocaleCode(),
+                'currency' => (string) $order->getLocaleCode(),
             ],
             'merchantAccount' => $options['merchantAccount'],
             'countryCode' => $countryCode,
@@ -120,12 +114,10 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
 
     public function createForPaymentDetails(
         array $receivedPayload,
-        OrderInterface $order,
         ?AdyenTokenInterface $adyenToken = null
-    ): array
-    {
+    ): array {
         $payload = [
-            'details'=>$receivedPayload
+            'details' => $receivedPayload,
         ];
 
         $payload = $this->enableOneOffPayment($payload, $adyenToken);
@@ -140,17 +132,15 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         array $receivedPayload,
         OrderInterface $order,
         ?AdyenTokenInterface $adyenToken = null
-    ): array
-    {
+    ): array {
         $payload = [
             'amount' => [
                 'value' => $order->getTotal(),
-                'currency' => (string)$order->getCurrencyCode(),
+                'currency' => (string) $order->getCurrencyCode(),
             ],
             'reference' => (string) $order->getNumber(),
             'merchantAccount' => $options['merchantAccount'],
             'returnUrl' => $url,
-            'paymentMethod' => $receivedPayload['paymentMethod'],
             'additionalData' => [
                 'allow3DS2' => true,
             ],
@@ -158,9 +148,9 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
             'origin' => $this->getOrigin($url),
         ];
 
-        if (isset($receivedPayload['browserInfo'])) {
-            $payload['browserInfo'] = (array) $receivedPayload['browserInfo'];
-        }
+        $payload = $this->filterArray($receivedPayload, [
+            'browserInfo', 'paymentMethod', 'clientStateDataIndicator', 'riskData',
+        ]) + $payload;
 
         $payload = $this->enableOneOffPayment(
             $payload,
@@ -169,7 +159,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         );
         $payload = $this->versionResolver->appendVersionConstraints($payload);
 
-        $payload = $payload + $this->orderDataAssembler->assemble($order);
+        $payload = $payload + $this->getOrderDataForPayment($order);
 
         return $payload;
     }
@@ -177,13 +167,12 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
     public function createForCapture(
         ArrayObject $options,
         PaymentInterface $payment
-    ): array
-    {
+    ): array {
         $params = [
             'merchantAccount' => $options['merchantAccount'],
             'modificationAmount' => [
                 'value' => $payment->getAmount(),
-                'currency' => (string)$payment->getCurrencyCode(),
+                'currency' => (string) $payment->getCurrencyCode(),
             ],
             'originalReference' => $payment->getDetails()['pspReference'],
         ];
@@ -196,8 +185,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
     public function createForCancel(
         ArrayObject $options,
         PaymentInterface $payment
-    ): array
-    {
+    ): array {
         $params = [
             'merchantAccount' => $options['merchantAccount'],
             'originalReference' => $payment->getDetails()['pspReference'],
@@ -212,8 +200,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         ArrayObject $options,
         string $paymentReference,
         AdyenTokenInterface $adyenToken
-    ): array
-    {
+    ): array {
         $params = [
             'merchantAccount' => $options['merchantAccount'],
             'recurringDetailReference' => $paymentReference,
@@ -229,20 +216,38 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         ArrayObject $options,
         PaymentInterface $payment,
         RefundPaymentGenerated $refund
-    ): array
-    {
+    ): array {
+        $order = $payment->getOrder();
+        Assert::notNull($order);
+
         $params = [
             'merchantAccount' => $options['merchantAccount'],
             'modificationAmount' => [
                 'value' => $refund->amount(),
                 'currency' => $refund->currencyCode(),
             ],
-            'reference' => $payment->getOrder()->getNumber(),
+            'reference' => (string) $order->getNumber(),
             'originalReference' => $payment->getDetails()['pspReference'],
         ];
 
         $params = $this->versionResolver->appendVersionConstraints($params);
 
         return $params;
+    }
+
+    private function filterArray(array $payload, array $keysWhitelist): array
+    {
+        return array_filter($payload, function (string $key) use ($keysWhitelist): bool {
+            return in_array($key, $keysWhitelist, true);
+        }, \ARRAY_FILTER_USE_KEY);
+    }
+
+    private function getOrderDataForPayment(OrderInterface $order): array
+    {
+        return (array) $this->normalizer->normalize(
+            $order,
+            null,
+            [AbstractPaymentNormalizer::NORMALIZER_ENABLED => true]
+        );
     }
 }

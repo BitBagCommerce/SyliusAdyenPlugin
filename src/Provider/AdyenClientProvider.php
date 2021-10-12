@@ -17,7 +17,6 @@ use BitBag\SyliusAdyenPlugin\Client\ClientPayloadFactoryInterface;
 use BitBag\SyliusAdyenPlugin\Exception\NonAdyenPaymentMethodException;
 use BitBag\SyliusAdyenPlugin\Exception\UnprocessablePaymentException;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
-use BitBag\SyliusAdyenPlugin\Resolver\Version\VersionResolver;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
@@ -36,9 +35,7 @@ final class AdyenClientProvider implements AdyenClientProviderInterface
     /** @var AdyenTransportFactory */
     private $adyenTransportFactory;
 
-    /**
-     * @var ClientPayloadFactoryInterface
-     */
+    /** @var ClientPayloadFactoryInterface */
     private $clientPayloadFactory;
 
     public function __construct(

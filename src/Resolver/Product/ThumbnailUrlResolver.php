@@ -12,13 +12,29 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Product;
 
 use Liip\ImagineBundle\Templating\FilterTrait;
 use Sylius\Component\Core\Model\ProductImageInterface;
+use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
+use Webmozart\Assert\Assert;
 
 class ThumbnailUrlResolver implements ThumbnailUrlResolverInterface
 {
     use FilterTrait;
 
     private const FILTER_NAME = 'sylius_shop_product_thumbnail';
+    private const IMAGE_TYPE = 'main';
+
+    private function getProductImagesForVariant(ProductVariantInterface $productVariant): array
+    {
+        /**
+         * @var ProductInterface|null $product
+         */
+        $product = $productVariant->getProduct();
+        if ($product === null) {
+            return [];
+        }
+
+        return $product->getImagesByType(self::IMAGE_TYPE)->toArray();
+    }
 
     private function getProductImage(ProductVariantInterface $productVariant): ?ProductImageInterface
     {
@@ -26,17 +42,12 @@ class ThumbnailUrlResolver implements ThumbnailUrlResolverInterface
          * @var ProductImageInterface[] $result
          */
         $result =
-            $productVariant->getImagesByType('main')->toArray()
-            + $productVariant->getProduct()->getImagesByType('main')->toArray()
+            $productVariant->getImagesByType(self::IMAGE_TYPE)->toArray()
+            +
+            $this->getProductImagesForVariant($productVariant)
         ;
 
-        $image = array_shift($result);
-
-        if ($image === false) {
-            return null;
-        }
-
-        return $image;
+        return array_shift($result);
     }
 
     public function resolve(ProductVariantInterface $productVariant): ?string
@@ -46,6 +57,9 @@ class ThumbnailUrlResolver implements ThumbnailUrlResolverInterface
             return null;
         }
 
-        return $this->filter($image->getPath(), self::FILTER_NAME);
+        $path = $image->getPath();
+        Assert::notNull($path);
+
+        return $this->filter($path, self::FILTER_NAME);
     }
 }

@@ -83,7 +83,8 @@ final class RefundPaymentGeneratedHandler implements MessageHandlerInterface
         $client = $this->adyenClientProvider->getForPaymentMethod($paymentMethod);
 
         $result = $client->requestRefund(
-            $payment, $refundPaymentGenerated
+            $payment,
+            $refundPaymentGenerated
         );
 
         Assert::keyExists($result, 'pspReference');

@@ -16,7 +16,6 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\TakeOverPayment;
 use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Bus\Query\GetToken;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
-use BitBag\SyliusAdyenPlugin\Exception\UnboundAddressFromOrderException;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProviderInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;

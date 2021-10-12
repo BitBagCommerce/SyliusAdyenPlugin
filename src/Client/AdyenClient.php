@@ -16,7 +16,6 @@ use Adyen\Service\Modification;
 use Adyen\Service\Recurring;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use BitBag\SyliusAdyenPlugin\Exception\PaymentMethodsResponseMissing;
-use BitBag\SyliusAdyenPlugin\Resolver\Version\VersionResolverInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -31,9 +30,7 @@ final class AdyenClient implements AdyenClientInterface
     /** @var Client */
     private $transport;
 
-    /**
-     * @var ClientPayloadFactoryInterface
-     */
+    /** @var ClientPayloadFactoryInterface */
     private $clientPayloadFactory;
 
     public function __construct(
@@ -82,27 +79,27 @@ final class AdyenClient implements AdyenClientInterface
         OrderInterface $order,
         ?AdyenTokenInterface $adyenToken = null
     ): array {
-
         $paymentMethods = (array) $this->getCheckout()->paymentMethods(
             $this->clientPayloadFactory->createForAvailablePaymentMethods($this->options, $order, $adyenToken)
         );
 
-        if (!isset($paymentMethods['paymentMethods'])) {
-            throw new PaymentMethodsResponseMissing();
-        }
+        Assert::keyExists($paymentMethods, 'paymentMethods');
+        /*        if (!isset($paymentMethods['paymentMethods'])) {
+                    throw new PaymentMethodsResponseMissing();
+                }*/
 
         return $paymentMethods;
     }
 
     public function paymentDetails(
         array $receivedPayload,
-        OrderInterface $order,
         ?AdyenTokenInterface $adyenToken = null
     ): array {
         Assert::keyExists($receivedPayload, 'details');
 
         $payload = $this->clientPayloadFactory->createForPaymentDetails(
-            $receivedPayload['details'], $order, $adyenToken
+            (array) $receivedPayload['details'],
+            $adyenToken
         );
 
         return (array) $this->getCheckout()->paymentsDetails($payload);
@@ -132,7 +129,6 @@ final class AdyenClient implements AdyenClientInterface
     public function requestCapture(
         PaymentInterface $payment
     ): array {
-
         $params = $this->clientPayloadFactory->createForCapture($this->options, $payment);
 
         return (array) $this->getModification()->capture($params);
@@ -150,7 +146,6 @@ final class AdyenClient implements AdyenClientInterface
         string $paymentReference,
         AdyenTokenInterface $adyenToken
     ): array {
-
         $params = $this->clientPayloadFactory->createForTokenRemove($this->options, $paymentReference, $adyenToken);
 
         return (array) $this->getRecurring()->disable($params);
@@ -159,8 +154,7 @@ final class AdyenClient implements AdyenClientInterface
     public function requestRefund(
         PaymentInterface $payment,
         RefundPaymentGenerated $refund
-    ): array
-    {
+    ): array {
         $params = $this->clientPayloadFactory->createForRefund($this->options, $payment, $refund);
 
         return (array) $this->getModification()->refund($params);

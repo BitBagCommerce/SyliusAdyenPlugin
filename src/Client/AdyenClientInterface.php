@@ -49,7 +49,6 @@ interface AdyenClientInterface
 
     public function paymentDetails(
         array $receivedPayload,
-        OrderInterface $order,
         ?AdyenTokenInterface $adyenToken = null
     ): array;
 

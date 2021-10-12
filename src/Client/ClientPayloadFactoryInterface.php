@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -7,7 +9,6 @@
  */
 
 namespace BitBag\SyliusAdyenPlugin\Client;
-
 
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
@@ -21,7 +22,7 @@ interface ClientPayloadFactoryInterface
 
     public function createForAvailablePaymentMethods(ArrayObject $options, OrderInterface $order, ?AdyenTokenInterface $adyenToken = null): array;
 
-    public function createForPaymentDetails(array $receivedPayload, OrderInterface $order, ?AdyenTokenInterface $adyenToken = null): array;
+    public function createForPaymentDetails(array $receivedPayload, ?AdyenTokenInterface $adyenToken = null): array;
 
     public function createForSubmitPayment(ArrayObject $options, string $url, array $receivedPayload, OrderInterface $order, ?AdyenTokenInterface $adyenToken = null): array;
 
