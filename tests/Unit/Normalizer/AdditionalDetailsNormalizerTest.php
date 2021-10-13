@@ -72,7 +72,7 @@ class AdditionalDetailsNormalizerTest extends TestCase
             'deliveryAddress' => self::EXPECTED_DELEGATED_NORMALIZER_RESULT,
             'lineItems' => [
                 self::EXPECTED_DELEGATED_NORMALIZER_RESULT,
-                self::EXPECTED_DELEGATED_NORMALIZER_RESULT
+                self::EXPECTED_DELEGATED_NORMALIZER_RESULT,
             ],
             'shopperEmail' => OrderMother::CUSTOMER_EMAIL,
             'shopperName' => [

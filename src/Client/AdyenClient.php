@@ -15,7 +15,6 @@ use Adyen\Service\Checkout;
 use Adyen\Service\Modification;
 use Adyen\Service\Recurring;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
-use BitBag\SyliusAdyenPlugin\Exception\PaymentMethodsResponseMissing;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -32,11 +31,14 @@ final class AdyenClient implements AdyenClientInterface
 
     /** @var ClientPayloadFactoryInterface */
     private $clientPayloadFactory;
+    /** @var PaymentMethodsFilterInterface */
+    private $paymentMethodsFilter;
 
     public function __construct(
         array $options,
         AdyenTransportFactoryInterface $adyenTransportFactory,
-        ClientPayloadFactoryInterface $clientPayloadFactory
+        ClientPayloadFactoryInterface $clientPayloadFactory,
+        PaymentMethodsFilterInterface $paymentMethodsFilter
     ) {
         $options = ArrayObject::ensureArrayObject($options);
         $options->defaults(self::DEFAULT_OPTIONS);
@@ -52,6 +54,7 @@ final class AdyenClient implements AdyenClientInterface
         $this->options = $options;
         $this->transport = $adyenTransportFactory->create($options->getArrayCopy());
         $this->clientPayloadFactory = $clientPayloadFactory;
+        $this->paymentMethodsFilter = $paymentMethodsFilter;
     }
 
     private function getCheckout(): Checkout
@@ -84,11 +87,8 @@ final class AdyenClient implements AdyenClientInterface
         );
 
         Assert::keyExists($paymentMethods, 'paymentMethods');
-        /*        if (!isset($paymentMethods['paymentMethods'])) {
-                    throw new PaymentMethodsResponseMissing();
-                }*/
 
-        return $paymentMethods;
+        return $this->paymentMethodsFilter->filter($paymentMethods);
     }
 
     public function paymentDetails(
