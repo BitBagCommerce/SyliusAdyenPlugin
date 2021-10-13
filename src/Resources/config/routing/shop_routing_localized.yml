@@ -18,7 +18,3 @@ bitbag_adyen_remove_token:
   path: /payment/adyen/{code}/token/{paymentReference}
   methods: [DELETE]
   controller: bitbag.sylius_adyen_plugin.controller.shop.remove_stored_token_action
-
-bitbag_test:
-  path: /test
-  controller: bit_bag.sylius_adyen_plugin.controller.test_controller

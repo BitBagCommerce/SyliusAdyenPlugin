@@ -16,7 +16,7 @@ use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Webmozart\Assert\Assert;
 
-class ThumbnailUrlResolver implements ThumbnailUrlResolverInterface
+final class ThumbnailUrlResolver implements ThumbnailUrlResolverInterface
 {
     use FilterTrait;
 

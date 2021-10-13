@@ -50,7 +50,7 @@ final class OrderMother
         $adjustment->setType(AdjustmentInterface::TAX_ADJUSTMENT);
         $adjustment->setAmount(self::ITEM_TAX_VALUE);
 
-        $item = new class extends OrderItem{
+        $item = new class() extends OrderItem {
             public function __construct()
             {
                 parent::__construct();

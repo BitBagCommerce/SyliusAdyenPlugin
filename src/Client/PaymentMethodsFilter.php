@@ -24,11 +24,10 @@ final class PaymentMethodsFilter implements PaymentMethodsFilterInterface
 
     private function doFilter(array $methodsList): array
     {
-        $result = array_filter($methodsList, function (array $item): bool
-        {
+        $result = array_filter($methodsList, function (array $item): bool {
             Assert::keyExists($item, 'type');
 
-            return in_array($item['type'], (array)$this->supportedMethodsList, true);
+            return in_array($item['type'], (array) $this->supportedMethodsList, true);
         }, \ARRAY_FILTER_USE_BOTH);
 
         return array_values($result);

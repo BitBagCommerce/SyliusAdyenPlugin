@@ -35,59 +35,6 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         $this->normalizer = $normalizer;
     }
 
-    private function getOrigin(string $url): string
-    {
-        $components = parse_url($url);
-
-        $pattern = '%s://%s';
-        if (isset($components['port'])) {
-            $pattern .= ':%d';
-        }
-
-        return sprintf(
-            $pattern,
-            $components[AdyenClientInterface::CREDIT_CARD_TYPE] ?? '',
-            $components['host'] ?? '',
-            $components['port'] ?? 0
-        );
-    }
-
-    private function isTokenizationSupported(array $payload, ?AdyenTokenInterface $customerIdentifier): bool
-    {
-        if ($customerIdentifier === null) {
-            return false;
-        }
-
-        if (
-            isset($payload['paymentMethod']['type'])
-            && $payload['paymentMethod']['type'] !== AdyenClientInterface::CREDIT_CARD_TYPE
-        ) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private function enableOneOffPayment(
-        array $payload,
-        ?AdyenTokenInterface $customerIdentifier,
-        bool $store = false
-    ): array {
-        if (!$this->isTokenizationSupported($payload, $customerIdentifier)) {
-            return $payload;
-        }
-
-        if ($store) {
-            $payload['storePaymentMethod'] = true;
-        }
-
-        $payload['recurringProcessingModel'] = 'CardOnFile';
-        $payload['shopperInteraction'] = 'Ecommerce';
-        $payload['shopperReference'] = ($customerIdentifier === null ? '' : $customerIdentifier->getIdentifier());
-
-        return $payload;
-    }
-
     public function createForAvailablePaymentMethods(
         ArrayObject $options,
         OrderInterface $order,
@@ -249,5 +196,58 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
             null,
             [AbstractPaymentNormalizer::NORMALIZER_ENABLED => true]
         );
+    }
+
+    private function getOrigin(string $url): string
+    {
+        $components = parse_url($url);
+
+        $pattern = '%s://%s';
+        if (isset($components['port'])) {
+            $pattern .= ':%d';
+        }
+
+        return sprintf(
+            $pattern,
+            $components[AdyenClientInterface::CREDIT_CARD_TYPE] ?? '',
+            $components['host'] ?? '',
+            $components['port'] ?? 0
+        );
+    }
+
+    private function isTokenizationSupported(array $payload, ?AdyenTokenInterface $customerIdentifier): bool
+    {
+        if ($customerIdentifier === null) {
+            return false;
+        }
+
+        if (
+            isset($payload['paymentMethod']['type'])
+            && $payload['paymentMethod']['type'] !== AdyenClientInterface::CREDIT_CARD_TYPE
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function enableOneOffPayment(
+        array $payload,
+        ?AdyenTokenInterface $customerIdentifier,
+        bool $store = false
+    ): array {
+        if (!$this->isTokenizationSupported($payload, $customerIdentifier)) {
+            return $payload;
+        }
+
+        if ($store) {
+            $payload['storePaymentMethod'] = true;
+        }
+
+        $payload['recurringProcessingModel'] = 'CardOnFile';
+        $payload['shopperInteraction'] = 'Ecommerce';
+        $payload['shopperReference'] = ($customerIdentifier === null ? '' : $customerIdentifier->getIdentifier());
+
+        return $payload;
     }
 }
