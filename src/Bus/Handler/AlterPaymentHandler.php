@@ -71,20 +71,18 @@ final class AlterPaymentHandler implements MessageHandlerInterface
     }
 
     private function dispatchRemoteAction(
-        string $pspReference,
+        PaymentInterface $payment,
         AlterPaymentCommand $alterPaymentCommand,
         AdyenClientInterface $adyenClient
     ): void {
         if ($alterPaymentCommand instanceof RequestCapture) {
             $adyenClient->requestCapture(
-                $pspReference,
-                $alterPaymentCommand->getOrder()->getTotal(),
-                (string) $alterPaymentCommand->getOrder()->getCurrencyCode()
+                $payment
             );
         }
 
         if ($alterPaymentCommand instanceof CancelPayment) {
-            $adyenClient->requestCancellation($pspReference);
+            $adyenClient->requestCancellation($payment);
         }
     }
 
@@ -96,15 +94,10 @@ final class AlterPaymentHandler implements MessageHandlerInterface
             return;
         }
 
-        $details = $payment->getDetails();
-        if (!isset($details['pspReference'])) {
-            return;
-        }
-
         $method = $payment->getMethod();
         Assert::isInstanceOf($method, PaymentMethodInterface::class);
 
         $client = $this->adyenClientProvider->getForPaymentMethod($method);
-        $this->dispatchRemoteAction((string) $details['pspReference'], $alterPaymentCommand, $client);
+        $this->dispatchRemoteAction($payment, $alterPaymentCommand, $client);
     }
 }

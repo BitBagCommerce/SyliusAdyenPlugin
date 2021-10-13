@@ -12,7 +12,7 @@ namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Processor\PaymentResponseProcessor
 
 use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\FailedResponseProcessor;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Tests\BitBag\SyliusAdyenPlugin\Unit\Processor\RequestMother;
+use Tests\BitBag\SyliusAdyenPlugin\Unit\Mock\RequestMother;
 
 class FailedResponseProcessorTest extends AbstractProcessorTest
 {

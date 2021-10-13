@@ -16,7 +16,6 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\TakeOverPayment;
 use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Bus\Query\GetToken;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
-use BitBag\SyliusAdyenPlugin\Exception\UnboundAddressFromOrderException;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProviderInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
@@ -32,8 +31,6 @@ class PaymentsAction
     use PaymentFromOrderTrait;
 
     public const REDIRECT_TARGET_ACTION = 'bitbag_adyen_thank_you';
-
-    public const NO_COUNTRY_AVAILABLE_PLACEHOLDER = 'ZZ';
 
     public const ORDER_ID_KEY = 'sylius_order_id';
 
@@ -85,33 +82,6 @@ class PaymentsAction
         $this->dispatcher->dispatch(new PrepareOrderForPayment($order));
     }
 
-    private function createFraudDetectionData(OrderInterface $order): array
-    {
-        $billingAddress = $order->getBillingAddress();
-
-        if ($billingAddress === null) {
-            throw new UnboundAddressFromOrderException($order);
-        }
-
-        return [
-            'street' => (string) $billingAddress->getStreet(),
-            'postalCode' => (string) $billingAddress->getPostcode(),
-            'city' => (string) $billingAddress->getCity(),
-            'country' => $billingAddress->getCountryCode() ?? self::NO_COUNTRY_AVAILABLE_PLACEHOLDER,
-            'stateOrProvince' => (string) $billingAddress->getProvinceName(),
-        ];
-    }
-
-    private function createPaymentPayload(Request $request, OrderInterface $order): array
-    {
-        $result = $request->request->all();
-        if (isset($result['paymentMethod']['brand'])) {
-            $result['paymentMethod']['billingAddress'] = $this->createFraudDetectionData($order);
-        }
-
-        return $result;
-    }
-
     public function __invoke(Request $request, ?string $code = null): JsonResponse
     {
         $order = $this->paymentCheckoutOrderResolver->resolve();
@@ -131,11 +101,9 @@ class PaymentsAction
 
         $client = $this->adyenClientProvider->getForPaymentMethod($paymentMethod);
         $result = $client->submitPayment(
-            $order->getTotal(),
-            (string) $order->getCurrencyCode(),
-            (string) $order->getNumber(),
             $url,
-            $this->createPaymentPayload($request, $order),
+            $request->request->all(),
+            $order,
             $customerIdentifier
         );
 

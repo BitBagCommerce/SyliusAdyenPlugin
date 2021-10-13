@@ -20,6 +20,7 @@ use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Webmozart\Assert\Assert;
 
 final class PaymentTypeExtension extends AbstractTypeExtension
 {
@@ -72,20 +73,10 @@ final class PaymentTypeExtension extends AbstractTypeExtension
     ): array {
         $order = $this->paymentCheckoutOrderResolver->resolve();
 
-        $address = $order->getBillingAddress();
-        $countryCode = $address !== null ? (string) $address->getCountryCode() : '';
+        $result = $client->getAvailablePaymentMethods($order);
+        Assert::keyExists($result, 'paymentMethods');
 
-        /**
-         * @var array<string, array> $result
-         */
-        $result = $client->getAvailablePaymentMethods(
-            (string) $order->getLocaleCode(),
-            $countryCode,
-            $order->getTotal(),
-            (string) $order->getCurrencyCode()
-        );
-
-        return $result['paymentMethods'];
+        return (array) $result['paymentMethods'];
     }
 
     public static function getExtendedTypes(): array

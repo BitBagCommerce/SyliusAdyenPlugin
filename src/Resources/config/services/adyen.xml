@@ -2,6 +2,19 @@
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="bitbag.sylius_adyen_plugin.supported_payment_methods" type="collection">
+            <parameter>scheme</parameter>
+            <parameter>dotpay</parameter>
+            <parameter>ideal</parameter>
+            <parameter>alipay</parameter>
+            <parameter>applepay</parameter>
+            <parameter>blik</parameter>
+            <parameter>amazonpay</parameter>
+            <parameter>sepadirectdebit</parameter>
+        </parameter>
+    </parameters>
+
     <services>
         <defaults public="true"/>
 
@@ -12,7 +25,16 @@
             <argument type="service" id="bitbag.sylius_adyen_plugin.repository.payment_method"/>
             <argument type="service" id="sylius.context.shopper"/>
             <argument type="service" id="bitbag.sylius_adyen_plugin.client.adyen_transport_factory"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.client.client_payload_factory"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.client.payment_methods_filter"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Client\ClientPayloadFactory"
+            id="bitbag.sylius_adyen_plugin.client.client_payload_factory"
+        >
             <argument type="service" id="bitbag.sylius_adyen_plugin.resolver.version.version_resolver"/>
+            <argument type="service" id="serializer"/>
         </service>
 
         <service
@@ -40,6 +62,13 @@
                 id="bitbag.sylius_adyen_plugin.provider.signature_validator_provider"
         >
             <argument type="service" id="bitbag.sylius_adyen_plugin.repository.payment_method"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Client\PaymentMethodsFilter"
+            id="bitbag.sylius_adyen_plugin.client.payment_methods_filter"
+        >
+            <argument>%bitbag.sylius_adyen_plugin.supported_payment_methods%</argument>
         </service>
     </services>
 </container>

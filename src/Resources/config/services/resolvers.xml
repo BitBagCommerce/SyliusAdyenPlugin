@@ -3,6 +3,8 @@
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <defaults public="true"/>
+
         <service
                 class="BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolver"
                 id="bitbag.sylius_adyen_plugin.resolver.order.payment_checkout_order_resolver"
@@ -65,6 +67,13 @@
             <argument type="service" id="sylius.repository.order"/>
             <argument type="service" id="bitbag.sylius_adyen_plugin.provider.adyen_client_provider"/>
             <argument type="service" id="sylius.repository.payment"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Resolver\Product\ThumbnailUrlResolver"
+            id="bitbag.sylius_adyen_plugin.resolver.product.thumbnail_url_resolver"
+        >
+            <argument type="service" id="liip_imagine.cache.manager"/>
         </service>
 
     </services>

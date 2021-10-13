@@ -68,8 +68,6 @@ class AlterPaymentHandlerTest extends TestCase
             'payment not found' => [null],
             'payment without method' => [$paymentWithoutMethod],
             'payment method without configuration' => [$paymentWithEmptyConfig],
-            'payment for non-Adyen configuration' => [$paymentWithoutAdyenConfiguration],
-            'payment without pspReference' => [$paymentWithoutReference],
             'completed order' => [$paymentWithoutAdyenConfiguration, PaymentInterface::STATE_COMPLETED],
         ];
     }
@@ -113,9 +111,7 @@ class AlterPaymentHandlerTest extends TestCase
                         ->expects($this->once())
                         ->method('requestCapture')
                         ->with(
-                            $this->equalTo(self::PSP_REFERENCE),
-                            $this->equalTo(self::ORDER_AMOUNT),
-                            $this->equalTo(self::ORDER_CURRENCY_CODE)
+                            $this->isInstanceOf(PaymentInterface::class)
                         )
                     ;
                 },
@@ -128,7 +124,7 @@ class AlterPaymentHandlerTest extends TestCase
                         ->expects($this->once())
                         ->method('requestCancellation')
                         ->with(
-                            $this->equalTo(self::PSP_REFERENCE)
+                            $this->isInstanceOf(PaymentInterface::class)
                         )
                     ;
                 },

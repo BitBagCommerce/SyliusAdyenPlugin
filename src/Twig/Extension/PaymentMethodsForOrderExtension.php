@@ -110,16 +110,6 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         return $token;
     }
 
-    private function getCountryCode(OrderInterface $order): string
-    {
-        $address = $order->getBillingAddress();
-        if ($address === null) {
-            return '';
-        }
-
-        return (string) $address->getCountryCode();
-    }
-
     private function adyenPaymentMethods(
         OrderInterface $order,
         ?string $code = null,
@@ -134,10 +124,7 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         }
 
         return $client->getAvailablePaymentMethods(
-            (string) $order->getLocaleCode(),
-            $this->getCountryCode($order),
-            $order->getTotal(),
-            (string) $order->getCurrencyCode(),
+            $order,
             $adyenToken
         );
     }

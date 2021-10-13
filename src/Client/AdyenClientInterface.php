@@ -11,6 +11,9 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Client;
 
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
+use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\RefundPlugin\Event\RefundPaymentGenerated;
 
 interface AdyenClientInterface
 {
@@ -31,34 +34,35 @@ interface AdyenClientInterface
     public const CREDIT_CARD_TYPE = 'scheme';
 
     public function getAvailablePaymentMethods(
-        string $locale,
-        string $countryCode,
-        int $amount,
-        string $currencyCode,
+        OrderInterface $order,
         ?AdyenTokenInterface $adyenToken = null
     ): array;
 
     public function getEnvironment(): string;
 
-    /**
-     * @param mixed $reference
-     */
     public function submitPayment(
-        int $amount,
-        string $currencyCode,
-        $reference,
         string $redirectUrl,
         array $receivedPayload,
+        OrderInterface $order,
         ?AdyenTokenInterface $customerIdentifier = null
     ): array;
 
-    public function paymentDetails(array $receivedPayload): array;
+    public function paymentDetails(
+        array $receivedPayload,
+        ?AdyenTokenInterface $adyenToken = null
+    ): array;
 
-    public function requestRefund(string $pspReference, int $amount, string $currencyCode, string $reference): array;
+    public function requestRefund(
+        PaymentInterface $payment,
+        RefundPaymentGenerated $refund
+    ): array;
 
-    public function removeStoredToken(string $paymentReference, string $shopperReference): array;
+    public function removeStoredToken(
+        string $paymentReference,
+        AdyenTokenInterface $adyenToken
+    ): array;
 
-    public function requestCancellation(string $pspReference): array;
+    public function requestCancellation(PaymentInterface $payment): array;
 
-    public function requestCapture(string $pspReference, int $amount, string $currencyCode): array;
+    public function requestCapture(PaymentInterface $payment): array;
 }
