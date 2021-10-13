@@ -14,6 +14,7 @@ use BitBag\SyliusAdyenPlugin\Client\AdyenClient;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
 use BitBag\SyliusAdyenPlugin\Client\AdyenTransportFactory;
 use BitBag\SyliusAdyenPlugin\Client\ClientPayloadFactoryInterface;
+use BitBag\SyliusAdyenPlugin\Client\PaymentMethodsFilterInterface;
 use BitBag\SyliusAdyenPlugin\Exception\NonAdyenPaymentMethodException;
 use BitBag\SyliusAdyenPlugin\Exception\UnprocessablePaymentException;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
@@ -37,17 +38,21 @@ final class AdyenClientProvider implements AdyenClientProviderInterface
 
     /** @var ClientPayloadFactoryInterface */
     private $clientPayloadFactory;
+    /** @var PaymentMethodsFilterInterface */
+    private $paymentMethodsFilter;
 
     public function __construct(
         PaymentMethodRepositoryInterface $paymentMethodRepository,
         ChannelContextInterface $channelContext,
         AdyenTransportFactory $adyenTransportFactory,
-        ClientPayloadFactoryInterface $clientPayloadFactory
+        ClientPayloadFactoryInterface $clientPayloadFactory,
+        PaymentMethodsFilterInterface $paymentMethodsFilter
     ) {
         $this->paymentMethodRepository = $paymentMethodRepository;
         $this->channelContext = $channelContext;
         $this->adyenTransportFactory = $adyenTransportFactory;
         $this->clientPayloadFactory = $clientPayloadFactory;
+        $this->paymentMethodsFilter = $paymentMethodsFilter;
     }
 
     public function getDefaultClient(): AdyenClient
@@ -62,7 +67,12 @@ final class AdyenClientProvider implements AdyenClientProviderInterface
 
         $config = $this->getGatewayConfig($paymentMethod)->getConfig();
 
-        return new AdyenClient($config, $this->adyenTransportFactory, $this->clientPayloadFactory);
+        return new AdyenClient(
+            $config,
+            $this->adyenTransportFactory,
+            $this->clientPayloadFactory,
+            $this->paymentMethodsFilter
+        );
     }
 
     public function getForPaymentMethod(PaymentMethodInterface $paymentMethod): AdyenClientInterface
@@ -73,7 +83,12 @@ final class AdyenClientProvider implements AdyenClientProviderInterface
             throw new NonAdyenPaymentMethodException($paymentMethod);
         }
 
-        return new AdyenClient($gatewayConfig->getConfig(), $this->adyenTransportFactory, $this->clientPayloadFactory);
+        return new AdyenClient(
+            $gatewayConfig->getConfig(),
+            $this->adyenTransportFactory,
+            $this->clientPayloadFactory,
+            $this->paymentMethodsFilter
+        );
     }
 
     public function getClientForCode(string $code): AdyenClientInterface

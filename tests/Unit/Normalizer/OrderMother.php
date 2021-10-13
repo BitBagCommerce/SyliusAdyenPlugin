@@ -50,14 +50,16 @@ final class OrderMother
         $adjustment->setType(AdjustmentInterface::TAX_ADJUSTMENT);
         $adjustment->setAmount(self::ITEM_TAX_VALUE);
 
-        $item = new OrderItem();
+        $item = new class extends OrderItem{
+            public function __construct()
+            {
+                parent::__construct();
+                $this->id = OrderMother::ITEM_ID;
+            }
+        };
         $item->setVariant($variant);
         $item->setUnitPrice(self::ITEM_UNIT_PRICE);
         $item->addAdjustment($adjustment);
-
-        (function (OrderItemInterface $orderItem) {
-            $orderItem->id = \Tests\BitBag\SyliusAdyenPlugin\Unit\Normalizer\OrderMother::ITEM_ID;
-        })->bindTo($item, $item)($item);
 
         new OrderItemUnit($item);
 
