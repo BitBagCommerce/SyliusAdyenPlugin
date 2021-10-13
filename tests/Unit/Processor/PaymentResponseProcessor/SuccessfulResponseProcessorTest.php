@@ -14,7 +14,7 @@ use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\SuccessfulRespon
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Tests\BitBag\SyliusAdyenPlugin\Unit\Processor\RequestMother;
+use Tests\BitBag\SyliusAdyenPlugin\Unit\Mock\RequestMother;
 
 class SuccessfulResponseProcessorTest extends AbstractProcessorTest
 {

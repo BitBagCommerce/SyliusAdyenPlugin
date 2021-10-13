@@ -166,10 +166,8 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
             ->expects($this->once())
             ->method('requestRefund')
             ->with(
-                $this->equalTo(self::PSP_REFERENCE),
-                $this->equalTo($command->amount()),
-                $this->equalTo($command->currencyCode()),
-                $this->equalTo(self::DUMMY_REFERENCE)
+                $this->equalTo($payment),
+                $this->equalTo($command),
             )
             ->willReturn([
                 'pspReference' => self::NEW_PSP_REFERENCE,

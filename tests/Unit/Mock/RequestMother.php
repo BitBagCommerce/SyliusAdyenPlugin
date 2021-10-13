@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Processor;
+namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Mock;
 
 use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\SuccessfulResponseProcessor;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +17,9 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 final class RequestMother
 {
+    public const TEST_LOCALE = 'pl_PL';
+    public const WHERE_YOUR_HOME_IS = '127.0.0.1';
+
     public static function createWithSession(): Request
     {
         $session = new Session(new MockArraySessionStorage());
@@ -38,6 +41,14 @@ final class RequestMother
     {
         $result = self::createWithSession();
         $result->query->set(SuccessfulResponseProcessor::TOKEN_VALUE_KEY, 'Szczebrzeszyn');
+
+        return $result;
+    }
+
+    public static function createWithLocaleSet(): Request
+    {
+        $result = Request::create('/', 'GET', [], [], [], ['REMOTE_ADDR' => self::WHERE_YOUR_HOME_IS]);
+        $result->setLocale(self::TEST_LOCALE);
 
         return $result;
     }

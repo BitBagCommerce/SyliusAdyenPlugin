@@ -75,7 +75,7 @@ final class OrderItemToLineItemNormalizer extends AbstractPaymentNormalizer
             'quantity' => $object->getQuantity(),
             'id' => $object->getId(),
             'productUrl' => $this->urlGenerator->generate('sylius_shop_product_show', [
-                'slug' => (string) $product->getSlug(),
+                'slug' => (string) $product->getTranslation($locale)->getSlug(),
             ], UrlGeneratorInterface::ABSOLUTE_URL),
             'imageUrl' => $this->thumbnailUrlResolver->resolve($productVariant),
         ];
