@@ -31,6 +31,7 @@ final class AdyenClient implements AdyenClientInterface
 
     /** @var ClientPayloadFactoryInterface */
     private $clientPayloadFactory;
+
     /** @var PaymentMethodsFilterInterface */
     private $paymentMethodsFilter;
 

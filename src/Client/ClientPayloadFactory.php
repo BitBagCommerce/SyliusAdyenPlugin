@@ -50,7 +50,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         $address = $order->getBillingAddress();
         $countryCode = $address !== null ? (string) $address->getCountryCode() : '';
         $request = $this->requestStack->getCurrentRequest();
-        $locale = $request !==null  ? $request->getLocale() : '';
+        $locale = $request !== null ? $request->getLocale() : '';
 
         $payload = [
             'amount' => [

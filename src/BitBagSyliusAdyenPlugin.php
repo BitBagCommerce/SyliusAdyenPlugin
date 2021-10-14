@@ -11,9 +11,17 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin;
 
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 final class BitBagSyliusAdyenPlugin extends Bundle
 {
     use SyliusPluginTrait;
+
+    public function getContainerExtension(): ?ExtensionInterface
+    {
+        $this->containerExtension = $this->createContainerExtension() ?? false;
+
+        return $this->containerExtension !== false ? $this->containerExtension : null;
+    }
 }
