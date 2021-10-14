@@ -5,6 +5,7 @@ parameters:
     excludes_analyse:
         # Makes PHPStan crash
         - 'src/DependencyInjection/Configuration.php'
+        - 'src/DependencyInjection/BitBagSyliusAdyenExtension.php'
 
         # Test dependencies
         - 'tests/Application/app/**.php'

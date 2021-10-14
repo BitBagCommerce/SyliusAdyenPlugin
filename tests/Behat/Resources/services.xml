@@ -18,6 +18,7 @@
                 decorates="bitbag.sylius_adyen_plugin.client.adyen_transport_factory"
                 id="bitbag.sylius_adyen_plugin.client.adyen_transport_factory.decorator"
         >
+            <argument>null</argument>
             <argument type="service" id="tests.bitbag.sylius_adyen_plugin.behat.context.api_mock_client"/>
         </service>
 

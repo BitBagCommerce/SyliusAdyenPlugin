@@ -31,7 +31,7 @@ class AdyenCredentialsValidatorTest extends ConstraintValidatorTestCase
     protected function createValidator(): AdyenCredentialsValidator
     {
         return new AdyenCredentialsValidator(
-            new AdyenTransportFactory($this->client)
+            new AdyenTransportFactory(null, $this->client)
         );
     }
 

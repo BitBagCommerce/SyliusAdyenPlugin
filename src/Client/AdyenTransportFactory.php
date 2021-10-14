@@ -15,14 +15,21 @@ use Adyen\Environment;
 use Adyen\HttpClient\ClientInterface;
 use Adyen\HttpClient\CurlClient;
 use BitBag\SyliusAdyenPlugin\Resolver\Configuration\ConfigurationResolver;
+use Psr\Log\LoggerInterface;
 
 final class AdyenTransportFactory implements AdyenTransportFactoryInterface
 {
     /** @var ClientInterface */
     private $adyenHttpClient;
 
-    public function __construct(?ClientInterface $adyenHttpClient = null)
-    {
+    /** @var LoggerInterface|null */
+    private $logger;
+
+    public function __construct(
+        ?LoggerInterface $logger = null,
+        ?ClientInterface $adyenHttpClient = null
+    ) {
+        $this->logger = $logger;
         $this->adyenHttpClient = $adyenHttpClient ?? new CurlClient();
     }
 
@@ -32,6 +39,10 @@ final class AdyenTransportFactory implements AdyenTransportFactoryInterface
 
         $client = new Client();
         $client->setHttpClient($this->adyenHttpClient);
+
+        if ($this->logger !== null) {
+            $client->setLogger($this->logger);
+        }
 
         $client->setXApiKey($options['apiKey']);
         $client->setEnvironment(
