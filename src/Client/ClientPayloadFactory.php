@@ -17,6 +17,7 @@ use Payum\Core\Bridge\Spl\ArrayObject;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\RefundPlugin\Event\RefundPaymentGenerated;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Webmozart\Assert\Assert;
 
@@ -24,15 +25,21 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
 {
     /** @var VersionResolverInterface */
     private $versionResolver;
+
     /** @var NormalizerInterface */
     private $normalizer;
 
+    /** @var RequestStack */
+    private $requestStack;
+
     public function __construct(
         VersionResolverInterface $versionResolver,
-        NormalizerInterface $normalizer
+        NormalizerInterface $normalizer,
+        RequestStack $requestStack
     ) {
         $this->versionResolver = $versionResolver;
         $this->normalizer = $normalizer;
+        $this->requestStack = $requestStack;
     }
 
     public function createForAvailablePaymentMethods(
@@ -42,15 +49,17 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
     ): array {
         $address = $order->getBillingAddress();
         $countryCode = $address !== null ? (string) $address->getCountryCode() : '';
+        $request = $this->requestStack->getCurrentRequest();
+        $locale = $request !==null  ? $request->getLocale() : '';
 
         $payload = [
             'amount' => [
                 'value' => $order->getTotal(),
-                'currency' => (string) $order->getLocaleCode(),
+                'currency' => (string) $order->getCurrencyCode(),
             ],
             'merchantAccount' => $options['merchantAccount'],
             'countryCode' => $countryCode,
-            'shopperLocale' => $countryCode,
+            'shopperLocale' => $locale,
         ];
 
         $payload = $this->enableOneOffPayment($payload, $adyenToken);
