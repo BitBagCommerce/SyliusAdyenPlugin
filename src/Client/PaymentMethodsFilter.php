@@ -37,7 +37,7 @@ final class PaymentMethodsFilter implements PaymentMethodsFilterInterface
     {
         Assert::keyExists($paymentMethodsResponse, 'paymentMethods');
 
-        if ($this->supportedMethodsList !== null) {
+        if (count((array) $this->supportedMethodsList) > 0) {
             $paymentMethodsResponse['paymentMethods'] = $this->doFilter(
                 (array) $paymentMethodsResponse['paymentMethods']
             );
