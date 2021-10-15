@@ -17,6 +17,7 @@ At BitBag we do believe in open source. However, we are able to do it just becau
     * [Requirements](#requirements)
     * [Usage](#usage)
     * [Customization](#customization)
+    * [Configuration](#configuration)
     * [Testing](#testing)
     * [Frontend part](#frontend-part)
 * [About us](#about-us)
@@ -57,9 +58,9 @@ We work on stable, supported and up-to-date versions of packages. We recommend y
 
 | Package | Version |
 | --- | --- |
-| PHP |  ^7.3 |
+| PHP |  ^7.4 |
 | ext-json:  | * |
-| sylius/refund-plugin |  ^1.0.0-RC.10 |
+| sylius/refund-plugin |  ^1.0.0|
 | sylius/sylius |  ^1.9.0 |
 | symfony/messenger |   ^4.4 |
 | adyen/php-api-library | ^10.1 |
@@ -77,6 +78,22 @@ Run the below command to see what Symfony services are shared with this plugin:
 ```
 $ bin/console debug:container bitbag_sylius_adyen_plugin
 ```
+
+## Configuration
+----
+The plug-in provides a configuration that can be overrided:
+
+```yaml
+bitbag_sylius_adyen:
+  logger: ~
+  supported_types: ~
+```
+
+| property | type | description
+| --- | --- | --- |
+| logger | null\|string | specifies a logger service name which handles dumping of all traffic between your Sylius instance and Adyen API; useful for debugging. Empty value = disable logging |
+| supported_types | null\|array | whitelist of visible payment methods; null = all tested payment methods, array = list of payment types, empty array = don't filter at all and show everything returned by Adyen |
+
 ## Frontend part
 ----
 ### Starting and building assets
