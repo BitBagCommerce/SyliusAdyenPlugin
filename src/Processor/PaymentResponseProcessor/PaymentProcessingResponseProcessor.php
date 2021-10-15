@@ -16,21 +16,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class SuccessfulResponseProcessor extends AbstractProcessor
+final class PaymentProcessingResponseProcessor extends AbstractProcessor
 {
     use ProcessableResponseTrait;
 
-    public const MY_ORDERS_ROUTE_NAME = 'sylius_shop_account_order_index';
-
-    public const THANKS_ROUTE_NAME = 'sylius_shop_order_thank_you';
-
-    public const PAYMENT_PROCEED_CODES = ['authorised'];
-
-    public const ORDER_ID_KEY = 'sylius_order_id';
-
-    public const TOKEN_VALUE_KEY = 'tokenValue';
-
-    public const LABEL_PAYMENT_COMPLETED = 'sylius.payment.completed';
+    public const PAYMENT_PROCESSING_CODES = ['received', 'processing'];
+    public const LABEL_PROCESSING = 'bitbag_sylius_adyen_plugin.ui.payment_processing';
+    public const REDIRECT_TARGET_ROUTE = 'sylius_shop_homepage';
 
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
@@ -47,33 +39,14 @@ class SuccessfulResponseProcessor extends AbstractProcessor
 
     public function accepts(Request $request, ?PaymentInterface $payment): bool
     {
-        return $this->isResultCodeSupportedForPayment($payment, self::PAYMENT_PROCEED_CODES);
+        return $this->isResultCodeSupportedForPayment($payment, self::PAYMENT_PROCESSING_CODES);
     }
 
     public function process(string $code, Request $request, PaymentInterface $payment): string
     {
-        $targetRoute = self::THANKS_ROUTE_NAME;
-
         $this->dispatchPaymentStatusReceived($payment);
+        $this->addFlash($request, self::FLASH_INFO, self::LABEL_PROCESSING);
 
-        if ($this->shouldTheAlternativeThanksPageBeShown($request)) {
-            $this->addFlash($request, self::FLASH_INFO, self::LABEL_PAYMENT_COMPLETED);
-            $targetRoute = self::MY_ORDERS_ROUTE_NAME;
-        }
-
-        return $this->urlGenerator->generate($targetRoute);
-    }
-
-    private function shouldTheAlternativeThanksPageBeShown(Request $request): bool
-    {
-        if ($request->query->get(self::TOKEN_VALUE_KEY) !== null) {
-            return true;
-        }
-
-        if ($request->getSession()->get(self::ORDER_ID_KEY) !== null) {
-            return false;
-        }
-
-        return true;
+        return $this->urlGenerator->generate(self::REDIRECT_TARGET_ROUTE);
     }
 }

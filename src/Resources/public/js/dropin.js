@@ -83,6 +83,10 @@
                 },
                 onAdditionalDetails: (state, dropin) => {
                     submitHandler(state, dropin, configuration.path.paymentDetails)
+                },
+                onError: (error, component) => {
+                    console.log(error, component);
+                    alert('ups');
                 }
             });
         };

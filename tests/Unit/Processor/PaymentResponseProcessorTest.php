@@ -16,7 +16,6 @@ use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessorInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\BitBag\SyliusAdyenPlugin\Unit\Processor\PaymentResponseProcessor\AbstractProcessorTest;
 
 class PaymentResponseProcessorTest extends KernelTestCase
@@ -36,7 +35,7 @@ class PaymentResponseProcessorTest extends KernelTestCase
         );
     }
 
-    private function getProcessor(bool $accepts, ?Response $response = null): ProcessorInterface
+    private function getProcessor(bool $accepts, ?string $response = null): ProcessorInterface
     {
         $result = $this->createMock(ProcessorInterface::class);
         if ($accepts) {
@@ -62,18 +61,16 @@ class PaymentResponseProcessorTest extends KernelTestCase
 
         $result = $tested->process('code', Request::create('/'), null);
 
-        $this->assertInstanceOf(Response::class, $result);
-        $this->assertStringEndsWith(self::URL_ENDING, $result->getTargetUrl());
+        $this->assertStringEndsWith(self::URL_ENDING, $result);
     }
 
     public function testAcceptingProcessor(): void
     {
-        $response = new Response();
         $payment = $this->createMock(PaymentInterface::class);
 
-        $tested = $this->getPaymentResponseProcessor([$this->getProcessor(true, $response)]);
+        $tested = $this->getPaymentResponseProcessor([$this->getProcessor(true, self::URL_ENDING)]);
 
         $result = $tested->process('code', Request::create('/'), $payment);
-        $this->assertEquals($response, $result);
+        $this->assertEquals(self::URL_ENDING, $result);
     }
 }

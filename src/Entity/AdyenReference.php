@@ -66,4 +66,9 @@ class AdyenReference implements ResourceInterface, AdyenReferenceInterface, Time
     {
         $this->refundPayment = $refundPayment;
     }
+
+    public function touch(): void
+    {
+        $this->setUpdatedAt(new \DateTime());
+    }
 }

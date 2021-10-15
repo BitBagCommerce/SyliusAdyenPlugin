@@ -12,7 +12,6 @@ namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Processor\PaymentResponseProcessor
 
 use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\SuccessfulResponseProcessor;
 use Sylius\Component\Core\Model\PaymentInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Tests\BitBag\SyliusAdyenPlugin\Unit\Mock\RequestMother;
 
@@ -25,6 +24,7 @@ class SuccessfulResponseProcessorTest extends AbstractProcessorTest
         $this->processor = new SuccessfulResponseProcessor(
             self::$container->get('tests.bitbag.sylius_adyen_plugin.bus.dispatcher'),
             self::getRouter(self::$container),
+            self::$container->get('translator')
         );
     }
 
@@ -58,13 +58,10 @@ class SuccessfulResponseProcessorTest extends AbstractProcessorTest
     {
         $payment = $this->createMock(PaymentInterface::class);
 
-        /**
-         * @var RedirectResponse $result
-         */
         $result = $this->processor->process('Szczebrzeszyn', $request, $payment);
 
         $this->assertIsPaymentScheduledForFinalization();
-        $this->assertStringEndsWith($expectedUrlEnding, (string) $result->getTargetUrl());
+        $this->assertStringEndsWith($expectedUrlEnding, $result);
 
         if (!$expectFlash) {
             return;

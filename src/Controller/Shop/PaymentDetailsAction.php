@@ -10,24 +10,19 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
-use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentStatusReceived;
-use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
+use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessorInterface;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProviderInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
 use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
-use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaymentDetailsAction
 {
     use PayableOrderPaymentTrait;
     use PaymentFromOrderTrait;
-
-    public const REDIRECT_TARGET_ACTION = 'bitbag_adyen_thank_you';
 
     /** @var AdyenClientProviderInterface */
     private $adyenClientProvider;
@@ -35,60 +30,38 @@ class PaymentDetailsAction
     /** @var PaymentCheckoutOrderResolverInterface */
     private $paymentCheckoutOrderResolver;
 
-    /** @var UrlGeneratorInterface */
-    private $urlGenerator;
-
-    /** @var DispatcherInterface */
-    private $dispatcher;
+    /** @var PaymentResponseProcessorInterface */
+    private $paymentResponseProcessor;
 
     public function __construct(
         AdyenClientProviderInterface $adyenClientProvider,
         PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver,
-        UrlGeneratorInterface $urlGenerator,
-        DispatcherInterface $dispatcher
+        PaymentResponseProcessorInterface $paymentResponseProcessor
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;
-        $this->urlGenerator = $urlGenerator;
-        $this->dispatcher = $dispatcher;
-    }
-
-    private function getTargetUrl(PaymentInterface $payment, ?string $tokenValue = null): string
-    {
-        $method = $this->getMethod($payment);
-
-        return $this->urlGenerator->generate(
-            self::REDIRECT_TARGET_ACTION,
-            [
-                'code' => $method->getCode(),
-                'tokenValue' => $tokenValue,
-            ],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
+        $this->paymentResponseProcessor = $paymentResponseProcessor;
     }
 
     public function __invoke(Request $request): Response
     {
         $order = $this->paymentCheckoutOrderResolver->resolve();
         $payment = $this->getPayablePayment($order);
+        $paymentMethod = $this->getMethod($payment);
 
-        $tokenValue = $request->query->get('tokenValue');
-        if ($tokenValue === null) {
-            $request->getSession()->set('sylius_order_id', $order->getId());
-        }
-
-        $client = $this->adyenClientProvider->getForPaymentMethod(
-            $this->getMethod($payment)
-        );
+        $client = $this->adyenClientProvider->getForPaymentMethod($paymentMethod);
         $result = $client->paymentDetails($request->request->all());
 
         $payment->setDetails($result);
-        $this->dispatcher->dispatch(new PaymentStatusReceived($payment));
 
         return new JsonResponse(
             $payment->getDetails()
             + [
-                'redirect' => $this->getTargetUrl($payment, $tokenValue === null ? null : (string) $tokenValue),
+                'redirect' => $this->paymentResponseProcessor->process(
+                    (string) $paymentMethod->getCode(),
+                    $request,
+                    $payment
+                ),
             ]
         );
     }

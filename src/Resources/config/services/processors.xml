@@ -11,6 +11,7 @@
         >
             <argument type="service" id="router"/>
             <argument type="service" id="translator"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
 
             <tag name="bitbag.sylius_adyen_plugin.processor.payment_response"/>
         </service>
@@ -21,6 +22,7 @@
         >
             <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
             <argument type="service" id="router"/>
+            <argument type="service" id="translator"/>
 
             <tag name="bitbag.sylius_adyen_plugin.processor.payment_response"/>
         </service>
@@ -32,6 +34,26 @@
             <argument type="tagged_iterator" tag="bitbag.sylius_adyen_plugin.processor.payment_response"/>
             <argument type="service" id="router"/>
             <argument type="service" id="sylius.context.cart.composite"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\PaymentProcessingResponseProcessor"
+            id="bitbag.sylius_adyen_plugin.processor.payment_response_processor.payment_processing_response_processor"
+        >
+            <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
+            <argument type="service" id="router"/>
+            <argument type="service" id="translator"/>
+
+            <tag name="bitbag.sylius_adyen_plugin.processor.payment_response"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\FallbackResponseProcessor"
+            id="bitbag.sylius_adyen_plugin.processor.payment_response_processor.fallback_response_processor"
+        >
+            <argument type="service" id="router"/>
+
+            <tag name="bitbag.sylius_adyen_plugin.processor.payment_response" priority="-100"/>
         </service>
 
     </services>
