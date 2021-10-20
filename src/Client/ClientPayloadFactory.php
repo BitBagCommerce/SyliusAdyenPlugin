@@ -85,8 +85,9 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         OrderInterface $order,
         ?AdyenTokenInterface $adyenToken = null
     ): array {
-        $countryCode = $order->getBillingAddress() !== null
-            ? (string)$order->getBillingAddress()->getCountryCode()
+        $billingAddress = $order->getBillingAddress();
+        $countryCode = $billingAddress !== null
+            ? (string)$billingAddress->getCountryCode()
             : null
         ;
 
