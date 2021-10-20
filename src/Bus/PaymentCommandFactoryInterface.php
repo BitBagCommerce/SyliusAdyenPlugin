@@ -12,6 +12,9 @@ namespace BitBag\SyliusAdyenPlugin\Bus;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\AuthorizePayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\CapturePayment;
+use BitBag\SyliusAdyenPlugin\Bus\Command\MarkPaymentAsProcessedCommand;
+use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentCancelledCommand;
+use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentFailedCommand;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentLifecycleCommand;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentStatusReceived;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
@@ -23,6 +26,10 @@ interface PaymentCommandFactoryInterface
         'authorisation' => AuthorizePayment::class,
         'payment_status_received' => PaymentStatusReceived::class,
         'capture' => CapturePayment::class,
+        'received' => MarkPaymentAsProcessedCommand::class,
+        'refused' => PaymentFailedCommand::class,
+        'rejected' => PaymentFailedCommand::class,
+        'cancelled' => PaymentCancelledCommand::class,
     ];
 
     public function createForEvent(string $event, PaymentInterface $payment, ?NotificationItemData $notificationItemData = null): PaymentLifecycleCommand;

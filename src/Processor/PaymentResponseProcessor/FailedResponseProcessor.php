@@ -10,33 +10,40 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor;
 
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
+use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Webmozart\Assert\Assert;
 
-class FailedResponseProcessor extends AbstractProcessor
+final class FailedResponseProcessor extends AbstractProcessor
 {
+    use ProcessableResponseTrait;
+
     public const PAYMENT_REFUSED_CODES = ['refused', 'rejected', 'cancelled', 'error'];
 
+    public const CHECKOUT_FINALIZATION_REDIRECT = 'sylius_shop_checkout_complete';
+
     public const FAILURE_REDIRECT_TARGET = 'sylius_shop_order_show';
+
+    public const LABEL_PAYMENT_FAILED = 'bitbag_sylius_adyen_plugin.ui.payment_failed';
 
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
 
-    /** @var TranslatorInterface */
-    private $translator;
+    /** @var DispatcherInterface */
+    private $dispatcher;
 
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        DispatcherInterface $dispatcher
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->translator = $translator;
+        $this->dispatcher = $dispatcher;
     }
 
     public function accepts(Request $request, ?PaymentInterface $payment): bool
@@ -44,25 +51,29 @@ class FailedResponseProcessor extends AbstractProcessor
         return $this->isResultCodeSupportedForPayment($payment, self::PAYMENT_REFUSED_CODES);
     }
 
-    public function process(string $code, Request $request, PaymentInterface $payment): Response
+    private function getRedirectUrl(OrderInterface $order): string
     {
-        /**
-         * @var Session $session
-         */
-        $session = $request->getSession();
-        $session->getFlashBag()->add(
-            'error',
-            $this->translator->trans('bitbag_sylius_adyen_plugin.ui.payment_failed')
+        $tokenValue = $order->getTokenValue();
+
+        if ($tokenValue === null) {
+            return $this->urlGenerator->generate(self::CHECKOUT_FINALIZATION_REDIRECT);
+        }
+
+        return $this->urlGenerator->generate(
+            self::FAILURE_REDIRECT_TARGET,
+            ['tokenValue' => $order->getTokenValue()]
         );
+    }
+
+    public function process(string $code, Request $request, PaymentInterface $payment): string
+    {
+        $this->addFlash($request, self::FLASH_ERROR, self::LABEL_PAYMENT_FAILED);
+
+        $this->dispatchPaymentStatusReceived($payment);
 
         $order = $payment->getOrder();
         Assert::notNull($order);
 
-        return new RedirectResponse(
-            $this->urlGenerator->generate(
-                self::FAILURE_REDIRECT_TARGET,
-                ['tokenValue' => $order->getTokenValue()]
-            )
-        );
+        return $this->getRedirectUrl($order);
     }
 }

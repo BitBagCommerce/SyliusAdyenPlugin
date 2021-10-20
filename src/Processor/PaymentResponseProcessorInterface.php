@@ -12,9 +12,8 @@ namespace BitBag\SyliusAdyenPlugin\Processor;
 
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 interface PaymentResponseProcessorInterface
 {
-    public function process(string $code, Request $request, ?PaymentInterface $payment): Response;
+    public function process(string $code, Request $request, PaymentInterface $payment): string;
 }

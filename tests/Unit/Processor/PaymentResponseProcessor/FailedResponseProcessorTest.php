@@ -10,21 +10,26 @@ declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Processor\PaymentResponseProcessor;
 
+use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\FailedResponseProcessor;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Tests\BitBag\SyliusAdyenPlugin\Unit\Mock\RequestMother;
 
 class FailedResponseProcessorTest extends AbstractProcessorTest
 {
     private const TOKEN_VALUE = 'Szczebrzeszyn';
+    /** @var DispatcherInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $dispatcher;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->dispatcher = $this->createMock(DispatcherInterface::class);
+
         $this->processor = new FailedResponseProcessor(
             self::getRouter(self::$container),
-            self::$container->get('translator')
+            self::$container->get('translator'),
+            $this->dispatcher
         );
     }
 
@@ -34,13 +39,9 @@ class FailedResponseProcessorTest extends AbstractProcessorTest
 
         $request = RequestMother::createWithSession();
 
-        /**
-         * @var $result RedirectResponse
-         */
         $result = $this->processor->process('code', $request, $payment);
 
-        $this->assertInstanceOf(RedirectResponse::class, $result);
-        $this->assertStringEndsWith(self::TOKEN_VALUE, $result->getTargetUrl());
+        $this->assertStringEndsWith(self::TOKEN_VALUE, $result);
         $this->assertNotEmpty($request->getSession()->getFlashBag()->get('error'));
     }
 
