@@ -71,7 +71,15 @@
                         data: {
                             holderName: `${configuration.billingAddress.firstName} ${configuration.billingAddress.lastName}`,
                         }
-                    }
+                    },
+                    paypal: {
+                        environment: configuration.environment,
+                        countryCode: configuration.billingAddress.countryCode,
+                        amount: {
+                            currency: configuration.amount.currency,
+                            value: configuration.amount.value
+                        }
+                    },
                 },
                 clientKey: configuration.clientKey,
                 locale: configuration.locale,
