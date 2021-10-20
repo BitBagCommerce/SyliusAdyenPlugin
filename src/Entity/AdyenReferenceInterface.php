@@ -29,4 +29,6 @@ interface AdyenReferenceInterface extends ResourceInterface
     public function setPayment(?PaymentInterface $payment): void;
 
     public function setPspReference(string $pspReference): void;
+
+    public function touch(): void;
 }

@@ -11,29 +11,59 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 
 use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForPayment;
+use BitBag\SyliusAdyenPlugin\Entity\AdyenReferenceInterface;
 use BitBag\SyliusAdyenPlugin\Factory\AdyenReferenceFactoryInterface;
-use Sylius\Component\Resource\Repository\RepositoryInterface;
+use BitBag\SyliusAdyenPlugin\Repository\AdyenReferenceRepositoryInterface;
+use Doctrine\ORM\NoResultException;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Webmozart\Assert\Assert;
 
 final class CreateReferenceForPaymentHandler implements MessageHandlerInterface
 {
-    /** @var RepositoryInterface */
+    /** @var AdyenReferenceRepositoryInterface */
     private $adyenReferenceRepository;
 
     /** @var AdyenReferenceFactoryInterface */
     private $adyenReferenceFactory;
 
     public function __construct(
-        RepositoryInterface $adyenReferenceRepository,
+        AdyenReferenceRepositoryInterface $adyenReferenceRepository,
         AdyenReferenceFactoryInterface $adyenReferenceFactory
     ) {
         $this->adyenReferenceRepository = $adyenReferenceRepository;
         $this->adyenReferenceFactory = $adyenReferenceFactory;
     }
 
+    private function getExisting(AdyenReferenceInterface $adyenReference): ?AdyenReferenceInterface
+    {
+        $payment = $adyenReference->getPayment();
+        Assert::notNull($payment);
+
+        $method = $payment->getMethod();
+        Assert::notNull($method);
+
+        $code = (string) $method->getCode();
+
+        try {
+            return $this->adyenReferenceRepository->getOneByCodeAndReference(
+                $code,
+                (string) $adyenReference->getPspReference()
+            );
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
     public function __invoke(CreateReferenceForPayment $referenceCommand): void
     {
         $object = $this->adyenReferenceFactory->createForPayment($referenceCommand->getPayment());
+        $existing = $this->getExisting($object);
+
+        if ($existing !== null) {
+            $existing->touch();
+            $object = $existing;
+        }
+
         $this->adyenReferenceRepository->add($object);
     }
 }

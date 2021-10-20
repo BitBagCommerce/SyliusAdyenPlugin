@@ -12,6 +12,8 @@ namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
 use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor;
 use BitBag\SyliusAdyenPlugin\Resolver\Payment\PaymentDetailsResolverInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -35,14 +37,20 @@ class RedirectTargetAction
 
     public function __invoke(Request $request, string $code): Response
     {
-        $payment = null;
+        $payment = $this->retrieveCurrentPayment($code, $request);
+
+        return new RedirectResponse($this->paymentResponseProcessor->process($code, $request, $payment));
+    }
+
+    private function retrieveCurrentPayment(string $code, Request $request): ?PaymentInterface
+    {
         $referenceId = $this->getReferenceId($request);
 
         if ($referenceId !== null) {
-            $payment = $this->paymentDetailsResolver->resolve($code, $referenceId);
+            return $this->paymentDetailsResolver->resolve($code, $referenceId);
         }
 
-        return $this->paymentResponseProcessor->process($code, $request, $payment);
+        return null;
     }
 
     private function getReferenceId(Request $request): ?string

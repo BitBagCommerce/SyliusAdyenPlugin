@@ -11,8 +11,9 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Repository;
 
 use BitBag\SyliusAdyenPlugin\Entity\AdyenReferenceInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 
-interface AdyenReferenceRepositoryInterface
+interface AdyenReferenceRepositoryInterface extends RepositoryInterface
 {
     public function getOneByCodeAndReference(string $code, string $pspReference): AdyenReferenceInterface;
 

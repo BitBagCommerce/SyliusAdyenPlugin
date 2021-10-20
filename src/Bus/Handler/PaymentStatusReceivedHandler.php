@@ -13,6 +13,7 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForPayment;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentStatusReceived;
 use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
+use BitBag\SyliusAdyenPlugin\Exception\UnmappedAdyenActionException;
 use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
 use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -25,7 +26,7 @@ final class PaymentStatusReceivedHandler implements MessageHandlerInterface
 {
     use OrderFromPaymentTrait;
 
-    public const ALLOWED_EVENT_NAMES = ['authorised', 'redirectshopper'];
+    public const ALLOWED_EVENT_NAMES = ['authorised', 'redirectshopper', 'received'];
 
     /** @var FactoryInterface */
     private $stateMachineFactory;
@@ -54,16 +55,29 @@ final class PaymentStatusReceivedHandler implements MessageHandlerInterface
     public function __invoke(PaymentStatusReceived $command): void
     {
         $payment = $command->getPayment();
+        $resultCode = $this->getResultCode($command->getPayment());
 
-        if ($this->isAccepted($payment)) {
+        if ($this->isAccepted($resultCode)) {
             $this->updateOrderState($this->getOrderFromPayment($payment));
         }
 
         try {
             $this->dispatcher->dispatch(new CreateReferenceForPayment($payment));
             $this->paymentRepository->add($payment);
+
+            $this->processCode($resultCode, $command);
         } catch (\InvalidArgumentException $ex) {
             // probably redirect, we don't have a pspReference at this stage
+        }
+    }
+
+    private function processCode(string $resultCode, PaymentStatusReceived $command): void
+    {
+        try {
+            $subcommand = $this->dispatcher->getCommandFactory()->createForEvent($resultCode, $command->getPayment());
+            $this->dispatcher->dispatch($subcommand);
+        } catch (UnmappedAdyenActionException $ex) {
+            // nothing here
         }
     }
 
@@ -75,12 +89,15 @@ final class PaymentStatusReceivedHandler implements MessageHandlerInterface
         $this->orderRepository->add($order);
     }
 
-    private function isAccepted(PaymentInterface $payment): bool
+    private function getResultCode(PaymentInterface $payment): string
     {
         $details = $payment->getDetails();
 
-        $resultCode = strtolower((string) $details['resultCode']);
+        return strtolower((string) $details['resultCode']);
+    }
 
+    private function isAccepted(string $resultCode): bool
+    {
         return in_array($resultCode, self::ALLOWED_EVENT_NAMES, true);
     }
 }

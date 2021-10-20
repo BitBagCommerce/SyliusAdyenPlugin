@@ -12,11 +12,8 @@ namespace BitBag\SyliusAdyenPlugin\Processor;
 
 use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\ProcessorInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Webmozart\Assert\Assert;
 
 final class PaymentResponseProcessor implements PaymentResponseProcessorInterface
 {
@@ -29,8 +26,6 @@ final class PaymentResponseProcessor implements PaymentResponseProcessorInterfac
     private $urlGenerator;
 
     /**
-     * PaymentResponseProcessor constructor.
-     *
      * @param ProcessorInterface[] $processors
      */
     public function __construct(
@@ -41,20 +36,30 @@ final class PaymentResponseProcessor implements PaymentResponseProcessorInterfac
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function process(string $code, Request $request, ?PaymentInterface $payment): Response
+    private function processForPaymentSpecified(string $code, Request $request, PaymentInterface $payment): ?string
     {
         foreach ($this->processors as $processor) {
             if (!$processor->accepts($request, $payment)) {
                 continue;
             }
 
-            Assert::notNull($payment);
-
             return $processor->process($code, $request, $payment);
         }
 
-        return new RedirectResponse(
-            $this->urlGenerator->generate(self::DEFAULT_REDIRECT_ROUTE)
-        );
+        return null;
+    }
+
+    public function process(string $code, Request $request, ?PaymentInterface $payment): string
+    {
+        $result = null;
+        if ($payment !== null) {
+            $result = $this->processForPaymentSpecified($code, $request, $payment);
+        }
+
+        if ($result !== null) {
+            return $result;
+        }
+
+        return $this->urlGenerator->generate(self::DEFAULT_REDIRECT_ROUTE);
     }
 }

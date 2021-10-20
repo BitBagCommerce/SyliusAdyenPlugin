@@ -89,7 +89,7 @@ class PaymentStatusReceivedHandlerTest extends TestCase
         ;
 
         $this->dispatcher
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('dispatch')
         ;
 
