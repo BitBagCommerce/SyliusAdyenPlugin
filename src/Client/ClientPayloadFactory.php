@@ -72,11 +72,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         array $receivedPayload,
         ?AdyenTokenInterface $adyenToken = null
     ): array {
-        $payload = [
-            'details' => $receivedPayload,
-        ];
-
-        $payload = $this->enableOneOffPayment($payload, $adyenToken);
+        $payload = $this->enableOneOffPayment($receivedPayload, $adyenToken);
         $payload = $this->versionResolver->appendVersionConstraints($payload);
 
         return $payload;
@@ -89,6 +85,12 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         OrderInterface $order,
         ?AdyenTokenInterface $adyenToken = null
     ): array {
+        $billingAddress = $order->getBillingAddress();
+        $countryCode = $billingAddress !== null
+            ? (string)$billingAddress->getCountryCode()
+            : null
+        ;
+
         $payload = [
             'amount' => [
                 'value' => $order->getTotal(),
@@ -102,6 +104,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
             ],
             'channel' => 'web',
             'origin' => $this->getOrigin($url),
+            'countryCode' => $countryCode
         ];
 
         $payload = $this->filterArray($receivedPayload, [
