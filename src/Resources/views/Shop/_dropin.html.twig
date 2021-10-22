@@ -16,6 +16,10 @@
     locale: order.localeCode,
     environment: payment_configuration['environment'],
     canBeStored: payment_configuration['canBeStored'],
+    amount: {
+        currency: order.currencyCode,
+        value: order.total
+    },
     path: {
         payments: path('bitbag_adyen_payments', path_params),
         paymentDetails: path('bitbag_adyen_payment_details', path_params),
