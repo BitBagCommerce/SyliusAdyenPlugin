@@ -6,13 +6,19 @@
         <defaults public="true"/>
 
         <service
+            alias="sylius.command_bus"
+            id="bitbag.sylius_adyen_plugin.command_bus"
+        />
+
+        <service
             class="BitBag\SyliusAdyenPlugin\Bus\Handler\PaymentFinalizationHandler"
             id="bitbag.sylius_adyen_plugin.bus.handler.authorize_payment_handler"
         >
             <argument type="service" id="sm.factory"/>
             <argument type="service" id="sylius.repository.order"/>
 
-            <tag name="messenger.message_handler" bus="sylius.command_bus"/>
+            <tag name="messenger.message_handler" bus="sylius.command_bus" />
+            <tag name="messenger.message_handler" bus="sylius_default.bus" />
         </service>
 
         <service
@@ -24,7 +30,8 @@
             <argument type="service" id="sylius.repository.order"/>
             <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
 
-            <tag name="messenger.message_handler" bus="sylius.command_bus"/>
+            <tag name="messenger.message_handler" bus="sylius.command_bus" />
+            <tag name="messenger.message_handler" bus="sylius_default.bus" />
         </service>
 
         <service
@@ -43,7 +50,7 @@
             class="BitBag\SyliusAdyenPlugin\Bus\Dispatcher"
             id="bitbag.sylius_adyen_plugin.bus.dispatcher"
         >
-            <argument type="service" id="sylius.command_bus"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.command_bus"/>
             <argument type="service" id="bitbag.sylius_adyen_plugin.bus.payment_command_factory"/>
         </service>
 
@@ -55,7 +62,8 @@
             <argument type="service" id="bitbag.sylius_adyen_plugin.repository.payment_method"/>
             <argument type="service" id="sylius.manager.payment"/>
 
-            <tag name="messenger.message_handler" bus="sylius.command_bus"/>
+            <tag name="messenger.message_handler" bus="sylius.command_bus" />
+            <tag name="messenger.message_handler" bus="sylius_default.bus" />
         </service>
 
         <service
@@ -63,7 +71,8 @@
             id="bitbag.sylius_adyen_plugin.bus.handler.request_capture_handler"
         >
             <argument type="service" id="bitbag.sylius_adyen_plugin.provider.adyen_client_provider"/>
-            <tag name="messenger.message_handler" bus="sylius.command_bus"/>
+            <tag name="messenger.message_handler" bus="sylius.command_bus" />
+            <tag name="messenger.message_handler" bus="sylius_default.bus" />
         </service>
 
         <service
@@ -86,7 +95,8 @@
             <argument type="service" id="SM\Factory\Factory"/>
             <argument type="service" id="sylius_refund.manager.refund_payment"/>
 
-            <tag name="messenger.message_handler" bus="sylius.command_bus"/>
+            <tag name="messenger.message_handler" bus="sylius.command_bus" />
+            <tag name="messenger.message_handler" bus="sylius_default.bus" />
         </service>
 
         <service
@@ -98,7 +108,8 @@
             <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
             <argument type="service" id="security.token_storage"/>
 
-            <tag name="messenger.message_handler"/>
+            <tag name="messenger.message_handler" bus="sylius.command_bus" />
+            <tag name="messenger.message_handler" bus="sylius_default.bus" />
         </service>
 
         <service
@@ -108,7 +119,8 @@
             <argument type="service" id="bitbag_sylius_adyen_plugin.repository.adyen_reference"/>
             <argument type="service" id="bitbag.sylius_adyen_plugin.factory.adyen_reference_factory"/>
 
-            <tag name="messenger.message_handler"/>
+            <tag name="messenger.message_handler" bus="sylius.command_bus" />
+            <tag name="messenger.message_handler" bus="sylius_default.bus" />
         </service>
 
         <service
@@ -118,7 +130,8 @@
             <argument type="service" id="bitbag_sylius_adyen_plugin.repository.adyen_reference"/>
             <argument type="service" id="bitbag.sylius_adyen_plugin.factory.adyen_reference_factory"/>
 
-            <tag name="messenger.message_handler"/>
+            <tag name="messenger.message_handler" bus="sylius.command_bus" />
+            <tag name="messenger.message_handler" bus="sylius_default.bus" />
         </service>
 
         <service
@@ -128,7 +141,8 @@
             <argument type="service" id="sylius.order_number_assigner"/>
             <argument type="service" id="sylius.repository.order"/>
 
-            <tag name="messenger.message_handler"/>
+            <tag name="messenger.message_handler" bus="sylius.command_bus" />
+            <tag name="messenger.message_handler" bus="sylius_default.bus" />
         </service>
 
     </services>
