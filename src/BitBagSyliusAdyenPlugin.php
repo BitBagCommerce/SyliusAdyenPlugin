@@ -28,12 +28,12 @@ final class BitBagSyliusAdyenPlugin extends Bundle
         return $this->containerExtension !== false ? $this->containerExtension : null;
     }
 
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(
-            new MessageBusPolyfillPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1
+            new MessageBusPolyfillPass(),
+            PassConfig::TYPE_BEFORE_OPTIMIZATION,
+            1
         );
     }
-
-
 }

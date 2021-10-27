@@ -96,7 +96,6 @@ final class AdyenClient implements AdyenClientInterface
         array $receivedPayload,
         ?AdyenTokenInterface $adyenToken = null
     ): array {
-
         $payload = $this->clientPayloadFactory->createForPaymentDetails(
             $receivedPayload,
             $adyenToken

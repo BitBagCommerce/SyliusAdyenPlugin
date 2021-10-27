@@ -33,7 +33,7 @@ final class BitBagSyliusAdyenExtension extends ConfigurableExtension
         }
 
         // fallback for previous version
-        if(!$container->has('sylius.command_bus')){
+        if (!$container->has('sylius.command_bus')) {
             $container->setAlias('bitbag.sylius_adyen_plugin.command_bus', 'sylius_default.bus');
         }
     }

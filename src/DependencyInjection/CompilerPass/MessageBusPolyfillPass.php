@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -8,26 +10,26 @@
 
 namespace BitBag\SyliusAdyenPlugin\DependencyInjection\CompilerPass;
 
-
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class MessageBusPolyfillPass implements CompilerPassInterface
 {
-    const TAG_FALLBACK = [
+    public const TAG_FALLBACK = [
         'sylius.command_bus' => 'sylius_default.bus',
-        'sylius.event_bus' => 'sylius_event.bus'
+        'sylius.event_bus' => 'sylius_event.bus',
     ];
-    const COMMAND_BUS_TAG = 'bitbag.sylius_adyen_plugin.command_bus';
+    public const COMMAND_BUS_TAG = 'bitbag.sylius_adyen_plugin.command_bus';
 
     private function setupDefaultCommandBus(array $buses, ContainerBuilder $container): void
     {
         $targetBusName = in_array('sylius.command_bus', $buses, true) ? 'sylius.command_bus' : 'sylius_default.bus';
         $container->setAlias(
-            self::COMMAND_BUS_TAG, $targetBusName
+            self::COMMAND_BUS_TAG,
+            $targetBusName
         );
     }
-    
+
     public function process(ContainerBuilder $container): void
     {
         /**
@@ -37,19 +39,17 @@ class MessageBusPolyfillPass implements CompilerPassInterface
         $buses = array_keys($container->findTaggedServiceIds('messenger.bus'));
         $this->setupDefaultCommandBus($buses, $container);
 
-        foreach ($handlers as $handler=>$tagData) {
-
-            if(!isset($tagData[0]['bus'])){
+        foreach ($handlers as $handler => $tagData) {
+            if (!isset($tagData[0]['bus'])) {
                 continue;
             }
 
-            $busName = (string)$tagData[0]['bus'];
+            $busName = (string) $tagData[0]['bus'];
 
             $def = $container->findDefinition($handler);
             $def->addTag('messenger.message_handler', [
-                'bus' => in_array($busName, $buses, true) ? $busName : self::TAG_FALLBACK[$busName]
+                'bus' => in_array($busName, $buses, true) ? $busName : self::TAG_FALLBACK[$busName],
             ]);
         }
     }
-
 }
