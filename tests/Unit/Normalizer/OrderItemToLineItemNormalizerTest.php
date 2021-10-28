@@ -86,8 +86,6 @@ class OrderItemToLineItemNormalizerTest extends TestCase
             'description' => OrderMother::ITEM_VARIANT_NAME,
             'amountIncludingTax' => OrderMother::ITEM_UNIT_PRICE + OrderMother::ITEM_TAX_VALUE,
             'amountExcludingTax' => OrderMother::ITEM_UNIT_PRICE,
-            'taxAmount' => OrderMother::ITEM_TAX_VALUE,
-            'taxPercentage' => OrderMother::ITEM_TAX_PERCENT,
             'quantity' => 1,
             'id' => OrderMother::ITEM_ID,
             'productUrl' => self::EXPECTED_PERMALINK,
