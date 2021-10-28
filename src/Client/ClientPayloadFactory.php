@@ -87,7 +87,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
     ): array {
         $billingAddress = $order->getBillingAddress();
         $countryCode = $billingAddress !== null
-            ? (string)$billingAddress->getCountryCode()
+            ? (string) $billingAddress->getCountryCode()
             : null
         ;
 
@@ -104,7 +104,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
             ],
             'channel' => 'web',
             'origin' => $this->getOrigin($url),
-            'countryCode' => $countryCode
+            'countryCode' => $countryCode,
         ];
 
         $payload = $this->filterArray($receivedPayload, [
