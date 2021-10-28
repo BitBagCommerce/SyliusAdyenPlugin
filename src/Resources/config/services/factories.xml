@@ -11,16 +11,6 @@
             <argument type="service" id="bitbag.sylius_adyen_plugin.factory.adyen_token_factory.inner"/>
         </service>
 
-        <service
-                class="BitBag\SyliusAdyenPlugin\Bus\Handler\CreateTokenHandler"
-                id="bitbag.sylius_adyen_plugin.bus.handler.create_token_handler"
-        >
-            <argument type="service" id="bitbag.sylius_adyen_plugin.factory.adyen_token_factory"/>
-            <argument type="service" id="bitbag_sylius_adyen_plugin.repository.adyen_token"/>
-
-            <tag name="messenger.message_handler"/>
-        </service>
-
         <service id="bitbag.sylius_adyen_plugin.factory.adyen_reference_factory"
                  class="BitBag\SyliusAdyenPlugin\Factory\AdyenReferenceFactory"
                  decorates="bitbag_sylius_adyen_plugin.factory.adyen_reference">
