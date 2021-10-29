@@ -10,6 +10,8 @@
                 id="bitbag.sylius_adyen_plugin.normalizer.additional_details_normalizer"
         >
             <argument type="service" id="request_stack"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.normalizer.shipping_line_generator"/>
+
             <tag name="serializer.normalizer" priority="100"/>
         </service>
 
@@ -30,6 +32,13 @@
             <argument type="service" id="bitbag.sylius_adyen_plugin.resolver.product.thumbnail_url_resolver"/>
 
             <tag name="serializer.normalizer" priority="100"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Normalizer\ShippingLineGenerator"
+            id="bitbag.sylius_adyen_plugin.normalizer.shipping_line_generator"
+        >
+            <argument type="service" id="translator"/>
         </service>
 
     </services>

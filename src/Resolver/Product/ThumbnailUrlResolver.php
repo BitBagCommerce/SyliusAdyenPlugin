@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Resolver\Product;
 
-use Liip\ImagineBundle\Templating\FilterTrait;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Sylius\Component\Core\Model\ProductImageInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
@@ -18,10 +18,18 @@ use Webmozart\Assert\Assert;
 
 final class ThumbnailUrlResolver implements ThumbnailUrlResolverInterface
 {
-    use FilterTrait;
-
     private const FILTER_NAME = 'sylius_shop_product_thumbnail';
     private const IMAGE_TYPE = 'main';
+    /**
+     * @var CacheManager
+     */
+    private $cacheManager;
+
+    public function __construct(CacheManager $cacheManager)
+    {
+        $this->cacheManager = $cacheManager;
+    }
+
 
     private function getProductImagesForVariant(ProductVariantInterface $productVariant): array
     {
@@ -60,6 +68,6 @@ final class ThumbnailUrlResolver implements ThumbnailUrlResolverInterface
         $path = $image->getPath();
         Assert::notNull($path);
 
-        return $this->filter($path, self::FILTER_NAME);
+        return $this->cacheManager->generateUrl($path, self::FILTER_NAME);
     }
 }

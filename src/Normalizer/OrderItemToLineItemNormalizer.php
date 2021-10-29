@@ -68,8 +68,6 @@ final class OrderItemToLineItemNormalizer extends AbstractPaymentNormalizer
             'description' => $productVariant->getTranslation($locale)->getName(),
             'amountIncludingTax' => $object->getTotal(),
             'amountExcludingTax' => $amountWithoutTax,
-            'taxAmount' => $object->getTaxTotal(),
-            'taxPercentage' => (int) round((($object->getTotal() / $amountWithoutTax) - 1) * 100),
             'quantity' => $object->getQuantity(),
             'id' => $object->getId(),
             'productUrl' => $this->urlGenerator->generate('sylius_shop_product_show', [

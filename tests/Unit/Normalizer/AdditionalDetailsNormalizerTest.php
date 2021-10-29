@@ -12,6 +12,7 @@ namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Normalizer;
 
 use BitBag\SyliusAdyenPlugin\Normalizer\AbstractPaymentNormalizer;
 use BitBag\SyliusAdyenPlugin\Normalizer\AdditionalDetailsNormalizer;
+use BitBag\SyliusAdyenPlugin\Normalizer\ShippingLineGeneratorInterface;
 use PHPUnit\Framework\TestCase;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -22,6 +23,7 @@ use Tests\BitBag\SyliusAdyenPlugin\Unit\Mock\RequestMother;
 class AdditionalDetailsNormalizerTest extends TestCase
 {
     private const EXPECTED_DELEGATED_NORMALIZER_RESULT = ['Bakłażan', 'ze', 'Szczebrzeszyna'];
+    private const EXPECTED_SHIPPING_LINE = ['do', 'chrząszcza'];
 
     /** @var \BitBag\SyliusAdyenPlugin\Normalizer\AdditionalDetailsNormalizer|object|null */
     private $normalizer;
@@ -29,11 +31,15 @@ class AdditionalDetailsNormalizerTest extends TestCase
     private $delegatedNormalizer;
     /** @var RequestStack */
     private $requestStack;
+    /** @var ShippingLineGeneratorInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $shippingLineGenerator;
 
     protected function setUp(): void
     {
+        $this->shippingLineGenerator = $this->createMock(ShippingLineGeneratorInterface::class);
+
         $this->requestStack = new RequestStack();
-        $this->normalizer = new AdditionalDetailsNormalizer($this->requestStack);
+        $this->normalizer = new AdditionalDetailsNormalizer($this->requestStack, $this->shippingLineGenerator);
         $this->delegatedNormalizer = $this->createMock(NormalizerInterface::class);
         $this->normalizer->setNormalizer($this->delegatedNormalizer);
     }
@@ -62,6 +68,7 @@ class AdditionalDetailsNormalizerTest extends TestCase
             ->willReturn(self::EXPECTED_DELEGATED_NORMALIZER_RESULT)
         ;
 
+        $this->setupShippingLine();
         $this->setupRequest();
 
         $target = OrderMother::createForNormalization();
@@ -73,6 +80,7 @@ class AdditionalDetailsNormalizerTest extends TestCase
             'lineItems' => [
                 self::EXPECTED_DELEGATED_NORMALIZER_RESULT,
                 self::EXPECTED_DELEGATED_NORMALIZER_RESULT,
+                self::EXPECTED_SHIPPING_LINE,
             ],
             'shopperEmail' => OrderMother::CUSTOMER_EMAIL,
             'shopperName' => [
@@ -82,6 +90,14 @@ class AdditionalDetailsNormalizerTest extends TestCase
             'shopperIP' => RequestMother::WHERE_YOUR_HOME_IS,
             'telephoneNumber' => OrderMother::CUSTOMER_PHONE_NUMBER,
         ], $result);
+    }
+
+    private function setupShippingLine(): void
+    {
+        $this->shippingLineGenerator
+            ->method('generate')
+            ->willReturn(self::EXPECTED_SHIPPING_LINE)
+        ;
     }
 
     private function setupRequest(): void
