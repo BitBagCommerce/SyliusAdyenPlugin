@@ -33,7 +33,7 @@ bitbag_sylius_adyen_plugin:
     resource: "@BitBagSyliusAdyenPlugin/Resources/config/shop_routing.yaml"
 ```
 
-5. Add image dir parameter in `config/packages/_sylius.yaml`
+5. Add Adyen payment method as supported refund gateway in `config/packages/_sylius.yaml`
 
 ```yaml
 # config/packages/_sylius.yaml
