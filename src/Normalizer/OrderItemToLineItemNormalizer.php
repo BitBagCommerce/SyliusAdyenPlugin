@@ -18,7 +18,7 @@ use Webmozart\Assert\Assert;
 
 final class OrderItemToLineItemNormalizer extends AbstractPaymentNormalizer
 {
-    private const DEFAULT_DESCRIPTION_LOCALE = 'en';
+    private const DEFAULT_DESCRIPTION_LOCALE = 'en_US';
 
     /** @var RequestStack */
     private $requestStack;
@@ -64,8 +64,10 @@ final class OrderItemToLineItemNormalizer extends AbstractPaymentNormalizer
 
         Assert::notNull($product);
 
+        $name = $productVariant->getTranslation($locale)->getName() ?? $product->getTranslation($locale)->getName();
+
         return [
-            'description' => $productVariant->getTranslation($locale)->getName(),
+            'description' => $name,
             'amountIncludingTax' => $object->getTotal(),
             'amountExcludingTax' => $amountWithoutTax,
             'quantity' => $object->getQuantity(),

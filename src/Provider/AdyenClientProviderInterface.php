@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Provider;
 
-use BitBag\SyliusAdyenPlugin\Client\AdyenClient;
 use BitBag\SyliusAdyenPlugin\Client\AdyenClientInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 
@@ -18,7 +17,7 @@ interface AdyenClientProviderInterface
 {
     public const FACTORY_NAME = 'adyen';
 
-    public function getDefaultClient(): AdyenClient;
+    public function getDefaultClient(): AdyenClientInterface;
 
     public function getClientForCode(string $code): AdyenClientInterface;
 

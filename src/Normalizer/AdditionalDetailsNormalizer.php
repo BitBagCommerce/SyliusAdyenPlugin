@@ -102,7 +102,7 @@ final class AdditionalDetailsNormalizer extends AbstractPaymentNormalizer implem
                 'lastName' => $customer->getLastName(),
             ],
             'shopperIP' => $request->getClientIp(),
-            'telephoneNumber' => $customer->getPhoneNumber(),
+            'telephoneNumber' => $billingAddress->getPhoneNumber(),
         ];
     }
 
