@@ -20,16 +20,13 @@ final class ThumbnailUrlResolver implements ThumbnailUrlResolverInterface
 {
     private const FILTER_NAME = 'sylius_shop_product_thumbnail';
     private const IMAGE_TYPE = 'main';
-    /**
-     * @var CacheManager
-     */
+    /** @var CacheManager */
     private $cacheManager;
 
     public function __construct(CacheManager $cacheManager)
     {
         $this->cacheManager = $cacheManager;
     }
-
 
     private function getProductImagesForVariant(ProductVariantInterface $productVariant): array
     {
