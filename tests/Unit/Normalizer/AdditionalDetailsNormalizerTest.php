@@ -88,7 +88,7 @@ class AdditionalDetailsNormalizerTest extends TestCase
                 'lastName' => OrderMother::CUSTOMER_LAST_NAME,
             ],
             'shopperIP' => RequestMother::WHERE_YOUR_HOME_IS,
-            'telephoneNumber' => OrderMother::CUSTOMER_PHONE_NUMBER,
+            'telephoneNumber' => AddressMother::BILLING_PHONE_NUMBER,
         ], $result);
     }
 

@@ -19,6 +19,7 @@ final class AddressMother
     public const BILLING_POSTCODE = '22-460';
     public const BILLING_STREET = 'Zamojska 1';
     public const BILLING_PROVINCE = 'lubelskie';
+    public const BILLING_PHONE_NUMBER = '+4242424242';
 
     public const SHIPPING_CITY = 'Wrocław';
     public const SHIPPING_POSTCODE = '54-530';
@@ -35,6 +36,7 @@ final class AddressMother
         $billingAddress->setStreet(self::BILLING_STREET);
         $billingAddress->setCountryCode(self::ADDRESS_COUNTRY);
         $billingAddress->setProvinceName(self::BILLING_PROVINCE);
+        $billingAddress->setPhoneNumber(self::BILLING_PHONE_NUMBER);
 
         return $billingAddress;
     }
