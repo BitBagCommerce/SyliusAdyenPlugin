@@ -62,7 +62,8 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
             'shopperLocale' => $locale,
         ];
 
-        $payload = $this->enableOneOffPayment($payload, $adyenToken);
+        $payload = $this->injectShopperReference($payload, $adyenToken);
+        $payload = $this->enableOneOffPaymentIfApplicable($payload, $adyenToken);
         $payload = $this->versionResolver->appendVersionConstraints($payload);
 
         return $payload;
@@ -72,7 +73,8 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         array $receivedPayload,
         ?AdyenTokenInterface $adyenToken = null
     ): array {
-        $payload = $this->enableOneOffPayment($receivedPayload, $adyenToken);
+        $payload = $this->injectShopperReference($receivedPayload, $adyenToken);
+        $payload = $this->enableOneOffPaymentIfApplicable($payload, $adyenToken);
         $payload = $this->versionResolver->appendVersionConstraints($payload);
 
         return $payload;
@@ -111,7 +113,8 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
             'browserInfo', 'paymentMethod', 'clientStateDataIndicator', 'riskData',
         ]) + $payload;
 
-        $payload = $this->enableOneOffPayment(
+        $payload = $this->injectShopperReference($payload, $adyenToken);
+        $payload = $this->enableOneOffPaymentIfApplicable(
             $payload,
             $adyenToken,
             (bool) ($receivedPayload['storePaymentMethod'] ?? false)
@@ -127,7 +130,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         ArrayObject $options,
         PaymentInterface $payment
     ): array {
-        $params = [
+        $payload = [
             'merchantAccount' => $options['merchantAccount'],
             'modificationAmount' => [
                 'value' => $payment->getAmount(),
@@ -136,9 +139,9 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
             'originalReference' => $payment->getDetails()['pspReference'],
         ];
 
-        $params = $this->versionResolver->appendVersionConstraints($params);
+        $payload = $this->versionResolver->appendVersionConstraints($payload);
 
-        return $params;
+        return $payload;
     }
 
     public function createForCancel(
@@ -243,7 +246,18 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         return true;
     }
 
-    private function enableOneOffPayment(
+    private function injectShopperReference(
+        array $payload,
+        ?AdyenTokenInterface $customerIdentifier
+    ): array {
+        if ($customerIdentifier !== null) {
+            $payload['shopperReference'] = $customerIdentifier->getIdentifier();
+        }
+
+        return $payload;
+    }
+
+    private function enableOneOffPaymentIfApplicable(
         array $payload,
         ?AdyenTokenInterface $customerIdentifier,
         bool $store = false
@@ -258,7 +272,6 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
 
         $payload['recurringProcessingModel'] = 'CardOnFile';
         $payload['shopperInteraction'] = 'Ecommerce';
-        $payload['shopperReference'] = ($customerIdentifier === null ? '' : $customerIdentifier->getIdentifier());
 
         return $payload;
     }
