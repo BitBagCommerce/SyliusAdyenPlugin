@@ -99,13 +99,13 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
             'reference' => (string) $order->getNumber(),
             'merchantAccount' => $options['merchantAccount'],
             'returnUrl' => $url,
-            'additionalData' => [
-                'allow3DS2' => true,
-            ],
+
             'channel' => 'web',
             'origin' => $this->getOrigin($url),
             'countryCode' => $countryCode,
         ];
+
+        $payload = $this->add3DSecureFlags($receivedPayload, $payload);
 
         $payload = $this->filterArray($receivedPayload, [
             'browserInfo', 'paymentMethod', 'clientStateDataIndicator', 'riskData',
@@ -241,6 +241,20 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         }
 
         return true;
+    }
+
+    private function add3DSecureFlags(array $receivedPayload, array $payload): array
+    {
+        if (
+            isset($receivedPayload['paymentMethod']['type'])
+            && $receivedPayload['paymentMethod']['type'] == 'scheme'
+        ) {
+            $payload['additionalData'] = [
+                'allow3DS2' => true,
+            ];
+        }
+
+        return $payload;
     }
 
     private function enableOneOffPayment(
