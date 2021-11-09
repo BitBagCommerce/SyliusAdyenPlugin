@@ -8,23 +8,19 @@
 
 declare(strict_types=1);
 
-namespace BitBag\SyliusAdyenPlugin\Twig\Extension;
+namespace BitBag\SyliusAdyenPlugin\Provider;
 
 use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Bus\Query\GetToken;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
-use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProvider;
-use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProviderInterface;
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
 
-class PaymentMethodsForOrderExtension extends AbstractExtension
+class PaymentMethodsForOrderProvider implements PaymentMethodsForOrderProviderInterface
 {
     use PaymentFromOrderTrait;
     use GatewayConfigFromPaymentTrait;
@@ -33,7 +29,7 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         'environment', 'merchantAccount', 'clientKey',
     ];
 
-    /** @var AdyenClientProvider */
+    /** @var AdyenClientProviderInterface */
     private $adyenClientProvider;
 
     /** @var PaymentMethodRepositoryInterface */
@@ -43,7 +39,7 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
     private $dispatcher;
 
     public function __construct(
-        AdyenClientProvider $adyenClientProvider,
+        AdyenClientProviderInterface $adyenClientProvider,
         PaymentMethodRepositoryInterface $paymentMethodRepository,
         DispatcherInterface $dispatcher
     ) {
@@ -52,28 +48,7 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
         $this->dispatcher = $dispatcher;
     }
 
-    public function getFunctions(): array
-    {
-        return [
-            new TwigFunction('adyen_payment_configuration', [$this, 'adyenPaymentConfiguration']),
-        ];
-    }
-
-    private function filterKeys(array $array): array
-    {
-        return array_intersect_key($array, array_flip(self::CONFIGURATION_KEYS_WHITELIST));
-    }
-
-    private function getPaymentMethod(OrderInterface $order, ?string $code = null): PaymentMethodInterface
-    {
-        if ($code !== null) {
-            return $this->paymentMethodRepository->getOneForAdyenAndCode($code);
-        }
-
-        return $this->getMethod($this->getPayment($order));
-    }
-
-    public function adyenPaymentConfiguration(OrderInterface $order, ?string $code = null): ?array
+    public function provideConfiguration(OrderInterface $order, ?string $code = null): ?array
     {
         $paymentMethod = $this->getPaymentMethod($order, $code);
         $token = $this->getToken($paymentMethod, $order);
@@ -127,5 +102,19 @@ class PaymentMethodsForOrderExtension extends AbstractExtension
             $order,
             $adyenToken
         );
+    }
+
+    private function filterKeys(array $array): array
+    {
+        return array_intersect_key($array, array_flip(self::CONFIGURATION_KEYS_WHITELIST));
+    }
+
+    private function getPaymentMethod(OrderInterface $order, ?string $code = null): PaymentMethodInterface
+    {
+        if ($code !== null) {
+            return $this->paymentMethodRepository->getOneForAdyenAndCode($code);
+        }
+
+        return $this->getMethod($this->getPayment($order));
     }
 }

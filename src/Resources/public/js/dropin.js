@@ -6,13 +6,28 @@
  */
 
 (() => {
-    const instantiate = ($container) => {
+    const instantiate = async ($container) => {
 
         let checkout = null;
-        let configuration = {}
+        let configuration = {};
+
         const _showLoader = (show) => {
             const $form = $container.closest('form');
             show ? $form.classList.add('loading') : $form.classList.remove('loading');
+        }
+
+        const _loadConfiguration = async (url) => {
+            _showLoader(true);
+            const request = await fetch(url);
+            const configuration = await request.json();
+            _showLoader(false);
+
+            if(typeof configuration['redirect'] == 'string'){
+                _showLoader(true);
+                window.location.replace(configuration['redirect']);
+            }
+
+            return configuration;
         }
 
         const _successfulFetchCallback = (dropin, data) => {
@@ -95,10 +110,8 @@
             });
         };
 
-        configuration = JSON.parse($container.attributes['data-dropin'].value);
-
+        configuration = await _loadConfiguration($container.attributes['data-config-url'].value);
         checkout = init();
-
         checkout
             .create('dropin', {
                 showRemovePaymentMethodButton: true,

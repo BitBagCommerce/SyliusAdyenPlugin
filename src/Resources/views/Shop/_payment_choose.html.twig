@@ -18,7 +18,6 @@
         {% endif %}
 
         {% if payment_configuration is not defined and order.tokenValue is not empty %}
-            {% set payment_configuration = adyen_payment_configuration(order, available_methods.vars.name) %}
             {% include '@BitBagSyliusAdyenPlugin/Shop/_dropin.html.twig' %}
         {% else %}
             <div class="adyen-method-grid">
