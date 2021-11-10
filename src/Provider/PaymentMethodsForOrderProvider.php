@@ -20,7 +20,7 @@ use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 
-class PaymentMethodsForOrderProvider implements PaymentMethodsForOrderProviderInterface
+final class PaymentMethodsForOrderProvider implements PaymentMethodsForOrderProviderInterface
 {
     use PaymentFromOrderTrait;
     use GatewayConfigFromPaymentTrait;
