@@ -27,7 +27,7 @@ class DropinConfigurationAction
     /** @var CartContextInterface */
     private $cartContext;
     /** @var PaymentMethodsForOrderProvider */
-    private $paymentMethodsForOrderExtension;
+    private $paymentMethodsForOrderProvider;
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
     /** @var OrderRepositoryInterface */
@@ -35,57 +35,25 @@ class DropinConfigurationAction
 
     public function __construct(
         CartContextInterface $cartContext,
-        PaymentMethodsForOrderProvider $paymentMethodsForOrderExtension,
+        PaymentMethodsForOrderProvider $paymentMethodsForOrderProvider,
         UrlGeneratorInterface $urlGenerator,
         OrderRepositoryInterface $orderRepository
     ) {
         $this->cartContext = $cartContext;
-        $this->paymentMethodsForOrderExtension = $paymentMethodsForOrderExtension;
+        $this->paymentMethodsForOrderProvider = $paymentMethodsForOrderProvider;
         $this->urlGenerator = $urlGenerator;
         $this->orderRepository = $orderRepository;
     }
 
-    private function getResponseForDroppedOrder(Request $request): JsonResponse
-    {
-        /**
-         * @var ?string $tokenValue
-         */
-        $tokenValue = $request->getSession()->get(
-            PreserveOrderTokenUponRedirectionCallback::NON_FINALIZED_CART_SESSION_KEY
-        );
-
-        if ($tokenValue === null) {
-            throw new NotFoundHttpException();
-        }
-
-        $response = new JsonResponse([
-            'redirect' => $this->urlGenerator->generate('sylius_shop_order_show', [
-                'tokenValue' => $tokenValue,
-            ]),
-        ]);
-        $request->getSession()->remove(PreserveOrderTokenUponRedirectionCallback::NON_FINALIZED_CART_SESSION_KEY);
-
-        return $response;
-    }
-
     public function __invoke(Request $request, string $code, ?string $orderToken = null): JsonResponse
     {
-        /**
-         * @var ?OrderInterface $order
-         */
-        if ($orderToken !== null) {
-            $order = $this->orderRepository->findOneByTokenValue($orderToken);
-        } else {
-            $order = $this->cartContext->getCart();
-        }
+        $order = $this->getOrder($orderToken);
 
         if ($order === null || $order->getId() === null) {
             return $this->getResponseForDroppedOrder($request);
         }
 
-        Assert::isInstanceOf($order, OrderInterface::class);
-
-        $config = $this->paymentMethodsForOrderExtension->provideConfiguration($order, $code);
+        $config = $this->paymentMethodsForOrderProvider->provideConfiguration($order, $code);
         Assert::isArray($config);
 
         $billingAddress = $order->getBillingAddress();
@@ -122,6 +90,46 @@ class DropinConfigurationAction
                     $pathParams + ['paymentReference' => '_REFERENCE_']
                 ),
             ],
+        ]);
+    }
+
+    private function getOrder(?string $orderToken = null): ?OrderInterface
+    {
+        /**
+         * @var ?OrderInterface $result
+         */
+        $result =
+            $orderToken !== null
+            ? $this->orderRepository->findOneByTokenValue($orderToken)
+            : $this->cartContext->getCart()
+        ;
+
+        return $result;
+    }
+
+    private function getResponseForDroppedOrder(Request $request): JsonResponse
+    {
+        /**
+         * @var ?string $tokenValue
+         */
+        $tokenValue = $request->getSession()->get(
+            PreserveOrderTokenUponRedirectionCallback::NON_FINALIZED_CART_SESSION_KEY
+        );
+
+        try {
+            if ($tokenValue === null) {
+                throw new NotFoundHttpException();
+            }
+        } finally {
+            $request->getSession()->remove(
+                PreserveOrderTokenUponRedirectionCallback::NON_FINALIZED_CART_SESSION_KEY
+            );
+        }
+
+        return new JsonResponse([
+            'redirect' => $this->urlGenerator->generate('sylius_shop_order_show', [
+                'tokenValue' => $tokenValue,
+            ]),
         ]);
     }
 }
