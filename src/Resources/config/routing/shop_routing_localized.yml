@@ -10,6 +10,13 @@ bitbag_adyen_payments:
   defaults:
     code: null
 
+bitbag_adyen_config:
+  path: /payment/adyen/{code}/{orderToken}
+  methods: [GET]
+  controller: bitbag.sylius_adyen_plugin.controller.shop.dropin_configuration_action
+  defaults:
+    orderToken: null
+
 bitbag_adyen_thank_you:
   path: /payment/adyen/{code}/thanks
   controller: bitbag.sylius_adyen_plugin.controller.shop.redirect_target_action
