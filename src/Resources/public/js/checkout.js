@@ -34,14 +34,14 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
         showSubmitButton(false);
 
-        adyenMethod.querySelector('.adyen-method-grid, .dropin-container').style.display = '';
+        adyenMethod.querySelector('.adyen-method-grid, .dropin-container').classList.remove('hidden');
     }
 
     const hideAdyen = () => {
         showSubmitButton(true);
 
         $adyenLayers.forEach((adyenLayer) => {
-            adyenLayer.style.display = 'none';
+            adyenLayer.classList.add('hidden');
         });
     }
 

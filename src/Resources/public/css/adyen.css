@@ -29,7 +29,9 @@ body .dropin-container .adyen-checkout__threeds2__challenge iframe
     margin: 1.5rem 0;
 }
 
-.adyen-submit.hidden
+.adyen-submit.hidden,
+.dropin-container.hidden,
+.adyen-method-grid.hidden
 {
     display: none;
 }
