@@ -8,7 +8,7 @@
 document.addEventListener('DOMContentLoaded', (e) => {
 
     const $form = document.querySelector('form[name=sylius_checkout_select_payment]');
-    if(!$form){
+    if (!$form) {
         return;
     }
 
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const $selectorSubmitButton = $form.querySelector('#sylius-pay-link');
 
     const toggleSubmitButton = (show) => {
-        if(!$selectorSubmitButton){
+        if (!$selectorSubmitButton) {
             return;
         }
 
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
     const init = () => {
 
-        if($selectorSubmitButton){
+        if ($selectorSubmitButton) {
             $selectorSubmitButton.classList.add('adyen-submit');
         }
 

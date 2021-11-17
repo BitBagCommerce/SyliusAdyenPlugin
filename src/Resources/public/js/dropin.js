@@ -23,7 +23,7 @@
             const configuration = await request.json();
             _showLoader(false);
 
-            if(typeof configuration['redirect'] == 'string'){
+            if (typeof configuration['redirect'] == 'string') {
                 _showLoader(true);
                 window.location.replace(configuration['redirect']);
             }
@@ -42,7 +42,7 @@
         }
 
         const _onSubmitHandler = (e) => {
-            if($container.classList.contains('hidden')){
+            if ($container.classList.contains('hidden')) {
                 return;
             }
 
@@ -74,7 +74,7 @@
 
         const injectOnSubmitHandler = () => {
 
-            if(!$form){
+            if (!$form) {
                 return;
             }
 
