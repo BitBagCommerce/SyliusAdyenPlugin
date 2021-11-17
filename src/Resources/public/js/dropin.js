@@ -10,6 +10,7 @@
 
         let checkout = null;
         let configuration = {};
+        let $form = $container.closest('form');
 
         const _showLoader = (show) => {
             const $form = $container.closest('form');
@@ -22,7 +23,7 @@
             const configuration = await request.json();
             _showLoader(false);
 
-            if(typeof configuration['redirect'] == 'string'){
+            if (typeof configuration['redirect'] == 'string') {
                 _showLoader(true);
                 window.location.replace(configuration['redirect']);
             }
@@ -39,6 +40,15 @@
 
             window.location.replace(data.redirect)
         }
+
+        const _onSubmitHandler = (e) => {
+            if ($container.classList.contains('hidden')) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+        };
 
         const submitHandler = (state, dropin, url) => {
             const options = {
@@ -62,6 +72,21 @@
             ;
         };
 
+        const injectOnSubmitHandler = () => {
+
+            if (!$form) {
+                return;
+            }
+
+            const $buttons = $form.querySelectorAll('[type=submit]');
+
+            $form.addEventListener('submit', _onSubmitHandler, true);
+
+            $buttons.forEach(($btn) => {
+                $btn.addEventListener('click', _onSubmitHandler, true);
+            });
+        };
+
         const disableStoredPaymentMethodHandler = (storedPaymentMethod, resolve, reject) => {
             const options = {
                 method: 'DELETE'
@@ -76,6 +101,8 @@
         };
 
         const init = () => {
+            injectOnSubmitHandler();
+
             return new AdyenCheckout({
                 paymentMethodsResponse: configuration.paymentMethods,
                 paymentMethodsConfiguration: {
