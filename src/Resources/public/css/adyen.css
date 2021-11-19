@@ -32,5 +32,5 @@ body .dropin-container .adyen-checkout__threeds2__challenge iframe {
 }
 
 button.adyen-checkout__applepay__button {
-    -webkit-appearance: none;
+    -webkit-appearance: -apple-pay-button;
 }
