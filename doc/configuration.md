@@ -40,6 +40,5 @@
 12. Once saved, additional box is being displayed. Copy the URL and paste in Adyen panel:
 
    ![Adyen notifications endpoint](notifications-endpoint.png)
-   ![Adyen webhook URL](adyen-webhook-hmac.png)
  
 13. Now you're ready to save and test the webhook notification. If everything goes green, you're done and ready to go.
