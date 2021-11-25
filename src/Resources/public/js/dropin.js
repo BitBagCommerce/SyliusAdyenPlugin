@@ -12,19 +12,19 @@
         let configuration = {};
         let $form = $container.closest('form');
 
-        const _showLoader = (show) => {
+        const _toggleLoader = (show) => {
             const $form = $container.closest('form');
             show ? $form.classList.add('loading') : $form.classList.remove('loading');
         }
 
         const _loadConfiguration = async (url) => {
-            _showLoader(true);
+            _toggleLoader(true);
             const request = await fetch(url);
             const configuration = await request.json();
-            _showLoader(false);
+            _toggleLoader(false);
 
             if (typeof configuration['redirect'] == 'string') {
-                _showLoader(true);
+                _toggleLoader(true);
                 window.location.replace(configuration['redirect']);
             }
 
@@ -33,7 +33,7 @@
 
         const _successfulFetchCallback = (dropin, data) => {
             if (data.action) {
-                _showLoader(false);
+                _toggleLoader(false);
                 dropin.handleAction(data.action);
                 return;
             }
@@ -59,15 +59,22 @@
                 }
             }
 
-            _showLoader(true);
+            _toggleLoader(true);
 
             fetch(url, options)
-                .then(response => response.json())
+                .then((response) => {
+                    if(response.status>=400 && response.status<600){
+                        return Promise.reject(response.body());
+                    }
+
+                    return Promise.resolve(response.json())
+                })
                 .then(data => {
                     _successfulFetchCallback(dropin, data);
                 })
                 .catch(error => {
-                    alert(error);
+                    alert(configuration.translations['bitbag_sylius_adyen_plugin.runtime.payment_failed_try_again']);
+                    _toggleLoader(false);
                 })
             ;
         };

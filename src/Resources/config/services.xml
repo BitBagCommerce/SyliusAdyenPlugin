@@ -41,6 +41,7 @@
             <argument type="service" id="bitbag.sylius_adyen_plugin.provider.payment_methods_for_order_provider"/>
             <argument type="service" id="router"/>
             <argument type="service" id="sylius.repository.order"/>
+            <argument type="service" id="translator"/>
 
             <tag name="controller.service_arguments"/>
         </service>

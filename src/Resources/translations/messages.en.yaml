@@ -15,4 +15,5 @@ bitbag_sylius_adyen_plugin:
     payment_failed: Payment failed, try again
     payment_processing: Payment is being processed, please watch the notifications on your e-mail
   runtime:
-    signature: Invalid notification signature provided
+    invalid_signature: Invalid notification signature provided
+    payment_failed_try_again: Payment failed, please try again

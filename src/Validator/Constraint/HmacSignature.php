@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraint;
 class HmacSignature extends Constraint
 {
     /** @var string */
-    public $message = 'bitbag_sylius_adyen_plugin.runtime.signature';
+    public $message = 'bitbag_sylius_adyen_plugin.runtime.invalid_signature';
 
     public function getTargets()
     {
