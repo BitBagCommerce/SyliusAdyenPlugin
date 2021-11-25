@@ -31,7 +31,7 @@ final class ShippingLineGenerator implements ShippingLineGeneratorInterface
         return [
             'amountExcludingTax' => $order->getTotal() - $order->getTaxTotal() - $netSum,
             'amountIncludingTax' => $order->getTotal() - $totalSum,
-            'id' => $this->translator->trans('sylius.ui.shipping'),
+            'description' => $this->translator->trans('sylius.ui.shipping'),
             'quantity' => 1,
         ];
     }
