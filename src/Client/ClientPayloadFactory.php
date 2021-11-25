@@ -60,7 +60,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
             'merchantAccount' => $options['merchantAccount'],
             'countryCode' => $countryCode,
             'shopperLocale' => $locale,
-            'channel' => 'Web'
+            'channel' => 'Web',
         ];
 
         $payload = $this->injectShopperReference($payload, $adyenToken);

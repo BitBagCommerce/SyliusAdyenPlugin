@@ -16,6 +16,7 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\TakeOverPayment;
 use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Bus\Query\GetToken;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
+use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessorInterface;
 use BitBag\SyliusAdyenPlugin\Provider\AdyenClientProviderInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Order\PaymentCheckoutOrderResolverInterface;
 use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
@@ -46,16 +47,21 @@ class PaymentsAction
     /** @var DispatcherInterface */
     private $dispatcher;
 
+    /** @var PaymentResponseProcessorInterface */
+    private $paymentResponseProcessor;
+
     public function __construct(
         AdyenClientProviderInterface $adyenClientProvider,
         UrlGeneratorInterface $urlGenerator,
         PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver,
-        DispatcherInterface $dispatcher
+        DispatcherInterface $dispatcher,
+        PaymentResponseProcessorInterface $paymentResponseProcessor
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->urlGenerator = $urlGenerator;
         $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;
         $this->dispatcher = $dispatcher;
+        $this->paymentResponseProcessor = $paymentResponseProcessor;
     }
 
     private function prepareTargetUrl(OrderInterface $order): string
@@ -110,6 +116,16 @@ class PaymentsAction
         $payment->setDetails($result);
         $this->dispatcher->dispatch(new PaymentStatusReceived($payment));
 
-        return new JsonResponse($payment->getDetails() + ['redirect' => $url]);
+        return new JsonResponse(
+            $payment->getDetails()
+            +
+            [
+                'redirect' => $this->paymentResponseProcessor->process(
+                    (string) $paymentMethod->getCode(),
+                    $request,
+                    $payment
+                ),
+            ]
+        );
     }
 }
