@@ -20,10 +20,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Webmozart\Assert\Assert;
 
 class DropinConfigurationAction
 {
+    public const TRANSLATIONS = [
+        'bitbag_sylius_adyen_plugin.runtime.payment_failed_try_again',
+    ];
+
     /** @var CartContextInterface */
     private $cartContext;
     /** @var PaymentMethodsForOrderProvider */
@@ -32,17 +37,21 @@ class DropinConfigurationAction
     private $urlGenerator;
     /** @var OrderRepositoryInterface */
     private $orderRepository;
+    /** @var TranslatorInterface */
+    private $translator;
 
     public function __construct(
         CartContextInterface $cartContext,
         PaymentMethodsForOrderProvider $paymentMethodsForOrderProvider,
         UrlGeneratorInterface $urlGenerator,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        TranslatorInterface $translator
     ) {
         $this->cartContext = $cartContext;
         $this->paymentMethodsForOrderProvider = $paymentMethodsForOrderProvider;
         $this->urlGenerator = $urlGenerator;
         $this->orderRepository = $orderRepository;
+        $this->translator = $translator;
     }
 
     public function __invoke(Request $request, string $code, ?string $orderToken = null): JsonResponse
@@ -90,7 +99,18 @@ class DropinConfigurationAction
                     $pathParams + ['paymentReference' => '_REFERENCE_']
                 ),
             ],
+            'translations' => $this->getTranslations(),
         ]);
+    }
+
+    private function getTranslations(): array
+    {
+        $result = [];
+        foreach (self::TRANSLATIONS as $key) {
+            $result[$key] = $this->translator->trans($key);
+        }
+
+        return $result;
     }
 
     private function getOrder(?string $orderToken = null): ?OrderInterface
