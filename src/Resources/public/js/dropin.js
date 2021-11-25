@@ -122,6 +122,13 @@
                             value: configuration.amount.value
                         }
                     },
+                    applepay: {
+                        countryCode: configuration.billingAddress.countryCode,
+                        amount: {
+                            currency: configuration.amount.currency,
+                            value: configuration.amount.value
+                        }
+                    }
                 },
                 clientKey: configuration.clientKey,
                 locale: configuration.locale,
