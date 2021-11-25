@@ -44,7 +44,7 @@ class ShippingLineGeneratorTest extends TestCase
         $this->assertEquals([
             'amountExcludingTax' => 25,
             'amountIncludingTax' => 32,
-            'id' => self::ITEM_NAME,
+            'description' => self::ITEM_NAME,
             'quantity' => 1,
         ], $result);
     }
