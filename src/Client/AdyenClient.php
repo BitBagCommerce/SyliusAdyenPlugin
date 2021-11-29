@@ -96,10 +96,8 @@ final class AdyenClient implements AdyenClientInterface
         array $receivedPayload,
         ?AdyenTokenInterface $adyenToken = null
     ): array {
-        Assert::keyExists($receivedPayload, 'details');
-
         $payload = $this->clientPayloadFactory->createForPaymentDetails(
-            (array) $receivedPayload['details'],
+            $receivedPayload,
             $adyenToken
         );
 

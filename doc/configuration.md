@@ -12,22 +12,20 @@
    
    ![API + client key](adyen-api-keys.png)
    
-5. Add an origin; type your shop URL:
+5. Add an origin; type your shop URL and save (keep in mind that you should have already copied the API key, it's displayed only once):
    
    ![Origin](adyen-allowed-origins.png)
 
-6. Create a new Adyen payment method. Type a merchant account, API and client key obtained in step 4. Also, create a username and password to be used for notifications credentials. Save payment method:
+6. Create a new Adyen payment method. Type a merchant account, API and client key obtained in step 4. Also, create a username and password to be used for notifications credentials and choose correct environment, either `live` or `test`. Don't save yet.
 
    ![Adyen payment method](payment-method-form.png)
-
-   Don't forget to choose a proper environment: `test` or `live`.   
 
 7. Come back to the Adyen panel, create a standard webhook:
    
    ![Webhook](adyen-webhooks.png)
    ![Standard webhook](adyen-webhook-type.png)
 
-8. Type username password created in step 6:
+8. Type username password typed in step 6:
 
    ![Credentials](adyen-webhook-authentication.png)
 
@@ -35,13 +33,12 @@
 
    ![HMAC](adyen-webhook-hmac.png)
 
-10. Back to the payment method configuration and paste previously generated HMAC key.
+10. Back to the Sylius payment method configuration and paste previously generated HMAC key.
 
 11. Save payment method.
 
-12. If you open a payment method again, additional box is being displayed. Copy the URL and paste here in Adyen panel:
+12. Once saved, additional box is being displayed. Copy the URL and paste in Adyen panel:
 
    ![Adyen notifications endpoint](notifications-endpoint.png)
-   ![Adyen webhook URL](adyen-webhook-hmac.png)
  
 13. Now you're ready to save and test the webhook notification. If everything goes green, you're done and ready to go.

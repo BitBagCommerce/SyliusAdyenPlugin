@@ -1,27 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
     <imports>
         <import resource="services/*.xml"/>
     </imports>
 
     <services>
+        <defaults public="true"/>
+
         <service
-            class="BitBag\SyliusAdyenPlugin\Callback\RequestCaptureOnShipCallback"
-            id="bitbag.sylius_adyen_plugin.callback.request_capture_on_ship_callback"
-            public="true"
+                class="BitBag\SyliusAdyenPlugin\Callback\RequestCaptureOnShipCallback"
+                id="bitbag.sylius_adyen_plugin.callback.request_capture_on_ship_callback"
         >
             <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
         </service>
 
         <service
-            class="BitBag\SyliusAdyenPlugin\Callback\RequestCancelCallback"
-            id="bitbag.sylius_adyen_plugin.callback.request_cancel_callback"
-            public="true"
+                class="BitBag\SyliusAdyenPlugin\Callback\RequestCancelCallback"
+                id="bitbag.sylius_adyen_plugin.callback.request_cancel_callback"
         >
             <argument type="service" id="sm.factory"/>
             <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
         </service>
+
+        <service
+                class="BitBag\SyliusAdyenPlugin\Callback\PreserveOrderTokenUponRedirectionCallback"
+                id="bitbag.sylius_adyen_plugin.callback.preserve_order_token_upon_redirection_callback"
+        >
+            <argument type="service" id="session"/>
+        </service>
+
+        <service
+                class="BitBag\SyliusAdyenPlugin\Controller\Shop\DropinConfigurationAction"
+                id="bitbag.sylius_adyen_plugin.controller.shop.dropin_configuration_action"
+        >
+
+            <argument type="service" id="sylius.context.cart.composite"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.provider.payment_methods_for_order_provider"/>
+            <argument type="service" id="router"/>
+            <argument type="service" id="sylius.repository.order"/>
+            <argument type="service" id="translator"/>
+
+            <tag name="controller.service_arguments"/>
+        </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Provider\PaymentMethodsForOrderProvider"
+            id="bitbag.sylius_adyen_plugin.provider.payment_methods_for_order_provider"
+        >
+            <argument type="service" id="bitbag.sylius_adyen_plugin.provider.adyen_client_provider"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.repository.payment_method"/>
+            <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
+        </service>
+
     </services>
 
 </container>

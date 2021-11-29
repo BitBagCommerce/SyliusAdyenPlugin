@@ -8,7 +8,7 @@
 document.addEventListener('DOMContentLoaded', (e) => {
 
     const $form = document.querySelector('form[name=sylius_checkout_select_payment]');
-    if(!$form){
+    if (!$form) {
         return;
     }
 
@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const $adyenLayers = $form.querySelectorAll('.adyen-method-grid, .dropin-container');
     const $selectorSubmitButton = $form.querySelector('#sylius-pay-link');
 
-    const showSubmitButton = (show) => {
-        if(!$selectorSubmitButton){
+    const toggleSubmitButton = (show) => {
+        if (!$selectorSubmitButton) {
             return;
         }
 
@@ -32,22 +32,22 @@ document.addEventListener('DOMContentLoaded', (e) => {
             return;
         }
 
-        showSubmitButton(false);
+        toggleSubmitButton(false);
 
-        adyenMethod.querySelector('.adyen-method-grid, .dropin-container').style.display = '';
+        adyenMethod.querySelector('.adyen-method-grid, .dropin-container').classList.remove('hidden');
     }
 
     const hideAdyen = () => {
-        showSubmitButton(true);
+        toggleSubmitButton(true);
 
         $adyenLayers.forEach((adyenLayer) => {
-            adyenLayer.style.display = 'none';
+            adyenLayer.classList.add('hidden');
         });
     }
 
     const init = () => {
 
-        if($selectorSubmitButton){
+        if ($selectorSubmitButton) {
             $selectorSubmitButton.classList.add('adyen-submit');
         }
 

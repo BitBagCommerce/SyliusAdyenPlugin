@@ -26,7 +26,6 @@ final class OrderMother
     public const CUSTOMER_EMAIL = 'ferdek@example.com';
     public const CUSTOMER_FIRST_NAME = 'Ferdynand';
     public const CUSTOMER_LAST_NAME = 'Kiepski';
-    public const CUSTOMER_PHONE_NUMBER = '123456789';
 
     public const LOCALE = 'pl_PL';
 
@@ -77,7 +76,7 @@ final class OrderMother
         $customer->setEmail(self::CUSTOMER_EMAIL);
         $customer->setFirstName(self::CUSTOMER_FIRST_NAME);
         $customer->setLastName(self::CUSTOMER_LAST_NAME);
-        $customer->setPhoneNumber(self::CUSTOMER_PHONE_NUMBER);
+        $customer->setPhoneNumber(AddressMother::BILLING_PHONE_NUMBER);
 
         $result->setCustomer($customer);
 

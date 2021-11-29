@@ -31,6 +31,11 @@ final class BitBagSyliusAdyenExtension extends ConfigurableExtension
         if ($config['logger'] !== null) {
             $container->setAlias('bitbag.sylius_adyen_plugin.logger', (string) $config['logger']);
         }
+
+        // fallback for previous version
+        if (!$container->has('sylius.command_bus')) {
+            $container->setAlias('bitbag.sylius_adyen_plugin.command_bus', 'sylius_default.bus');
+        }
     }
 
     public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface

@@ -6,24 +6,49 @@
  */
 
 (() => {
-    const instantiate = ($container) => {
+    const instantiate = async ($container) => {
 
         let checkout = null;
-        let configuration = {}
-        const _showLoader = (show) => {
+        let configuration = {};
+        let $form = $container.closest('form');
+
+        const _toggleLoader = (show) => {
             const $form = $container.closest('form');
             show ? $form.classList.add('loading') : $form.classList.remove('loading');
         }
 
+        const _loadConfiguration = async (url) => {
+            _toggleLoader(true);
+            const request = await fetch(url);
+            const configuration = await request.json();
+            _toggleLoader(false);
+
+            if (typeof configuration['redirect'] == 'string') {
+                _toggleLoader(true);
+                window.location.replace(configuration['redirect']);
+            }
+
+            return configuration;
+        }
+
         const _successfulFetchCallback = (dropin, data) => {
             if (data.action) {
-                _showLoader(false);
+                _toggleLoader(false);
                 dropin.handleAction(data.action);
                 return;
             }
 
             window.location.replace(data.redirect)
         }
+
+        const _onSubmitHandler = (e) => {
+            if ($container.classList.contains('hidden')) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+        };
 
         const submitHandler = (state, dropin, url) => {
             const options = {
@@ -34,17 +59,39 @@
                 }
             }
 
-            _showLoader(true);
+            _toggleLoader(true);
 
             fetch(url, options)
-                .then(response => response.json())
+                .then((response) => {
+                    if(response.status>=400 && response.status<600){
+                        return Promise.reject(response.body());
+                    }
+
+                    return Promise.resolve(response.json())
+                })
                 .then(data => {
                     _successfulFetchCallback(dropin, data);
                 })
                 .catch(error => {
-                    alert(error);
+                    alert(configuration.translations['bitbag_sylius_adyen_plugin.runtime.payment_failed_try_again']);
+                    _toggleLoader(false);
                 })
             ;
+        };
+
+        const injectOnSubmitHandler = () => {
+
+            if (!$form) {
+                return;
+            }
+
+            const $buttons = $form.querySelectorAll('[type=submit]');
+
+            $form.addEventListener('submit', _onSubmitHandler, true);
+
+            $buttons.forEach(($btn) => {
+                $btn.addEventListener('click', _onSubmitHandler, true);
+            });
         };
 
         const disableStoredPaymentMethodHandler = (storedPaymentMethod, resolve, reject) => {
@@ -61,6 +108,8 @@
         };
 
         const init = () => {
+            injectOnSubmitHandler();
+
             return new AdyenCheckout({
                 paymentMethodsResponse: configuration.paymentMethods,
                 paymentMethodsConfiguration: {
@@ -70,6 +119,21 @@
                         enableStoreDetails: configuration.canBeStored,
                         data: {
                             holderName: `${configuration.billingAddress.firstName} ${configuration.billingAddress.lastName}`,
+                        }
+                    },
+                    paypal: {
+                        environment: configuration.environment,
+                        countryCode: configuration.billingAddress.countryCode,
+                        amount: {
+                            currency: configuration.amount.currency,
+                            value: configuration.amount.value
+                        }
+                    },
+                    applepay: {
+                        countryCode: configuration.billingAddress.countryCode,
+                        amount: {
+                            currency: configuration.amount.currency,
+                            value: configuration.amount.value
                         }
                     }
                 },
@@ -91,10 +155,8 @@
             });
         };
 
-        configuration = JSON.parse($container.attributes['data-dropin'].value);
-
+        configuration = await _loadConfiguration($container.attributes['data-config-url'].value);
         checkout = init();
-
         checkout
             .create('dropin', {
                 showRemovePaymentMethodButton: true,

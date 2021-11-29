@@ -1,6 +1,5 @@
 body .dropin-container .adyen-checkout__threeds2__challenge,
-body .dropin-container .adyen-checkout__threeds2__challenge iframe
-{
+body .dropin-container .adyen-checkout__threeds2__challenge iframe {
     width: 100%;
 }
 
@@ -9,27 +8,29 @@ body .dropin-container .adyen-checkout__threeds2__challenge iframe
     flex-wrap: wrap;
 }
 
-.adyen-method-grid .online-payment__item
-{
+.adyen-method-grid .online-payment__item {
     border: 2px solid rgba(34, 36, 38, 0.05);
     background: transparent;
     padding: 0.2em;
     margin: 0.5em;
 }
 
-.adyen-method-grid img
-{
+.adyen-method-grid img {
     display: block;
     min-width: 77px;
     min-height: 50px;
 }
 
-.adyen-method .dropin-container
-{
+.adyen-method .dropin-container {
     margin: 1.5rem 0;
 }
 
-.adyen-submit.hidden
-{
+.adyen-submit.hidden,
+.dropin-container.hidden,
+.adyen-method-grid.hidden {
     display: none;
+}
+
+button.adyen-checkout__applepay__button {
+    -webkit-appearance: -apple-pay-button;
 }

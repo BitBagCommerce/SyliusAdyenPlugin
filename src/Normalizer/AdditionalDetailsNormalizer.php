@@ -26,10 +26,15 @@ final class AdditionalDetailsNormalizer extends AbstractPaymentNormalizer implem
 
     /** @var ?NormalizerInterface */
     private $normalizer;
+    /** @var ShippingLineGeneratorInterface */
+    private $shippingLineGenerator;
 
-    public function __construct(RequestStack $requestStack)
-    {
+    public function __construct(
+        RequestStack $requestStack,
+        ShippingLineGeneratorInterface $shippingLineGenerator
+    ) {
         $this->requestStack = $requestStack;
+        $this->shippingLineGenerator = $shippingLineGenerator;
     }
 
     /**
@@ -84,17 +89,20 @@ final class AdditionalDetailsNormalizer extends AbstractPaymentNormalizer implem
         $shippingAddress = $object->getShippingAddress();
         Assert::isInstanceOf($shippingAddress, AddressInterface::class);
 
+        $lineItems = $this->getLineItems($object);
+        $lineItems[] = $this->shippingLineGenerator->generate($lineItems, $object);
+
         return [
             'billingAddress' => $this->normalizeInternalStructure($billingAddress),
             'deliveryAddress' => $this->normalizeInternalStructure($shippingAddress),
-            'lineItems' => $this->getLineItems($object),
+            'lineItems' => $lineItems,
             'shopperEmail' => (string) $customer->getEmail(),
             'shopperName' => [
                 'firstName' => $customer->getFirstName(),
                 'lastName' => $customer->getLastName(),
             ],
             'shopperIP' => $request->getClientIp(),
-            'telephoneNumber' => $customer->getPhoneNumber(),
+            'telephoneNumber' => $billingAddress->getPhoneNumber(),
         ];
     }
 

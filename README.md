@@ -3,7 +3,7 @@
 # Adyen Payments Plugin for Sylius
 ----
 
-[![](https://img.shields.io/packagist/l/bitbag/adyen-plugin.svg) ](https://packagist.org/packages/bitbag/adyen-plugin "License") [ ![](https://img.shields.io/packagist/v/bitbag/mollie-plugin.svg) ](https://packagist.org/packages/bitbag/mollie-plugin "Version") [ ![](https://img.shields.io/scrutinizer/g/BitBagCommerce/SyliusMolliePlugin.svg) ](https://scrutinizer-ci.com/g/BitBagCommerce/SyliusMolliePlugin/ "Scrutinizer") [![](https://poser.pugx.org/bitbag/mollie-plugin/downloads)](https://packagist.org/packages/bitbag/mollie-plugin "Total Downloads") [![Slack](https://img.shields.io/badge/community%20chat-slack-FF1493.svg)](http://sylius-devs.slack.com) [![Support](https://img.shields.io/badge/support-contact%20author-blue])](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen)
+[![](https://img.shields.io/packagist/l/bitbag/adyen-plugin.svg) ](https://packagist.org/packages/bitbag/adyen-plugin "License") [![Slack](https://img.shields.io/badge/community%20chat-slack-FF1493.svg)](http://sylius-devs.slack.com) [![Support](https://img.shields.io/badge/support-contact%20author-blue])](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen)
 
 At BitBag we do believe in open source. However, we are able to do it just because of our awesome clients, who are kind enough to share some parts of our work with the community. Therefore, if you feel like there is a possibility for us working together, feel free to reach us out. You will find out more about our professional services, technologies and contact details at [https://bitbag.io/](https://bitbag.io/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen).
 
@@ -18,6 +18,7 @@ At BitBag we do believe in open source. However, we are able to do it just becau
     * [Usage](#usage)
     * [Customization](#customization)
     * [Configuration](#configuration)
+    * [Security](#security)  
     * [Testing](#testing)
     * [Frontend part](#frontend-part)
 * [About us](#about-us)
@@ -79,6 +80,10 @@ Run the below command to see what Symfony services are shared with this plugin:
 $ bin/console debug:container bitbag_sylius_adyen_plugin
 ```
 
+Plug-in heavily relies on Symfony's [Messenger](https://symfony.com/doc/current/messenger.html) Component. All the payment notifications handling actions are done by messages and their handlers. Feel free to play with, decorate or provide a middleware to customize plug-in according to your needs.
+
+All the processing is done using `sylius.command_bus` (`sylius_default.bus` in previous versions). `sylius.event_bus` (`sylius_event.bus`) is used to hook up Refund Plug-in requests and let the Adyen know that refund is requested.
+
 ## Configuration
 ----
 The plug-in provides a configuration that can be overrided:
@@ -93,6 +98,13 @@ bitbag_sylius_adyen:
 | --- | --- | --- |
 | logger | null\|string | specifies a logger service name which handles dumping of all traffic between your Sylius instance and Adyen API; useful for debugging. Empty value = disable logging |
 | supported_types | null\|array | whitelist of visible payment methods; null = all tested payment methods, array = list of payment types, empty array = don't filter at all and show everything returned by Adyen |
+
+## Security
+----
+
+If you find anything that could be a security problem, please reach us first on `hello@bitbag.io` in order to prepare a patch before disclosure.
+
+We know that your money is valuable, so we designed this plug-in to change the payment statuses only at the request of Adyen systems that are signed using HMAC signature.
 
 ## Frontend part
 ----

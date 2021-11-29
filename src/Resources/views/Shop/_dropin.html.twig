@@ -1,30 +1,11 @@
-{% set path_params = order.tokenValue ? {tokenValue: order.tokenValue} : {} %}
+{% set path_parameters = {code: order.payments.last.method.code} %}
 
-{% set path_params = path_params|merge({code: method.code is defined ? method.code : payment_configuration['code']}) %}
-
-{% set dropin_configuration = {
-    billingAddress: {
-        firstName: order.billingAddress.firstName,
-        lastName: order.billingAddress.lastName,
-        countryCode: order.billingAddress.countryCode,
-        province: order.billingAddress.provinceName ?? order.billingAddress.provinceCode,
-        city: order.billingAddress.city,
-        postcode: order.billingAddress.postcode
-    },
-    paymentMethods: payment_configuration['paymentMethods'],
-    clientKey: payment_configuration['clientKey'],
-    locale: order.localeCode,
-    environment: payment_configuration['environment'],
-    canBeStored: payment_configuration['canBeStored'],
-    path: {
-        payments: path('bitbag_adyen_payments', path_params),
-        paymentDetails: path('bitbag_adyen_payment_details', path_params),
-        deleteToken: path('bitbag_adyen_remove_token', path_params|merge({paymentReference: '_REFERENCE_'}))
-    }
-} %}
+{% if order.tokenValue is not empty %}
+    {% set path_parameters = path_parameters|merge({orderToken: order.tokenValue}) %}
+{% endif %}
 
 <div
     class="dropin-container"
-    data-dropin="{{ dropin_configuration|json_encode }}"
+    data-config-url="{{ path('bitbag_adyen_config', path_parameters) }}"
 ></div>
 
