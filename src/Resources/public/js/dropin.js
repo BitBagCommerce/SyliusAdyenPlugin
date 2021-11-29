@@ -147,6 +147,9 @@
                 },
                 onAdditionalDetails: (state, dropin) => {
                     submitHandler(state, dropin, configuration.path.paymentDetails)
+                },
+                onError: (error, component) => {
+                    alert(typeof error['errorText'] !== "undefined" ? error.errorText : 'Unknown error occurred');
                 }
             });
         };
