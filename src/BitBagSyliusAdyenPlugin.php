@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin;
 
+use BitBag\SyliusAdyenPlugin\DependencyInjection\CompilerPass\AuthenticationManagerPolyfillPass;
 use BitBag\SyliusAdyenPlugin\DependencyInjection\CompilerPass\MessageBusPolyfillPass;
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
@@ -32,6 +33,12 @@ final class BitBagSyliusAdyenPlugin extends Bundle
     {
         $container->addCompilerPass(
             new MessageBusPolyfillPass(),
+            PassConfig::TYPE_BEFORE_OPTIMIZATION,
+            1
+        );
+
+        $container->addCompilerPass(
+            new AuthenticationManagerPolyfillPass(),
             PassConfig::TYPE_BEFORE_OPTIMIZATION,
             1
         );

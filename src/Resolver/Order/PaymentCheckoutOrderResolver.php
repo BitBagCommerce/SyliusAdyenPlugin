@@ -56,6 +56,7 @@ final class PaymentCheckoutOrderResolver implements PaymentCheckoutOrderResolver
     {
         /**
          * @var string|null $tokenValue
+         * @psalm-suppress InternalMethod
          */
         $tokenValue = $this->getCurrentRequest()->get('tokenValue');
 
