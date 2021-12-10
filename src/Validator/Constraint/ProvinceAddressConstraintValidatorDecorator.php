@@ -68,9 +68,6 @@ class ProvinceAddressConstraintValidatorDecorator extends ConstraintValidator
     {
         Assert::isInstanceOf($constraint, ProvinceAddressConstraint::class);
 
-        /**
-         * @var ConstraintViolationInterface $violation
-         */
         foreach ($this->context->getViolations() as $violation) {
             if ($violation->getMessageTemplate() == $constraint->message) {
                 return true;
