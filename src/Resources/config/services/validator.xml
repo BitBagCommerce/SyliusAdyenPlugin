@@ -14,5 +14,13 @@
             <argument type="service" id="serializer"/>
             <tag name="validator.constraint_validator"/>
         </service>
+
+        <service
+            class="BitBag\SyliusAdyenPlugin\Validator\Constraint\ProvinceAddressConstraintValidatorDecorator"
+            id="bitbag.sylius_adyen_plugin.validator.constraint.province_address_constraint_validator_decorator"
+            decorates="sylius.validator.valid_province_address"
+        >
+            <argument type="service" id="bitbag.sylius_adyen_plugin.validator.constraint.province_address_constraint_validator_decorator.inner"/>
+        </service>
     </services>
 </container>

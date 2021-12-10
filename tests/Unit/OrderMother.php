@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Normalizer;
+namespace Tests\BitBag\SyliusAdyenPlugin\Unit;
 
 use Sylius\Component\Core\Model\Adjustment;
 use Sylius\Component\Core\Model\AdjustmentInterface;

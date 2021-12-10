@@ -13,6 +13,7 @@ namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Normalizer;
 use BitBag\SyliusAdyenPlugin\Normalizer\ShippingLineGenerator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Tests\BitBag\SyliusAdyenPlugin\Unit\OrderMother;
 
 class ShippingLineGeneratorTest extends TestCase
 {
