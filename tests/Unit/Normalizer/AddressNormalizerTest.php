@@ -16,6 +16,7 @@ use BitBag\SyliusAdyenPlugin\Normalizer\AddressNormalizer;
 use PHPUnit\Framework\TestCase;
 use Sylius\Component\Core\Model\Address;
 use Sylius\Component\Core\Model\AddressInterface;
+use Tests\BitBag\SyliusAdyenPlugin\Unit\AddressMother;
 
 class AddressNormalizerTest extends TestCase
 {

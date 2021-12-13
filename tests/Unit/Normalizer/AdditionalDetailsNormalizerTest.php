@@ -18,7 +18,9 @@ use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Tests\BitBag\SyliusAdyenPlugin\Unit\AddressMother;
 use Tests\BitBag\SyliusAdyenPlugin\Unit\Mock\RequestMother;
+use Tests\BitBag\SyliusAdyenPlugin\Unit\OrderMother;
 
 class AdditionalDetailsNormalizerTest extends TestCase
 {

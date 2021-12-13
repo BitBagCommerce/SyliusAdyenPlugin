@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -8,7 +6,9 @@ declare(strict_types=1);
  * an email on hello@bitbag.io.
  */
 
-namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Normalizer;
+declare(strict_types=1);
+
+namespace Tests\BitBag\SyliusAdyenPlugin\Unit;
 
 use Sylius\Component\Core\Model\Address;
 use Sylius\Component\Core\Model\AddressInterface;
@@ -51,5 +51,16 @@ final class AddressMother
         $shippingAddress->setProvinceName(self::SHIPPING_PROVINCE);
 
         return $shippingAddress;
+    }
+
+    public static function createAddressWithSpecifiedCountryAndEmptyProvince(
+        string $country = self::ADDRESS_COUNTRY
+    ): AddressInterface {
+        $result = self::createShippingAddress();
+        $result->setCountryCode($country);
+        $result->setProvinceCode(null);
+        $result->setProvinceName(null);
+
+        return $result;
     }
 }

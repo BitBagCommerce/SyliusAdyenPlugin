@@ -19,6 +19,7 @@ use Sylius\Component\Core\Model\OrderItemInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Tests\BitBag\SyliusAdyenPlugin\Unit\Mock\RequestMother;
+use Tests\BitBag\SyliusAdyenPlugin\Unit\OrderMother;
 
 class OrderItemToLineItemNormalizerTest extends TestCase
 {
