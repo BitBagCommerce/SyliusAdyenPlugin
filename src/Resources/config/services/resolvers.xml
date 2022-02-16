@@ -50,6 +50,7 @@
         >
             <argument type="service" id="serializer"/>
             <argument type="service" id="validator"/>
+            <argument type="service" id="monolog.logger.adyen"/>
         </service>
 
         <service

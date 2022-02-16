@@ -62,6 +62,7 @@ We work on stable, supported and up-to-date versions of packages. We recommend y
 | PHP |  ^7.4 |
 | ext-json:  | * |
 | sylius/refund-plugin |  ^1.0.0|
+| sylius/resource-bundle | ^1.8 |
 | sylius/sylius |  ^1.9.0 |
 | symfony/messenger |   ^4.4 |
 | adyen/php-api-library | ^10.1 |

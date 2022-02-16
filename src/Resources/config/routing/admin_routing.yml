@@ -1,1 +1,15 @@
-# Define your own admin routes here
+bitbag_sylius_adyen_plugin_log:
+  resource: |
+    alias: bitbag_sylius_adyen_plugin.log
+    section: admin
+    path: /adyen/log
+    permission: true
+    templates: "@SyliusAdmin\\Crud"
+    redirect: update
+    grid: bitbag_sylius_adyen_plugin_log
+    vars:
+        all:
+            subheader: bitbag_sylius_adyen_plugin.ui.log_list
+        index:
+            icon: 'tags'
+  type: sylius.resource

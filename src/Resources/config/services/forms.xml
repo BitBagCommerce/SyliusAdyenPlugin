@@ -23,5 +23,10 @@
             <tag name="form.type_extension" />
         </service>
 
+        <service class="BitBag\SyliusAdyenPlugin\Grid\Filter\LoggerLevel"
+                 id="bitbag.sylius_adyen_plugin.grid.filter.logger_level"
+        >
+            <tag name="sylius.grid_filter" type="log_level" form_type="BitBag\SyliusAdyenPlugin\Form\Type\LoggerLevelFilterType" />
+        </service>
     </services>
 </container>

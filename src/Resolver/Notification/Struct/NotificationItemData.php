@@ -41,4 +41,13 @@ class NotificationItemData
 
     /** @var ?string */
     public $originalReference;
+
+    /** @var ?array */
+    public $operations;
+
+    /** @var ?string */
+    public $paymentCode;
+
+    /** @var ?string */
+    public $reason;
 }

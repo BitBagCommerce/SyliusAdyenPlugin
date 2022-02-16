@@ -14,6 +14,7 @@ use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver\NoCommandResolvedException;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationToCommandResolver;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,27 +31,36 @@ class ProcessNotificationsAction
     /** @var NotificationResolver */
     private $notificationResolver;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     public function __construct(
         DispatcherInterface $dispatcher,
         NotificationToCommandResolver $notificationCommandResolver,
-        NotificationResolver $notificationResolver
+        NotificationResolver $notificationResolver,
+        LoggerInterface $logger
     ) {
         $this->dispatcher = $dispatcher;
         $this->notificationCommandResolver = $notificationCommandResolver;
         $this->notificationResolver = $notificationResolver;
+        $this->logger = $logger;
     }
 
     public function __invoke(string $code, Request $request): Response
     {
         foreach ($this->notificationResolver->resolve($code, $request) as $notificationItem) {
             if (!$notificationItem->success) {
-                continue;
+                $this->logger->info(\sprintf(
+                    'Payment with pspReference [%s] did not return success',
+                    $notificationItem->pspReference ?? ''
+                ));
             }
 
             try {
                 $command = $this->notificationCommandResolver->resolve($code, $notificationItem);
                 $this->dispatcher->dispatch($command);
             } catch (NoCommandResolvedException $ex) {
+                $this->logger->error($ex->getMessage());
             }
         }
 

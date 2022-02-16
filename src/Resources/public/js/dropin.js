@@ -117,9 +117,6 @@
                         hasHolderName: true,
                         holderNameRequired: true,
                         enableStoreDetails: configuration.canBeStored,
-                        data: {
-                            holderName: `${configuration.billingAddress.firstName} ${configuration.billingAddress.lastName}`,
-                        }
                     },
                     paypal: {
                         environment: configuration.environment,

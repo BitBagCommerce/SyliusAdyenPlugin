@@ -1,4 +1,5 @@
 monolog:
+    channels: [adyen]
     handlers:
         main:
             type: stream
@@ -7,3 +8,7 @@ monolog:
         firephp:
             type: firephp
             level: info
+        doctrine:
+            type: service
+            channels: [adyen]
+            id: bitbag.sylius_adyen_plugin.logging.monolog.doctrine_handler
