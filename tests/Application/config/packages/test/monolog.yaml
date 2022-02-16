@@ -4,3 +4,7 @@ monolog:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: error
+        doctrine:
+            type: service
+            channels: [adyen]
+            id: bitbag.sylius_adyen_plugin.logging.monolog.doctrine_handler
