@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service class="BitBag\SyliusAdyenPlugin\Logging\Monolog\DoctrineHandler" id="bitbag.sylius_adyen_plugin.logging.monolog.doctrine_handler">
+            <argument type="service" id="bitbag.sylius_adyen_plugin.factory.log_factory"/>
+            <argument type="service" id="sylius.repository.taxon"/>
+        </service>
+
+
+        <defaults public="true"/>
+
+        <service class="BitBag\SyliusAdyenPlugin\Provider\LoggerProvider" id="bitbag.sylius_adyen_plugin.provider.logger_provider">
+            <argument type="service" id="sylius_fixtures.logger.handler.console"/>
+        </service>
+    </services>
+</container>

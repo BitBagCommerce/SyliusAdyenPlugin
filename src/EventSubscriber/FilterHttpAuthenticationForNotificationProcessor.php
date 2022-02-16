@@ -12,6 +12,7 @@ namespace BitBag\SyliusAdyenPlugin\EventSubscriber;
 
 use BitBag\SyliusAdyenPlugin\Repository\PaymentMethodRepositoryInterface;
 use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,9 +30,15 @@ final class FilterHttpAuthenticationForNotificationProcessor implements EventSub
     /** @var PaymentMethodRepositoryInterface */
     private $paymentMethodRepository;
 
-    public function __construct(PaymentMethodRepositoryInterface $paymentMethodRepository)
-    {
+    /** @var LoggerInterface */
+    private $logger;
+
+    public function __construct(
+        PaymentMethodRepositoryInterface $paymentMethodRepository,
+        LoggerInterface $logger
+    ) {
         $this->paymentMethodRepository = $paymentMethodRepository;
+        $this->logger = $logger;
     }
 
     public static function getSubscribedEvents()
@@ -58,11 +65,15 @@ final class FilterHttpAuthenticationForNotificationProcessor implements EventSub
         }
 
         if (
-            $request->getUser() === $configuration['authUser']
-            && $request->getPassword() === $configuration['authPassword']
+            \hash_equals($request->getUser() ?? '', $configuration['authUser'])
+            && \hash_equals($request->getPassword() ?? '', $configuration['authPassword']) // This should probably be done with a timing-attack safe string comparison tool like hash_equals
         ) {
+            $this->logger->info('Webhook authentication successful');
+
             return true;
         }
+
+        $this->logger->info('Webhook authentication failed. Check the provided credentials');
 
         return false;
     }

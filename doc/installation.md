@@ -71,3 +71,15 @@ bin/console doctrine:schema:update
 ```
 
 10. [Obtain Adyen credentials and configure payment method](configuration.md)
+
+11. Add logging to your environment in {dev, prod, staging}/monolog.yaml
+
+```yaml
+monolog:
+    channels: [adyen]
+    handlers: # Add alongside other handlers you might have
+        doctrine:
+            type: service
+            channels: [adyen]
+            id: bitbag.sylius_adyen_plugin.logging.monolog.doctrine_handler
+```

@@ -7,13 +7,24 @@ bitbag_sylius_adyen_plugin:
     merchant_account: Merchant account
     hmac_key: HMAC Key
     ayden_gateway_label: Adyen
-    auth_user: Notification authentication username
-    auth_password: Notification authentication password
+    auth_user: Webhook authentication username
+    auth_password: Webhook authentication password
     client_key: Client key
     notification_endpoint_description: In order to configure Adyen payment, head to merchant panel and use following URL as target
     notification_endpoint: Notifications endpoint
     payment_failed: Payment failed, try again
     payment_processing: Payment is being processed, please watch the notifications on your e-mail
+    log_list: Log list
+    logs: Adyen logs
+    logging:
+      info: Info
+      error: Error
+      debug: Debug
+      level: Level
+      error_code: Error code
+      message: Message
+      date_time: Date time
+      search: Search
   runtime:
     invalid_signature: Invalid notification signature provided
     payment_failed_try_again: Payment failed, please try again

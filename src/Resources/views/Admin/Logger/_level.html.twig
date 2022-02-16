@@ -1,0 +1,13 @@
+{% if data %}
+    {% set notice = constant('Monolog\\Logger::NOTICE') %}
+    {% set error = constant('Monolog\\Logger::ERROR') %}
+    {% set debug = constant('Monolog\\Logger::DEBUG') %}
+
+    {% if data == notice %}
+        <div class="ui info horizontal label">{{'bitbag_sylius_adyen_plugin.ui.logging.info'|trans}}</div>
+    {% elseif data == error %}
+        <div class="ui red horizontal label">{{'bitbag_sylius_adyen_plugin.ui.logging.error'|trans}}</div>
+    {% elseif data == debug %}
+        <div class="ui info horizontal label">{{'bitbag_sylius_adyen_plugin.ui.logging.debug'|trans}}</div>
+    {% endif %}
+{% endif %}

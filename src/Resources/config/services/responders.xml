@@ -36,6 +36,7 @@
             <argument type="service" id="bitbag.sylius_adyen_plugin.bus.dispatcher"/>
             <argument type="service" id="bitbag.sylius_adyen_plugin.resolver.notification.notification_command_resolver"/>
             <argument type="service" id="bitbag.sylius_adyen_plugin.resolver.notification.notification_resolver"/>
+            <argument type="service" id="monolog.logger.adyen"/>
 
             <tag name="controller.service_arguments"/>
         </service>

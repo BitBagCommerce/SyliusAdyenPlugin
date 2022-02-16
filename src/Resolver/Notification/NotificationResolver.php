@@ -10,10 +10,8 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Resolver\Notification;
 
-use BitBag\SyliusAdyenPlugin\Exception\NotificationItemsEmptyException;
-use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItem;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
-use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationRequest;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -23,7 +21,7 @@ final class NotificationResolver implements NotificationResolverInterface
     /**
      * Adyen passes booleans as strings
      */
-    private const DENORMALIZATION_FORMAT = 'xml';
+    private const DENORMALIZATION_FORMAT = 'json';
 
     /** @var DenormalizerInterface */
     private $denormalizer;
@@ -31,32 +29,43 @@ final class NotificationResolver implements NotificationResolverInterface
     /** @var ValidatorInterface */
     private $validator;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     public function __construct(
         DenormalizerInterface $denormalizer,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        LoggerInterface $logger
     ) {
         $this->denormalizer = $denormalizer;
         $this->validator = $validator;
+        $this->logger = $logger;
     }
 
     /**
-     * @return NotificationItem[]
+     * @return NotificationItemData[]
      */
     private function denormalizeRequestData(Request $request): array
     {
         $payload = $request->request->all();
 
-        $objects = $this->denormalizer->denormalize(
-            $payload,
-            NotificationRequest::class,
-            self::DENORMALIZATION_FORMAT
-        );
+        /** @var array $notificationItems */
+        $notificationItems = $payload['notificationItems'];
+        $result = [];
 
-        if (!is_array($objects->notificationItems)) {
-            throw new NotificationItemsEmptyException();
+        /** @var array $notificationItem */
+        foreach ($notificationItems as $notificationItem) {
+            /** @var array $notificationRequestItem */
+            $notificationRequestItem = $notificationItem['NotificationRequestItem'] ?? [];
+
+            $result[] = $this->denormalizer->denormalize(
+                $notificationRequestItem,
+                NotificationItemData::class,
+                self::DENORMALIZATION_FORMAT
+            );
         }
 
-        return $objects->notificationItems;
+        return $result;
     }
 
     /**
@@ -70,10 +79,14 @@ final class NotificationResolver implements NotificationResolverInterface
 
             $validationResult = $this->validator->validate($item);
             if ($validationResult->count() > 0) {
+                $this->logger->error(
+                    'Denormalization violations: ' . \var_export($validationResult, true)
+                );
+
                 continue;
             }
 
-            $result[] = $item->notificationRequestItem;
+            $result[] = $item;
         }
 
         return $result;

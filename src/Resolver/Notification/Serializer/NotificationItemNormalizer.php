@@ -35,7 +35,6 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
     {
         if (!isset($data[self::DENORMALIZATION_PROCESSED_FLAG]) && is_array($data)) {
             $data['eventCode'] = strtolower((string) $data['eventCode']);
-            $data['paymentMethod'] = strtolower((string) $data['paymentMethod']);
             $data[self::DENORMALIZATION_PROCESSED_FLAG] = true;
         }
 

@@ -5,8 +5,12 @@ sylius_resource:
         repository: BitBag\SyliusAdyenPlugin\Repository\AdyenTokenRepository
         model: BitBag\SyliusAdyenPlugin\Entity\AdyenToken
 
-
     bitbag_sylius_adyen_plugin.adyen_reference:
       classes:
         repository: BitBag\SyliusAdyenPlugin\Repository\AdyenReferenceRepository
         model: BitBag\SyliusAdyenPlugin\Entity\AdyenReference
+
+    bitbag_sylius_adyen_plugin.log:
+      driver: doctrine/orm
+      classes:
+        model: BitBag\SyliusAdyenPlugin\Entity\Log
