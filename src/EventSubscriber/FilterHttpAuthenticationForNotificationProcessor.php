@@ -64,9 +64,15 @@ final class FilterHttpAuthenticationForNotificationProcessor implements EventSub
             return true;
         }
 
+        /** @var string $authUser */
+        $authUser = $configuration['authUser'];
+
+        /** @var string $authPassword */
+        $authPassword = $configuration['authPassword'];
+
         if (
-            \hash_equals($request->getUser() ?? '', $configuration['authUser'])
-            && \hash_equals($request->getPassword() ?? '', $configuration['authPassword']) // This should probably be done with a timing-attack safe string comparison tool like hash_equals
+            \hash_equals($request->getUser() ?? '', $authUser)
+            && \hash_equals($request->getPassword() ?? '', $authPassword)
         ) {
             $this->logger->info('Webhook authentication successful');
 

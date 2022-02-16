@@ -24,7 +24,6 @@ final class DoctrineHandler extends AbstractProcessingHandler
         parent::__construct();
     }
 
-    /** @inheritDoc */
     protected function write(array $record): void
     {
         $log = $this->logFactory->create($record['message'], $record['level'], 0);
