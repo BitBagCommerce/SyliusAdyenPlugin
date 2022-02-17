@@ -27,7 +27,7 @@ jobs:
                 sylius: ["~1.10.0", "~1.11.0"]
 
                 exclude:
-                    - sylius: ~1.11.0
+                    - sylius: "~1.11.0"
                       php: 7.4
 
         env:
