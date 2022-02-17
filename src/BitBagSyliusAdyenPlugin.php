@@ -43,7 +43,5 @@ final class BitBagSyliusAdyenPlugin extends Bundle
             PassConfig::TYPE_BEFORE_OPTIMIZATION,
             1
         );
-
-        $container->addCompilerPass(new SyliusBehatPolyfillCompilerPass());
     }
 }
