@@ -15,7 +15,6 @@ At BitBag we do believe in open source. However, we are able to do it just becau
 * [Support](#we-are-here-to-help)
 * [Installation](#installation)
     * [Requirements](#requirements)
-    * [Usage](#usage)
     * [Customization](#customization)
     * [Configuration](#configuration)
     * [Security](#security)  
@@ -39,10 +38,19 @@ Adyen is a growing payment processing company. This plug-in is an integration wi
 It supports all methods available to [drop-in](https://docs.adyen.com/online-payments/drop-in-web). Available methods are depended on your contract with Adyen, it includes: 
 
 1. Credit Cards (Master Card, VISA, American Express)
-2. PayPal
-5. iDEAL
-6. SEPA
-7. SOFORT
+2. iDEAL
+3. PayPal
+4. SEPA
+5. SOFORT
+6. Klarna (Sofort / Slice It / Invoice
+7. Apple Pay
+8. WeChat Pay
+9. Google Pay
+10. Amazon Pay
+11. AliPay
+12. Twint
+13. BLIK
+14. Dotpay
 
 ## We are here to help
 This **open-source plugin was developed to help the Sylius community** and make Adyen payments platform available to any Sylius store. If you have any additional questions, would like help with installing or configuring the plugin or need any assistance with your Sylius project - let us know!
@@ -156,37 +164,12 @@ If you need some help with Sylius development, don't be hesitated to contact us 
 
 ---
 
-[![](https://bitbag.io/wp-content/uploads/2020/10/badges-sylius.png)](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen)
+[![](https://bitbag.io/wp-content/uploads/2021/08/sylius-badges-transparent-wide.png)](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen)
 
 ## Community
 ----
 For online communication, we invite you to chat with us & other users on [Sylius Slack](https://sylius-devs.slack.com/).
 
-# Demo Sylius shop
----
-
-@todo: still relevant?
-
-We created a demo app with some useful use-cases of plugins!
-Visit b2b.bitbag.shop to take a look at it. The admin can be accessed under b2b.bitbag.shop/admin/login link and sylius: sylius credentials.
-Plugins that we have used in the demo:
-| BitBag's Plugin | GitHub | Sylius' Store|
-| ------ | ------ | ------|
-| ACL PLugin | *Private. Available after the purchasing.*| https://plugins.sylius.com/plugin/access-control-layer-plugin/|
-| Braintree Plugin | https://github.com/BitBagCommerce/SyliusBraintreePlugin |https://plugins.sylius.com/plugin/braintree-plugin/|
-| CMS Plugin | https://github.com/BitBagCommerce/SyliusCmsPlugin | https://plugins.sylius.com/plugin/cmsplugin/|
-| Elasticsearch Plugin | https://github.com/BitBagCommerce/SyliusElasticsearchPlugin | https://plugins.sylius.com/plugin/2004/|
-| Mailchimp Plugin | https://github.com/BitBagCommerce/SyliusMailChimpPlugin | https://plugins.sylius.com/plugin/mailchimp/ |
-| Multisafepay Plugin | https://github.com/BitBagCommerce/SyliusMultiSafepayPlugin |
-| Wishlist Plugin | https://github.com/BitBagCommerce/SyliusWishlistPlugin | https://plugins.sylius.com/plugin/wishlist-plugin/|
-| **Sylius' Plugin** | **GitHub** | **Sylius' Store** |
-| Admin Order Creation Plugin | https://github.com/Sylius/AdminOrderCreationPlugin | https://plugins.sylius.com/plugin/admin-order-creation-plugin/ |
-| Invoicing Plugin | https://github.com/Sylius/InvoicingPlugin | https://plugins.sylius.com/plugin/invoicing-plugin/ |
-| Refund Plugin | https://github.com/Sylius/RefundPlugin | https://plugins.sylius.com/plugin/refund-plugin/ |
-
-**If you need an overview of Sylius' capabilities, schedule a consultation with our expert.**
-
-[![](https://bitbag.io/wp-content/uploads/2020/10/button_free_consulatation-1.png)](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen)
 
 ## Additional resources for developers
 ---
@@ -206,4 +189,4 @@ This plugin's source code is completely free and released under the terms of the
 ---
 If you want to contact us, the best way is to fill the form on [our website](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen) or send us an e-mail to hello@bitbag.io with your question(s). We guarantee that we answer as soon as we can!
 
-[![](https://bitbag.io/wp-content/uploads/2020/10/footer.png)](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen)
+[![](https://bitbag.io/wp-content/uploads/2021/08/badges-bitbag.png)](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen)
