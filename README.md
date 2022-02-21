@@ -22,7 +22,6 @@ At BitBag we do believe in open source. However, we are able to do it just becau
     * [Frontend part](#frontend-part)
 * [About us](#about-us)
     * [Community](#community)
-* [Demo Sylius shop](#demo-sylius-shop)
 * [Additional Sylius resources for developers](#additional-resources-for-developers)
 * [License](#license)
 * [Contact](#contact)
@@ -37,20 +36,19 @@ At BitBag we do believe in open source. However, we are able to do it just becau
 Adyen is a growing payment processing company. This plug-in is an integration with Sylius, it was developed with Adyen Team cooperation to provide the best experience.
 It supports all methods available to [drop-in](https://docs.adyen.com/online-payments/drop-in-web). Available methods are depended on your contract with Adyen, it includes: 
 
-1. Credit Cards (Master Card, VISA, American Express)
+1. Credit Cards (Master Card, VISA, American Express & other)
 2. iDEAL
 3. PayPal
 4. SEPA
 5. SOFORT
-6. Klarna (Sofort / Slice It / Invoice
+6. Klarna
 7. Apple Pay
 8. WeChat Pay
 9. Google Pay
-10. Amazon Pay
-11. AliPay
-12. Twint
-13. BLIK
-14. Dotpay
+10. AliPay
+11. Twint
+12. BLIK
+13. Dotpay
 
 ## We are here to help
 This **open-source plugin was developed to help the Sylius community** and make Adyen payments platform available to any Sylius store. If you have any additional questions, would like help with installing or configuring the plugin or need any assistance with your Sylius project - let us know!
