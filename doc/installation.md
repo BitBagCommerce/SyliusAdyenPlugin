@@ -83,3 +83,4 @@ monolog:
             channels: [adyen]
             id: bitbag.sylius_adyen_plugin.logging.monolog.doctrine_handler
 ```
+If you want to access the log page, go to /adyen/log.

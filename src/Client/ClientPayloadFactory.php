@@ -32,6 +32,32 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
     /** @var RequestStack */
     private $requestStack;
 
+    /** @var array */
+    private $allowedMethodsList = [
+        'ideal',
+        'paypal',
+        'directEbanking', // Klarna - Sofort
+        'applepay',
+        'googlepay',
+        'alipay',
+        'twint',
+        'blik',
+        'dotpay',
+        'scheme',
+        'klarna',
+        'klarna_account',
+        'klarna_paynow',
+        'bcmc',
+        'bcmc_mobile',
+        'benefit',
+        'knet',
+        'naps',
+        'omannet',
+        'ach',
+        'directdebit_GB',
+        'ratepay_directdebit',
+    ];
+
     public function __construct(
         VersionResolverInterface $versionResolver,
         NormalizerInterface $normalizer,
@@ -61,6 +87,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
             'countryCode' => $countryCode,
             'shopperLocale' => $locale,
             'channel' => 'Web',
+            'allowedPaymentMethods' => $this->allowedMethodsList,
         ];
 
         $payload = $this->injectShopperReference($payload, $adyenToken);
