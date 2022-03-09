@@ -10,7 +10,12 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Client;
 
+use Adyen\Exception\HMACKeyValidationException;
+
 interface SignatureValidatorInterface
 {
+    /**
+     * @throws HMACKeyValidationException
+     */
     public function isValid(array $params): bool;
 }
