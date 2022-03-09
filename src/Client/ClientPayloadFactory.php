@@ -56,6 +56,9 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         'ach',
         'directdebit_GB',
         'ratepay_directdebit',
+        'wechatpayWeb',
+        'wechatpaySDK',
+        'wechatpayQR',
     ];
 
     public function __construct(
