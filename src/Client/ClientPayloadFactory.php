@@ -16,6 +16,7 @@ use BitBag\SyliusAdyenPlugin\Resolver\Version\VersionResolverInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Currency\Context\CurrencyContextInterface;
 use Sylius\RefundPlugin\Event\RefundPaymentGenerated;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -31,6 +32,9 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
 
     /** @var RequestStack */
     private $requestStack;
+
+    /** @var CurrencyContextInterface */
+    private $currencyContext;
 
     /** @var array */
     private $allowedMethodsList = [
@@ -64,11 +68,13 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
     public function __construct(
         VersionResolverInterface $versionResolver,
         NormalizerInterface $normalizer,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        CurrencyContextInterface $currencyContext
     ) {
         $this->versionResolver = $versionResolver;
         $this->normalizer = $normalizer;
         $this->requestStack = $requestStack;
+        $this->currencyContext = $currencyContext;
     }
 
     public function createForAvailablePaymentMethods(
@@ -84,7 +90,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         $payload = [
             'amount' => [
                 'value' => $order->getTotal(),
-                'currency' => (string) $order->getCurrencyCode(),
+                'currency' => $this->currencyContext->getCurrencyCode(),
             ],
             'merchantAccount' => $options['merchantAccount'],
             'countryCode' => $countryCode,

@@ -19,6 +19,8 @@
             class="BitBag\SyliusAdyenPlugin\Normalizer\AddressNormalizer"
             id="bitbag.sylius_adyen_plugin.normalizer.address_normalizer"
         >
+            <argument type="service" id="bitbag.sylius_adyen_plugin.resolver.address.street_address_resolver"/>
+
             <tag name="serializer.normalizer" priority="100"/>
         </service>
 

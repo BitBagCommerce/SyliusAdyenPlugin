@@ -18,6 +18,8 @@ final class AddressMother
     public const BILLING_CITY = 'Szczebrzeszyn';
     public const BILLING_POSTCODE = '22-460';
     public const BILLING_STREET = 'Zamojska 1';
+    public const BILLING_STREET_NAME_ONLY = 'Zamojska';
+    public const BILLING_HOUSE_NAME_OR_NUMBER = '1';
     public const BILLING_PROVINCE = 'lubelskie';
     public const BILLING_PHONE_NUMBER = '+4242424242';
 
