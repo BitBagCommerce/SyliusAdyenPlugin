@@ -31,9 +31,9 @@ final class StreetAddressResolver implements StreetAddressResolverInterface
         // Match addresses where the house number comes first, e.g. 10 D John-Paul's Ave.
         \preg_match(self::NUMBER_FIRST_REGEX, \trim($streetAddress), $numberFirstAddress);
 
-        if (!empty($streetFirstAddress)) {
+        if (\count($streetFirstAddress) > 0) {
             return $this->getAddress($streetFirstAddress['streetName'] ?? '', $streetFirstAddress['houseNumber'] ?? '');
-        } elseif (!empty($numberFirstAddress)) {
+        } elseif (\count($numberFirstAddress) > 0) {
             return $this->getAddress($numberFirstAddress['streetName'] ?? '', $numberFirstAddress['houseNumber'] ?? '');
         }
 
