@@ -33,6 +33,9 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
     /** @var RequestStack */
     private $requestStack;
 
+    /** @var CurrencyContextInterface */
+    private $currencyContext;
+
     /** @var array */
     private $allowedMethodsList = [
         'ideal',
@@ -58,10 +61,6 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         'directdebit_GB',
         'ratepay_directdebit',
     ];
-    /**
-     * @var CurrencyContextInterface
-     */
-    private $currencyContext;
 
     public function __construct(
         VersionResolverInterface $versionResolver,
