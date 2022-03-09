@@ -11,11 +11,22 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Normalizer;
 
 use BitBag\SyliusAdyenPlugin\Client\ClientPayloadFactoryInterface;
+use BitBag\SyliusAdyenPlugin\Resolver\Address\StreetAddressResolverInterface;
 use Sylius\Component\Core\Model\AddressInterface;
 use Webmozart\Assert\Assert;
 
 final class AddressNormalizer extends AbstractPaymentNormalizer
 {
+    /**
+     * @var StreetAddressResolverInterface
+     */
+    private $streetAddressResolver;
+
+    public function __construct(StreetAddressResolverInterface $streetAddressResolver)
+    {
+        $this->streetAddressResolver = $streetAddressResolver;
+    }
+
     /**
      * @param mixed|AddressInterface $data
      */
@@ -31,13 +42,26 @@ final class AddressNormalizer extends AbstractPaymentNormalizer
     {
         Assert::isInstanceOf($object, AddressInterface::class);
 
-        return [
-            'street' => (string) $object->getStreet(),
+        $address = [
             'postalCode' => (string) $object->getPostcode(),
             'city' => (string) $object->getCity(),
             'country' => $object->getCountryCode() ?? ClientPayloadFactoryInterface::NO_COUNTRY_AVAILABLE_PLACEHOLDER,
             'stateOrProvince' => (string) $object->getProvinceName(),
-            'houseNumberOrName' => '',
+        ];
+
+        return \array_merge(
+            $address,
+            $this->getStreetAddressPayload((string) $object->getStreet())
+        );
+    }
+
+    private function getStreetAddressPayload(string $street): array
+    {
+        $streetAddress = $this->streetAddressResolver->resolve($street);
+
+        return [
+            'street' => $streetAddress->getStreet(),
+            'houseNumberOrName' => $streetAddress->getHouseNumber(),
         ];
     }
 }
