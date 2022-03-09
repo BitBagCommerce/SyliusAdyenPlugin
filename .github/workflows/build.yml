@@ -16,14 +16,19 @@ jobs:
     tests:
         runs-on: ubuntu-18.04
 
-        name: "PHP ${{ matrix.php }}, MySQL ${{ matrix.mysql }}"
+        name: "PHP ${{ matrix.php }}, MySQL ${{ matrix.mysql }}, Sylius ${{ matrix.sylius }}"
 
         strategy:
             fail-fast: false
             matrix:
-                php: [7.4]
+                php: [7.4, 8.0]
                 node: [14.18]
                 mysql: [5.7, 8.0]
+                sylius: ["~1.10.0", "~1.11.0"]
+
+                exclude:
+                    - sylius: "~1.11.0"
+                      php: 7.4
 
         env:
             APP_ENV: test
@@ -88,6 +93,11 @@ jobs:
                     key: ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json **/composer.lock') }}
                     restore-keys: |
                         ${{ runner.os }}-php-${{ matrix.php }}-composer-
+
+            -
+                name: Restrcting Sylius version
+                if: matrix.sylius != ''
+                run: composer require "sylius/sylius:${{ matrix.sylius }}" --no-update --no-scripts --no-interaction
 
             -
                 name: Install PHP dependencies
