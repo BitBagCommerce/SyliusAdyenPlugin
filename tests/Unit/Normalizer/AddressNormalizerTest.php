@@ -11,8 +11,10 @@ declare(strict_types=1);
 namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Normalizer;
 
 use BitBag\SyliusAdyenPlugin\Client\ClientPayloadFactoryInterface;
+use BitBag\SyliusAdyenPlugin\Model\StreetAddressModel;
 use BitBag\SyliusAdyenPlugin\Normalizer\AbstractPaymentNormalizer;
 use BitBag\SyliusAdyenPlugin\Normalizer\AddressNormalizer;
+use BitBag\SyliusAdyenPlugin\Resolver\Address\StreetAddressResolverInterface;
 use PHPUnit\Framework\TestCase;
 use Sylius\Component\Core\Model\Address;
 use Sylius\Component\Core\Model\AddressInterface;
@@ -23,9 +25,23 @@ class AddressNormalizerTest extends TestCase
     /** @var AddressNormalizer */
     private $normalizer;
 
+    /** @var StreetAddressResolverInterface */
+    private $streetAddressResolver;
+
     protected function setUp(): void
     {
-        $this->normalizer = new AddressNormalizer();
+        $this->streetAddressResolver = $this->createMock(StreetAddressResolverInterface::class);
+        $this->streetAddressResolver
+            ->method('resolve')
+            ->with(AddressMother::BILLING_STREET)
+            ->willReturn(
+                new StreetAddressModel(
+                    AddressMother::BILLING_STREET_NAME_ONLY,
+                    AddressMother::BILLING_HOUSE_NAME_OR_NUMBER
+                )
+            );
+
+        $this->normalizer = new AddressNormalizer($this->streetAddressResolver);
     }
 
     public static function provideForSupportsNormalization(): array
@@ -71,12 +87,12 @@ class AddressNormalizerTest extends TestCase
         $result = $this->normalizer->normalize($address);
 
         $this->assertEquals([
-            'street' => AddressMother::BILLING_STREET,
+            'street' => AddressMother::BILLING_STREET_NAME_ONLY,
             'postalCode' => AddressMother::BILLING_POSTCODE,
             'city' => AddressMother::BILLING_CITY,
             'country' => $expectedCountryCode,
             'stateOrProvince' => AddressMother::BILLING_PROVINCE,
-            'houseNumberOrName' => '',
+            'houseNumberOrName' => AddressMother::BILLING_HOUSE_NAME_OR_NUMBER,
         ], $result);
     }
 }

@@ -79,7 +79,7 @@ final class FilterHttpAuthenticationForNotificationProcessor implements EventSub
             return true;
         }
 
-        $this->logger->info('Webhook authentication failed. Check the provided credentials');
+        $this->logger->error('Webhook authentication failed. Check the provided credentials');
 
         return false;
     }
