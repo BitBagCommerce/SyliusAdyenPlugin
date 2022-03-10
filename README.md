@@ -13,6 +13,7 @@ At BitBag we do believe in open source. However, we are able to do it just becau
 
 * [Overview](#overview)
 * [Support](#we-are-here-to-help)
+* [Features](#features)
 * [Installation](#installation)
     * [Requirements](#requirements)
     * [Customization](#customization)
@@ -34,21 +35,41 @@ At BitBag we do believe in open source. However, we are able to do it just becau
 ![Screenshot showing payment method config in admin](doc/payment-method-form.png)
 
 Adyen is a growing payment processing company. This plug-in is an integration with Sylius, it was developed with Adyen Team cooperation to provide the best experience.
-It supports all methods available to [drop-in](https://docs.adyen.com/online-payments/drop-in-web). Available methods are depended on your contract with Adyen, it includes: 
+It supports all methods available to [drop-in](https://docs.adyen.com/online-payments/drop-in-web).
 
-1. Credit Cards (Master Card, VISA, American Express & other)
-2. iDEAL
-3. PayPal
-4. SEPA
-5. SOFORT
-6. Klarna
-7. Apple Pay
-8. WeChat Pay
-9. Google Pay
-10. AliPay
-11. Twint
-12. BLIK
-13. Dotpay
+# Features
+
+|**Feature Table** | **Support** |
+| -------------    | ----------- |
+| **Configuration panel** |
+| Encrypted authorization | Yes |
+| Encrypted notification password | Yes |        
+| Encrypted HMAC key | Yes |
+| Credential validation | Yes |
+| Live/Sandbox environment | Yes |
+| Live endpoint URL prefix | Yes |
+| **Payments** |
+| [Payment dropin](https://docs.adyen.com/online-payments/web-drop-in) | Yes |
+| [Card payments](https://docs.adyen.com/payment-methods/cards) | Yes |
+| [3D Secure](https://docs.adyen.com/online-payments/3d-secure) | Yes |
+| **Wallet payments** |
+| [WeChat Pay](https://docs.adyen.com/payment-methods/wechat-pay) | Yes |
+| [Apple Pay](https://docs.adyen.com/payment-methods/apple-pay) | Yes |
+| [Google Pay](https://docs.adyen.com/payment-methods/google-pay) | Yes |
+| [AliPay](https://docs.adyen.com/payment-methods/alipay) | Yes |
+| **[One-click payment methods](https://docs.adyen.com/online-payments/classic-integrations/api-integration-ecommerce/recurring-payments/authorise-a-recurring-payment#one-click-payments)** |
+| [Klarna](https://docs.adyen.com/payment-methods/klarna) | Yes |
+| [Dotpay](https://docs.adyen.com/payment-methods/dotpay#page-introduction) | Yes |
+| [Twint](https://docs.adyen.com/payment-methods/twint#page-introduction) | Yes |
+| [Blik](https://docs.adyen.com/payment-methods/blik#page-introduction) | Yes |
+| [PayPal](https://docs.adyen.com/payment-methods/paypal) | Yes |
+| [iDeal](https://docs.adyen.com/payment-methods/ideal) | Yes |
+| SEPA | Yes |
+| [Sofort](https://docs.adyen.com/payment-methods/sofort#page-introduction) | Yes |
+| **Order management** |
+| [Capture](https://docs.adyen.com/issuing/payment-stages#captures) | Yes |
+| [Partial refunds](https://docs.adyen.com/issuing/payment-stages#refunds) | Yes |
+
 
 ## We are here to help
 This **open-source plugin was developed to help the Sylius community** and make Adyen payments platform available to any Sylius store. If you have any additional questions, would like help with installing or configuring the plugin or need any assistance with your Sylius project - let us know!
@@ -65,11 +86,11 @@ We work on stable, supported and up-to-date versions of packages. We recommend y
 
 | Package | Version |
 | --- | --- |
-| PHP |  ^7.4 |
+| PHP |  ^7.4 or ^8.0 |
 | ext-json:  | * |
 | sylius/refund-plugin |  ^1.0.0|
 | sylius/resource-bundle | ^1.8 |
-| sylius/sylius |  ^1.9.0 |
+| sylius/sylius |  ^1.10.0 or ^1.11.0 |
 | symfony/messenger |   ^4.4 |
 | adyen/php-api-library | ^10.1 |
 
