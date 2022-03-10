@@ -21,9 +21,7 @@ use Webmozart\Assert\Assert;
 
 final class NotificationItemNormalizer implements DenormalizerAwareInterface, DenormalizerInterface, NormalizerAwareInterface, ContextAwareNormalizerInterface
 {
-    private const DENORMALIZATION_PROCESSED_FLAG = '_adyen_notification_normalization_processed';
-
-    private const NORMALIZATION_PROCESSED_FLAG = '_adyen_notification_denormalization_processed';
+    private const DENORMALIZATION_PROCESSED_FLAG = '_adyen_notification_denormalization_processed';
 
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
