@@ -3,7 +3,7 @@
 1. Require with composer
 
 ```bash
-composer require bitbag/adyen-plugin
+composer require bitbag/sylius-adyen-plugin
 ```
 2. Add plugin dependencies to your `config/bundles.php` file:
 
