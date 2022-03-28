@@ -29,7 +29,7 @@ interface PaymentCommandFactoryInterface
         'received' => MarkPaymentAsProcessedCommand::class,
         'refused' => PaymentFailedCommand::class,
         'rejected' => PaymentFailedCommand::class,
-        'cancelled' => PaymentCancelledCommand::class,
+        'cancellation' => PaymentCancelledCommand::class,
     ];
 
     public function createForEvent(string $event, PaymentInterface $payment, ?NotificationItemData $notificationItemData = null): PaymentLifecycleCommand;

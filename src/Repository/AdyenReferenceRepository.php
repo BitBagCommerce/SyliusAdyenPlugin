@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Repository;
 
 use BitBag\SyliusAdyenPlugin\Entity\AdyenReferenceInterface;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 
@@ -44,6 +45,7 @@ final class AdyenReferenceRepository extends EntityRepository implements AdyenRe
     /**
      * @psalm-suppress MixedReturnStatement
      * @psalm-suppress MixedInferredReturnType
+     * @throws NoResultException
      */
     public function getOneForRefundByCodeAndReference(string $code, string $pspReference): AdyenReferenceInterface
     {

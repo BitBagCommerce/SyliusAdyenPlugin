@@ -42,3 +42,8 @@
    ![Adyen notifications endpoint](notifications-endpoint.png)
  
 13. Now you're ready to save and test the webhook notification. If everything goes green, you're done and ready to go.
+
+
+> :warning: **Notice**
+> 
+> When it comes to configuration of Sylius itself: some countries need to contain a "state" or "province" field to handle  to properly handle some of the offered payment methods. These can be configured under 

@@ -3,9 +3,9 @@
 1. Require with composer
 
 ```bash
-composer require bitbag/sylius-adyen-plugin
+composer require bitbag/sylius-adyen-plugin --no-script
 ```
-2. Add plugin dependencies to your `config/bundles.php` file:
+2. When using Symfony flex the proper bundle class is registered in your bundles.php file. Otherwise, add it to your `config/bundles.php` file:
 
 ```php
 return [
@@ -30,7 +30,7 @@ imports:
 # config/routes.yaml
 
 bitbag_sylius_adyen_plugin:
-    resource: "@BitBagSyliusAdyenPlugin/Resources/config/shop_routing.yaml"
+    resource: "@BitBagSyliusAdyenPlugin/Resources/config/routing.yaml"
 ```
 
 5. Add Adyen payment method as supported refund gateway in `config/packages/_sylius.yaml`
