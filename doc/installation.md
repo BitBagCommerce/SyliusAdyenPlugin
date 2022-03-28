@@ -67,7 +67,7 @@ bin/console assets:install
 9. Synchronize the database
 
 ```
-bin/console doctrine:schema:update
+bin/console doctrine:migrations:migrate
 ```
 
 10. [Obtain Adyen credentials and configure payment method](configuration.md)

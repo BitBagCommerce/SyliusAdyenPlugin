@@ -46,4 +46,4 @@
 
 > :warning: **Notice**
 > 
-> When it comes to configuration of Sylius itself: some countries need to contain a "state" or "province" field to handle  to properly handle some of the offered payment methods. These can be configured under 
+> When it comes to configuration of Sylius itself: some countries need to contain a "state" or "province" field to properly handle some of the offered payment methods. These can be configured under Configuration > Countries in the Sylius admin panel.
