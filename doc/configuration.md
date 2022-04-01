@@ -1,5 +1,13 @@
 ## Configuration
 
+> :warning: **Notice**
+>
+> When it comes to configuration of Sylius itself: some countries need to contain a "state" or "province" field to properly handle some of the offered payment methods. These can be configured under Configuration > Countries in the Sylius admin panel.
+
+> :warning: **Notice**
+> 
+> Mind that refunds **from** Adyen do not work. You must refund order items directly from the Sylius admin panel.
+
 1. Obtain an [Adyen](https://adyen.com) account. If you want to test the gateway, [register a test account](https://www.adyen.com/signup/).
 
 2. Head to API Credentials page:
@@ -42,8 +50,3 @@
    ![Adyen notifications endpoint](notifications-endpoint.png)
  
 13. Now you're ready to save and test the webhook notification. If everything goes green, you're done and ready to go.
-
-
-> :warning: **Notice**
-> 
-> When it comes to configuration of Sylius itself: some countries need to contain a "state" or "province" field to properly handle some of the offered payment methods. These can be configured under Configuration > Countries in the Sylius admin panel.
