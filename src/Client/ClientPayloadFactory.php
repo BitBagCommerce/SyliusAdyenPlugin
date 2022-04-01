@@ -133,7 +133,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         $payload = [
             'amount' => [
                 'value' => $order->getTotal(),
-                'currency' => (string) $order->getCurrencyCode(),
+                'currency' => $this->currencyContext->getCurrencyCode(),
             ],
             'reference' => (string) $order->getNumber(),
             'merchantAccount' => $options['merchantAccount'],
