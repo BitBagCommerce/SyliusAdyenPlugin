@@ -12,7 +12,6 @@ The following scheme presents the general flow that the plugin utilizes to carry
 
 ```
 Fetching the dropin data
-Initializing the transaction
 Being redirected back to Sylius
 ```
 
@@ -244,17 +243,7 @@ Sample response:
 }
 ```
 
-This configuration shall be then injected into the dropin configuration provided by [Adyen itself](https://docs.adyen.com/online-payments/web-drop-in).
-
-#### Initializing the transaction
-
-/payment/adyen/{code} - Carries out the payment. It fetches the order from the request itself with the given payment method code.
-
-Params:
-
-| **Param** | **Description** |
-|-------|-----------------|
-| code  | payment method code|
+This configuration shall be then injected into the dropin configuration provided by [Adyen itself](https://docs.adyen.com/online-payments/web-drop-in). When the configuration for the dropin is generated, it already has the correct payment initialization/details/removal set up. 
 
 #### Being redirected back to Sylius
 
