@@ -1,7 +1,7 @@
 ## Headless integration
 
 ### Introduction
-As the endpoint exposed by the plugin generate JSON responses, it's possible to integrate the plugin with an arbitrary frontend of your choice. This means, it's possible to use it in a headless environment.
+As the endpoint exposed by the plugin generate JSON responses, it's possible to integrate the plugin with an arbitrary frontend of your choice. This means it's possible to use it in a headless environment.
 
 > :warning: **Notice**
 >
@@ -13,7 +13,7 @@ The following scheme presents the general flow that the plugin utilizes to carry
 ```
 Fetching the dropin data
 Initializing the transaction
-Being redirect back to Sylius
+Being redirected back to Sylius
 ```
 
 #### Fetching the dropin data
@@ -244,7 +244,7 @@ Sample response:
 }
 ```
 
-This configuration can be further injected into the dropin configuration provided by [Adyen itself](https://docs.adyen.com/online-payments/web-drop-in)
+This configuration shall be then injected into the dropin configuration provided by [Adyen itself](https://docs.adyen.com/online-payments/web-drop-in).
 
 #### Initializing the transaction
 
@@ -256,7 +256,7 @@ Params:
 |-------|-----------------|
 | code  | payment method code|
 
-#### Being redirect back to Sylius
+#### Being redirected back to Sylius
 
 /payment/adyen/{code}/thanks - Custom thank-you page, that needs to be intercepted.
 
