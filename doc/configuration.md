@@ -8,6 +8,10 @@
 > 
 > Mind that refunds **from** Adyen do not work. You must refund order items directly from the Sylius admin panel.
 
+> :warning: **Notice**
+> 
+> The plugin resolves the available payment methods based on the base currency of your shop. This means that when USD is the base currency and the user switches over to EUR and, say, Klarna is constrained to EUR, the payment method will not be visible to the customer. 
+
 1. Obtain an [Adyen](https://adyen.com) account. If you want to test the gateway, [register a test account](https://www.adyen.com/signup/).
 
 2. Head to API Credentials page:
