@@ -51,6 +51,8 @@ final class PaymentCheckoutOrderResolver implements PaymentCheckoutOrderResolver
 
     /**
      * @psalm-suppress MixedInferredReturnType
+     * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress LessSpecificReturnStatement
      */
     private function getCurrentOrder(): ?OrderInterface
     {

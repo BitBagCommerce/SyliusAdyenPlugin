@@ -26,6 +26,8 @@ final class PaymentRepository implements PaymentRepositoryInterface
     /**
      * @psalm-suppress MixedReturnStatement
      * @psalm-suppress MixedInferredReturnType
+     * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress LessSpecificReturnStatement
      */
     public function find(int $id): ?PaymentInterface
     {
