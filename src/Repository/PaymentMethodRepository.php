@@ -30,6 +30,8 @@ final class PaymentMethodRepository implements PaymentMethodRepositoryInterface
     /**
      * @psalm-suppress MixedReturnStatement
      * @psalm-suppress MixedInferredReturnType
+     * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress LessSpecificReturnStatement
      */
     public function find(int $id): ?PaymentMethodInterface
     {
@@ -39,6 +41,8 @@ final class PaymentMethodRepository implements PaymentMethodRepositoryInterface
     /**
      * @psalm-suppress MixedReturnStatement
      * @psalm-suppress MixedInferredReturnType
+     * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress LessSpecificReturnStatement
      */
     public function getOneForAdyenAndCode(string $code): PaymentMethodInterface
     {
