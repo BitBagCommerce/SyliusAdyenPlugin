@@ -26,6 +26,8 @@ final class RefundPaymentRepository implements RefundPaymentRepositoryInterface
     /**
      * @psalm-suppress MixedReturnStatement
      * @psalm-suppress MixedInferredReturnType
+     * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress LessSpecificReturnStatement
      */
     public function getForOrderNumberAndRefundPaymentId(
         string $orderNumber,
@@ -49,6 +51,8 @@ final class RefundPaymentRepository implements RefundPaymentRepositoryInterface
     /**
      * @psalm-suppress MixedReturnStatement
      * @psalm-suppress MixedInferredReturnType
+     * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress LessSpecificReturnStatement
      */
     public function find(int $id): ?RefundPaymentInterface
     {
