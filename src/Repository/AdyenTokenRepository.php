@@ -20,6 +20,8 @@ final class AdyenTokenRepository extends EntityRepository implements AdyenTokenR
     /**
      * @psalm-suppress MixedReturnStatement
      * @psalm-suppress MixedInferredReturnType
+     * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress LessSpecificReturnStatement
      */
     public function findOneByPaymentMethodAndCustomer(
         PaymentMethodInterface $paymentMethod,
