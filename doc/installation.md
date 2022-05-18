@@ -35,7 +35,7 @@ bitbag_sylius_adyen_plugin:
     resource: "@BitBagSyliusAdyenPlugin/Resources/config/routing.yaml"
 ```
 
-6. Add logging to your environment in {dev, prod, staging}/monolog.yaml
+6. Add logging to your environment in config/packages/{dev, prod, staging}/monolog.yaml
 
 ```yaml
 monolog:
