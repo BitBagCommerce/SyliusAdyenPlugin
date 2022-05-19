@@ -21,8 +21,9 @@
 3. Choose an existing merchant account or create a new one.
 
 4. Generate an API key + client key:
-   
-   ![API + client key](adyen-api-keys.png)
+
+   ![Origin](adyen-api-key.png)
+   ![Origin](adyen-client-key.png)
    
 5. Add an origin; type your shop URL and save it (keep in mind that you should have already copied the API key, it's displayed only once):
    
