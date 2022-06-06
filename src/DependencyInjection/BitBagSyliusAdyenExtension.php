@@ -13,13 +13,29 @@ namespace BitBag\SyliusAdyenPlugin\DependencyInjection;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
-final class BitBagSyliusAdyenExtension extends ConfigurableExtension
+final class BitBagSyliusAdyenExtension extends ConfigurableExtension implements PrependExtensionInterface
 {
     public const TRANSPORT_FACTORY_ID = 'bitbag.sylius_adyen_plugin.client.adyen_transport_factory';
     public const SUPPORTED_PAYMENT_METHODS_LIST = 'bitbag.sylius_adyen_plugin.supported_payment_methods';
+
+    public function prepend(ContainerBuilder $container): void
+    {
+        $container->prependExtensionConfig('doctrine_migrations', [
+            'migrations_paths' => [
+                'BitBag\SyliusAdyenPlugin\Migrations' => __DIR__ . '/../Migrations',
+            ],
+        ]);
+
+        $container->prependExtensionConfig('sylius_labs_doctrine_migrations_extra', [
+            'migrations' => [
+                'BitBag\SyliusAdyenPlugin\Migrations' => ['Sylius\Bundle\CoreBundle\Migrations'],
+            ],
+        ]);
+    }
 
     public function loadInternal(array $config, ContainerBuilder $container): void
     {

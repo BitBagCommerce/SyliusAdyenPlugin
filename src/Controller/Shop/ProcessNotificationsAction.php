@@ -50,9 +50,15 @@ class ProcessNotificationsAction
     {
         foreach ($this->notificationResolver->resolve($code, $request) as $notificationItem) {
             if (!$notificationItem->success) {
-                $this->logger->info(\sprintf(
+                $this->logger->error(\sprintf(
                     'Payment with pspReference [%s] did not return success',
                     $notificationItem->pspReference ?? ''
+                ));
+            } else {
+                $this->logger->debug(\sprintf(
+                    'Payment with pspReference [%s] finished with event code [%s]',
+                    $notificationItem->pspReference ?? '',
+                    $notificationItem->eventCode ?? ''
                 ));
             }
 
@@ -60,7 +66,7 @@ class ProcessNotificationsAction
                 $command = $this->notificationCommandResolver->resolve($code, $notificationItem);
                 $this->dispatcher->dispatch($command);
             } catch (NoCommandResolvedException $ex) {
-                $this->logger->error($ex->getMessage());
+                $this->logger->error('Tried to dispatch an unknown command');
             }
         }
 

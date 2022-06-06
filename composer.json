@@ -13,6 +13,7 @@
         "adyen/php-api-library": "^11.0",
         "composer/package-versions-deprecated": "^1.11",
         "nyholm/psr7": "^1.4",
+        "sylius-labs/doctrine-migrations-extra-bundle": "^0.1.4",
         "sylius/refund-plugin": "~1.0.0 || ^1.1",
         "sylius/resource-bundle": "^1.8",
         "sylius/sylius": "^1.10.0 || ^1.11.0",

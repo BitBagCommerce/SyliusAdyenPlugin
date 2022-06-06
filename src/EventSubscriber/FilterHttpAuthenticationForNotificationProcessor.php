@@ -74,12 +74,14 @@ final class FilterHttpAuthenticationForNotificationProcessor implements EventSub
             \hash_equals($request->getUser() ?? '', $authUser)
             && \hash_equals($request->getPassword() ?? '', $authPassword)
         ) {
-            $this->logger->info('Webhook authentication successful');
-
             return true;
         }
 
-        $this->logger->error('Webhook authentication failed. Check the provided credentials');
+        $this->logger->error(\sprintf(
+            'Webhook authentication failed. Check the provided credentials: [%s] [%s]',
+            $request->getUser() ?? '',
+            $request->getPassword() ?? ''
+        ));
 
         return false;
     }

@@ -1,4 +1,4 @@
-bitbag_adyen_localized:
+bitbag_adyen_shop:
   resource: "@BitBagSyliusAdyenPlugin/Resources/config/routing/shop_routing.yml"
 bitbag_adyen_admin:
   prefix: /admin

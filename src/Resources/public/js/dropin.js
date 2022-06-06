@@ -73,7 +73,6 @@
                     _successfulFetchCallback(dropin, data);
                 })
                 .catch(error => {
-                    alert(configuration.translations['bitbag_sylius_adyen_plugin.runtime.payment_failed_try_again']);
                     _toggleLoader(false);
                 })
             ;
@@ -146,7 +145,6 @@
                     submitHandler(state, dropin, configuration.path.paymentDetails)
                 },
                 onError: (error, component) => {
-                    alert(typeof error['errorText'] !== "undefined" ? error.errorText : 'Unknown error occurred');
                 }
             });
         };
