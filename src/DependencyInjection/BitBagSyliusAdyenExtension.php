@@ -32,7 +32,7 @@ final class BitBagSyliusAdyenExtension extends ConfigurableExtension implements 
 
         $container->prependExtensionConfig('sylius_labs_doctrine_migrations_extra', [
             'migrations' => [
-                'BitBag\SyliusAdyenPlugin\Migrations' => ['Sylius\Bundle\CoreBundle\Migrations'],
+                'BitBag\SyliusAdyenPlugin\Migrations' => ['Sylius\Bundle\CoreBundle\Migrations', 'Sylius\RefundPlugin\Migrations'],
             ],
         ]);
     }
