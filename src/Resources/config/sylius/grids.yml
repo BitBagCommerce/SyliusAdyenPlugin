@@ -36,8 +36,8 @@ sylius_grid:
             field: dateTime
             label: test
         level:
-          type: log_level
+          type: adyen_log_level
           label: bitbag_sylius_adyen_plugin.ui.logging.level
   templates:
     filter:
-      log_level: "@BitBagSyliusAdyenPlugin/Admin/Logger/Grid/_theme.html.twig"
+      adyen_log_level: "@BitBagSyliusAdyenPlugin/Admin/Logger/Grid/_theme.html.twig"
