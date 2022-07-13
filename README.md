@@ -66,6 +66,7 @@ It supports all methods available to [drop-in](https://docs.adyen.com/online-pay
 | [iDeal](https://docs.adyen.com/payment-methods/ideal) | Yes |
 | SEPA | Yes |
 | [Sofort](https://docs.adyen.com/payment-methods/sofort#page-introduction) | Yes |
+| [Bancontact Card](https://docs.adyen.com/payment-methods/bancontact) | Yes |
 | **Order management** |
 | [Capture](https://docs.adyen.com/issuing/payment-stages#captures) | Yes |
 | [Partial refunds](https://docs.adyen.com/issuing/payment-stages#refunds) | Yes |
