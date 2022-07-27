@@ -18,7 +18,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 abstract class AbstractProcessor implements ProcessorInterface
 {
     public const PAYMENT_STATUS_RECEIVED_CODE = 'payment_status_received';
+
     public const FLASH_INFO = 'info';
+
     public const FLASH_ERROR = 'error';
 
     /** @var TranslatorInterface|null */
@@ -26,7 +28,7 @@ abstract class AbstractProcessor implements ProcessorInterface
 
     protected function isResultCodeSupportedForPayment(?PaymentInterface $payment, array $resultCodes): bool
     {
-        if ($payment === null) {
+        if (null === $payment) {
             return false;
         }
 
@@ -42,9 +44,13 @@ abstract class AbstractProcessor implements ProcessorInterface
         );
     }
 
-    protected function addFlash(Request $request, string $type, string $message): void
+    protected function addFlash(
+        Request $request,
+        string $type,
+        string $message
+    ): void
     {
-        if ($this->translator !== null) {
+        if (null !== $this->translator) {
             $message = $this->translator->trans($message);
         }
 

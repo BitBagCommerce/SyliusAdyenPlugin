@@ -15,7 +15,6 @@ use Sylius\Bundle\AddressingBundle\Validator\Constraints\ProvinceAddressConstrai
 use Sylius\Component\Core\Model\AddressInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\Validator\ConstraintViolationInterface;
 use Webmozart\Assert\Assert;
 
 class ProvinceAddressConstraintValidatorDecorator extends ConstraintValidator
@@ -26,6 +25,7 @@ class ProvinceAddressConstraintValidatorDecorator extends ConstraintValidator
 
     /** @var ProvinceAddressConstraintValidator */
     private $decorated;
+
     /** @var array|string[] */
     private $provinceRequiredCountriesList;
 
@@ -57,7 +57,7 @@ class ProvinceAddressConstraintValidatorDecorator extends ConstraintValidator
             return;
         }
 
-        if (!is_null($value->getProvinceCode()) || !is_null($value->getProvinceName())) {
+        if (null !== $value->getProvinceCode() || null !== $value->getProvinceName()) {
             return;
         }
 

@@ -29,7 +29,7 @@ trait PaymentFromOrderTrait
     {
         $payment = $order->getLastPayment($state);
 
-        if ($payment === null) {
+        if (null === $payment) {
             throw new \InvalidArgumentException(
                 sprintf('No payment associated with Order #%d', (int) $order->getId())
             );

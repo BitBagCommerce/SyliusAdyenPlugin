@@ -46,7 +46,7 @@ final class PaymentFinalizationHandler implements MessageHandlerInterface
     private function updatePayment(PaymentInterface $payment): void
     {
         $order = $payment->getOrder();
-        if ($order === null) {
+        if (null === $order) {
             return;
         }
 
@@ -67,6 +67,6 @@ final class PaymentFinalizationHandler implements MessageHandlerInterface
 
     private function isAccepted(PaymentInterface $payment): bool
     {
-        return $this->getOrderFromPayment($payment)->getPaymentState() !== OrderPaymentStates::STATE_PAID;
+        return OrderPaymentStates::STATE_PAID !== $this->getOrderFromPayment($payment)->getPaymentState();
     }
 }

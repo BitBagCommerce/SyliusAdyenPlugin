@@ -36,7 +36,7 @@ final class AlterPaymentHandler implements MessageHandlerInterface
 
     private function isCompleted(OrderInterface $order): bool
     {
-        return $order->getPaymentState() === PaymentInterface::STATE_COMPLETED;
+        return PaymentInterface::STATE_COMPLETED === $order->getPaymentState();
     }
 
     private function isAdyenPayment(PaymentInterface $payment): bool
@@ -46,8 +46,8 @@ final class AlterPaymentHandler implements MessageHandlerInterface
          */
         $method = $payment->getMethod();
         if (
-            $method === null
-            || $method->getGatewayConfig() === null
+            null === $method
+            || null === $method->getGatewayConfig()
             || !isset($this->getGatewayConfig($method)->getConfig()[AdyenClientProviderInterface::FACTORY_NAME])
         ) {
             return false;
@@ -63,7 +63,7 @@ final class AlterPaymentHandler implements MessageHandlerInterface
         }
 
         $payment = $order->getLastPayment(PaymentInterface::STATE_AUTHORIZED);
-        if ($payment === null) {
+        if (null === $payment) {
             return null;
         }
 
@@ -90,7 +90,7 @@ final class AlterPaymentHandler implements MessageHandlerInterface
     {
         $payment = $this->getPayment($alterPaymentCommand->getOrder());
 
-        if ($payment === null || !$this->isAdyenPayment($payment)) {
+        if (null === $payment || !$this->isAdyenPayment($payment)) {
             return;
         }
 

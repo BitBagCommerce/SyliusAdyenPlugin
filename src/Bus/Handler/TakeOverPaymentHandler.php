@@ -21,6 +21,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 final class TakeOverPaymentHandler implements MessageHandlerInterface
 {
     use PayableOrderPaymentTrait;
+
     use PaymentFromOrderTrait;
 
     /** @var PaymentMethodRepositoryInterface */

@@ -32,5 +32,9 @@ interface PaymentCommandFactoryInterface
         'cancellation' => PaymentCancelledCommand::class,
     ];
 
-    public function createForEvent(string $event, PaymentInterface $payment, ?NotificationItemData $notificationItemData = null): PaymentLifecycleCommand;
+    public function createForEvent(
+        string $event,
+        PaymentInterface $payment,
+        ?NotificationItemData $notificationItemData = null
+    ): PaymentLifecycleCommand;
 }

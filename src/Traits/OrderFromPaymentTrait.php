@@ -18,7 +18,7 @@ trait OrderFromPaymentTrait
     private function getOrderFromPayment(PaymentInterface $payment): OrderInterface
     {
         $result = $payment->getOrder();
-        if ($result === null) {
+        if (null === $result) {
             throw new \InvalidArgumentException(sprintf('Payment #%d has no order', (int) $payment->getId()));
         }
 

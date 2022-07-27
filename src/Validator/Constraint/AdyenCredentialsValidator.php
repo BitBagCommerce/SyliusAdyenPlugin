@@ -33,11 +33,11 @@ class AdyenCredentialsValidator extends ConstraintValidator
 
     private function dispatchException(AdyenException $exception): void
     {
-        if ($exception->getCode() === Response::HTTP_UNAUTHORIZED) {
+        if (Response::HTTP_UNAUTHORIZED === $exception->getCode()) {
             throw new InvalidApiKeyException();
         }
 
-        if ($exception->getCode() === Response::HTTP_FORBIDDEN) {
+        if (Response::HTTP_FORBIDDEN === $exception->getCode()) {
             throw new InvalidMerchantAccountException();
         }
 
@@ -46,11 +46,11 @@ class AdyenCredentialsValidator extends ConstraintValidator
 
     private function validateArguments(?string $merchantAccount, ?string $apiKey): void
     {
-        if ($merchantAccount === null || $merchantAccount === '') {
+        if (null === $merchantAccount || '' === $merchantAccount) {
             throw new InvalidMerchantAccountException();
         }
 
-        if ($apiKey === null || $apiKey === '') {
+        if (null === $apiKey || '' === $apiKey) {
             throw new InvalidApiKeyException();
         }
     }
@@ -58,7 +58,11 @@ class AdyenCredentialsValidator extends ConstraintValidator
     /**
      * @throws AuthenticationException|AdyenException
      */
-    public function isApiKeyValid(string $environment, ?string $merchantAccount, ?string $apiKey): bool
+    public function isApiKeyValid(
+        string $environment,
+        ?string $merchantAccount,
+        ?string $apiKey
+    ): bool
     {
         $this->validateArguments($merchantAccount, $apiKey);
 

@@ -46,7 +46,7 @@ class RedirectTargetAction
     {
         $referenceId = $this->getReferenceId($request);
 
-        if ($referenceId !== null) {
+        if (null !== $referenceId) {
             return $this->paymentDetailsResolver->resolve($code, $referenceId);
         }
 

@@ -52,7 +52,7 @@ final class PaymentCommandFactory implements PaymentCommandFactoryInterface
         PaymentInterface $payment,
         ?NotificationItemData $notificationItemData = null
     ): PaymentLifecycleCommand {
-        if ($notificationItemData !== null) {
+        if (null !== $notificationItemData) {
             $event = $this->eventCodeResolver->resolve($notificationItemData);
         }
 

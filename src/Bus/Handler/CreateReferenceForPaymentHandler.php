@@ -59,7 +59,7 @@ final class CreateReferenceForPaymentHandler implements MessageHandlerInterface
         $object = $this->adyenReferenceFactory->createForPayment($referenceCommand->getPayment());
         $existing = $this->getExisting($object);
 
-        if ($existing !== null) {
+        if (null !== $existing) {
             $existing->touch();
             $object = $existing;
         }

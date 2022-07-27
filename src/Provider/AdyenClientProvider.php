@@ -38,6 +38,7 @@ final class AdyenClientProvider implements AdyenClientProviderInterface
 
     /** @var ClientPayloadFactoryInterface */
     private $clientPayloadFactory;
+
     /** @var PaymentMethodsFilterInterface */
     private $paymentMethodsFilter;
 
@@ -95,7 +96,7 @@ final class AdyenClientProvider implements AdyenClientProviderInterface
     {
         $paymentMethod = $this->paymentMethodRepository->findOneForAdyenAndCode($code);
 
-        if ($paymentMethod === null) {
+        if (null === $paymentMethod) {
             throw new UnprocessablePaymentException();
         }
 

@@ -54,12 +54,12 @@ final class PaymentDetailsResolver implements PaymentDetailsResolverInterface
          * @var ?OrderInterface $order
          */
         $order = $this->orderRepository->findOneByNumber($orderNumber);
-        if ($order === null) {
+        if (null === $order) {
             throw new PaymentMethodForReferenceNotFoundException($orderNumber);
         }
 
         $payment = $order->getLastPayment();
-        if ($payment === null) {
+        if (null === $payment) {
             throw new UnprocessablePaymentException();
         }
 

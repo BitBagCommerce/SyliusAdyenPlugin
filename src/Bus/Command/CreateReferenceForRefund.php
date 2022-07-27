@@ -25,7 +25,11 @@ final class CreateReferenceForRefund
     /** @var string */
     private $refundReference;
 
-    public function __construct(string $refundReference, RefundPaymentInterface $refundPayment, PaymentInterface $payment)
+    public function __construct(
+        string $refundReference,
+        RefundPaymentInterface $refundPayment,
+        PaymentInterface $payment
+    )
     {
         $details = $payment->getDetails();
         Assert::keyExists($details, 'pspReference', 'Payment pspReference is not present');

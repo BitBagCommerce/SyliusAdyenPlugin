@@ -78,7 +78,7 @@ final class NotificationResolver implements NotificationResolverInterface
             $item->paymentCode = $paymentCode;
 
             $validationResult = $this->validator->validate($item);
-            if ($validationResult->count() > 0) {
+            if (0 < $validationResult->count()) {
                 $this->logger->error(
                     'Denormalization violations: ' . \var_export($validationResult, true)
                 );

@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PaymentDetailsAction
 {
     use PayableOrderPaymentTrait;
+
     use PaymentFromOrderTrait;
 
     /** @var AdyenClientProviderInterface */

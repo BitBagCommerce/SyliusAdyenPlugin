@@ -32,7 +32,7 @@ final class SignatureValidatorProvider implements SignatureValidatorProviderInte
     {
         $paymentMethod = $this->paymentMethodRepository->findOneForAdyenAndCode($code);
 
-        if ($paymentMethod === null) {
+        if (null === $paymentMethod) {
             throw new AdyenNotConfiguredException($code);
         }
         $gatewayConfig = $this->getGatewayConfig($paymentMethod);

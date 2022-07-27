@@ -28,13 +28,17 @@ final class FallbackResponseProcessor extends AbstractProcessor
 
     public function accepts(Request $request, ?PaymentInterface $payment): bool
     {
-        return $payment !== null;
+        return null !== $payment;
     }
 
-    public function process(string $code, Request $request, PaymentInterface $payment): string
+    public function process(
+        string $code,
+        Request $request,
+        PaymentInterface $payment
+    ): string
     {
         $tokenValue = $request->query->get('tokenValue');
-        if ($tokenValue === null) {
+        if (null === $tokenValue) {
             $this->setActiveOrderViaPayment($request, $payment);
         }
 
@@ -51,7 +55,7 @@ final class FallbackResponseProcessor extends AbstractProcessor
     private function setActiveOrderViaPayment(Request $request, PaymentInterface $payment): void
     {
         $order = $payment->getOrder();
-        if ($order === null) {
+        if (null === $order) {
             return;
         }
 

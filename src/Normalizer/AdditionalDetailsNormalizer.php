@@ -26,6 +26,7 @@ final class AdditionalDetailsNormalizer extends AbstractPaymentNormalizer implem
 
     /** @var ?NormalizerInterface */
     private $normalizer;
+
     /** @var ShippingLineGeneratorInterface */
     private $shippingLineGenerator;
 
@@ -40,7 +41,11 @@ final class AdditionalDetailsNormalizer extends AbstractPaymentNormalizer implem
     /**
      * @param mixed|OrderInterface $data
      */
-    public function supportsNormalization($data, string $format = null, array $context = []): bool
+    public function supportsNormalization(
+        $data,
+        string $format = null,
+        array $context = []
+    ): bool
     {
         return parent::supportsNormalization($data, $format, $context) && $data instanceof OrderInterface;
     }
@@ -73,7 +78,11 @@ final class AdditionalDetailsNormalizer extends AbstractPaymentNormalizer implem
     /**
      * @param mixed $object
      */
-    public function normalize($object, string $format = null, array $context = []): array
+    public function normalize(
+        $object,
+        string $format = null,
+        array $context = []
+    ): array
     {
         Assert::isInstanceOf($object, OrderInterface::class);
 

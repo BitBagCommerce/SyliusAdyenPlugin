@@ -36,7 +36,11 @@ final class PaymentResponseProcessor implements PaymentResponseProcessorInterfac
         $this->urlGenerator = $urlGenerator;
     }
 
-    private function processForPaymentSpecified(string $code, Request $request, PaymentInterface $payment): ?string
+    private function processForPaymentSpecified(
+        string $code,
+        Request $request,
+        PaymentInterface $payment
+    ): ?string
     {
         foreach ($this->processors as $processor) {
             if (!$processor->accepts($request, $payment)) {
@@ -49,14 +53,18 @@ final class PaymentResponseProcessor implements PaymentResponseProcessorInterfac
         return null;
     }
 
-    public function process(string $code, Request $request, ?PaymentInterface $payment): string
+    public function process(
+        string $code,
+        Request $request,
+        ?PaymentInterface $payment
+    ): string
     {
         $result = null;
-        if ($payment !== null) {
+        if (null !== $payment) {
             $result = $this->processForPaymentSpecified($code, $request, $payment);
         }
 
-        if ($result !== null) {
+        if (null !== $result) {
             return $result;
         }
 

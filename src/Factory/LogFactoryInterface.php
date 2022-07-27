@@ -8,5 +8,9 @@ use BitBag\SyliusAdyenPlugin\Entity\LogInterface;
 
 interface LogFactoryInterface
 {
-    public function create(string $message, int $level, int $errorCode): LogInterface;
+    public function create(
+        string $message,
+        int $level,
+        int $errorCode
+    ): LogInterface;
 }

@@ -12,7 +12,6 @@ namespace BitBag\SyliusAdyenPlugin;
 
 use BitBag\SyliusAdyenPlugin\DependencyInjection\CompilerPass\AuthenticationManagerPolyfillPass;
 use BitBag\SyliusAdyenPlugin\DependencyInjection\CompilerPass\MessageBusPolyfillPass;
-use BitBag\SyliusAdyenPlugin\DependencyInjection\CompilerPass\SyliusBehatPolyfillCompilerPass;
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -27,7 +26,7 @@ final class BitBagSyliusAdyenPlugin extends Bundle
     {
         $this->containerExtension = $this->createContainerExtension() ?? false;
 
-        return $this->containerExtension !== false ? $this->containerExtension : null;
+        return false !== $this->containerExtension ? $this->containerExtension : null;
     }
 
     public function build(ContainerBuilder $container): void

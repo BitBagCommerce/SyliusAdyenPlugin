@@ -47,7 +47,7 @@ final class GetTokenHandler implements MessageHandlerInterface
     {
         $token = $this->tokenStorage->getToken();
 
-        if ($token === null) {
+        if (null === $token) {
             return null;
         }
 
@@ -62,12 +62,12 @@ final class GetTokenHandler implements MessageHandlerInterface
      */
     public function __invoke(GetToken $getTokenQuery): ?AdyenTokenInterface
     {
-        if ($this->getUser() === null) {
+        if (null === $this->getUser()) {
             return null;
         }
 
         $customer = $getTokenQuery->getOrder()->getCustomer();
-        if ($customer === null) {
+        if (null === $customer) {
             throw new OrderWithoutCustomerException($getTokenQuery->getOrder());
         }
 
@@ -82,7 +82,7 @@ final class GetTokenHandler implements MessageHandlerInterface
             $customer
         );
 
-        if ($token !== null) {
+        if (null !== $token) {
             return $token;
         }
 

@@ -55,7 +55,7 @@ final class FailedResponseProcessor extends AbstractProcessor
     {
         $tokenValue = $order->getTokenValue();
 
-        if ($tokenValue === null) {
+        if (null === $tokenValue) {
             return $this->urlGenerator->generate(self::CHECKOUT_FINALIZATION_REDIRECT);
         }
 
@@ -65,7 +65,11 @@ final class FailedResponseProcessor extends AbstractProcessor
         );
     }
 
-    public function process(string $code, Request $request, PaymentInterface $payment): string
+    public function process(
+        string $code,
+        Request $request,
+        PaymentInterface $payment
+    ): string
     {
         $this->addFlash($request, self::FLASH_ERROR, self::LABEL_PAYMENT_FAILED);
 

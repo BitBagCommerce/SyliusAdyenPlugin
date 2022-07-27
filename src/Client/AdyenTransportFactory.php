@@ -40,13 +40,13 @@ final class AdyenTransportFactory implements AdyenTransportFactoryInterface
         $client = new Client();
         $client->setHttpClient($this->adyenHttpClient);
 
-        if ($this->logger !== null) {
+        if (null !== $this->logger) {
             $client->setLogger($this->logger);
         }
 
         $client->setXApiKey($options['apiKey']);
         $client->setEnvironment(
-            $options['environment'] == AdyenClientInterface::TEST_ENVIRONMENT
+            AdyenClientInterface::TEST_ENVIRONMENT == $options['environment']
                 ? Environment::TEST
                 : Environment::LIVE
         );

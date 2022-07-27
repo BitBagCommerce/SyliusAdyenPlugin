@@ -29,6 +29,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class PaymentsAction
 {
     use PayableOrderPaymentTrait;
+
     use PaymentFromOrderTrait;
 
     public const REDIRECT_TARGET_ACTION = 'bitbag_adyen_thank_you';
@@ -84,7 +85,7 @@ class PaymentsAction
         /**
          * @psalm-suppress InternalMethod
          */
-        if ($request->get('tokenValue') === null) {
+        if (null === $request->get('tokenValue')) {
             $request->getSession()->set(self::ORDER_ID_KEY, $order->getId());
         }
 
@@ -96,7 +97,7 @@ class PaymentsAction
         $order = $this->paymentCheckoutOrderResolver->resolve();
         $this->prepareOrder($request, $order);
 
-        if ($code !== null) {
+        if (null !== $code) {
             $this->dispatcher->dispatch(new TakeOverPayment($order, $code));
         }
 

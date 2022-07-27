@@ -24,12 +24,18 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
     private const DENORMALIZATION_PROCESSED_FLAG = '_adyen_notification_denormalization_processed';
 
     use DenormalizerAwareTrait;
+
     use NormalizerAwareTrait;
 
     /**
      * @psalm-suppress MixedReturnStatement
      */
-    public function denormalize($data, string $type, string $format = null, array $context = [])
+    public function denormalize(
+        $data,
+        string $type,
+        string $format = null,
+        array $context = []
+    )
     {
         if (!isset($data[self::DENORMALIZATION_PROCESSED_FLAG]) && is_array($data)) {
             $data['eventCode'] = strtolower((string) $data['eventCode']);
@@ -39,10 +45,14 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
         return $this->denormalizer->denormalize($data, $type, $format, $context);
     }
 
-    public function supportsDenormalization($data, string $type, string $format = null): bool
+    public function supportsDenormalization(
+        $data,
+        string $type,
+        string $format = null
+    ): bool
     {
         return
-            $type === NotificationItemData::class
+            NotificationItemData::class === $type
             && isset($data['eventCode'], $data['paymentMethod'])
             && !isset($data[self::DENORMALIZATION_PROCESSED_FLAG])
         ;
@@ -63,7 +73,11 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
      *
      * @return array<string, mixed>
      */
-    public function normalize($object, string $format = null, array $context = [])
+    public function normalize(
+        $object,
+        string $format = null,
+        array $context = []
+    )
     {
         if (!isset($context[$this->getNormalizationMarking($object)])) {
             $context[$this->getNormalizationMarking($object)] = true;
@@ -81,7 +95,11 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
     /**
      * @param mixed $data
      */
-    public function supportsNormalization($data, string $format = null, array $context = [])
+    public function supportsNormalization(
+        $data,
+        string $format = null,
+        array $context = []
+    )
     {
         return
             $data instanceof NotificationItemData
