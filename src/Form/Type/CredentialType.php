@@ -25,8 +25,7 @@ final class CredentialType extends PasswordType
         FormView $view,
         FormInterface $form,
         array $options
-    ): void
-    {
+    ): void {
         if (0 === strlen((string) $view->vars['value']) || $form->isSubmitted()) {
             return;
         }

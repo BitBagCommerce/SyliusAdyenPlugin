@@ -40,8 +40,7 @@ final class PaymentResponseProcessor implements PaymentResponseProcessorInterfac
         string $code,
         Request $request,
         PaymentInterface $payment
-    ): ?string
-    {
+    ): ?string {
         foreach ($this->processors as $processor) {
             if (!$processor->accepts($request, $payment)) {
                 continue;
@@ -57,8 +56,7 @@ final class PaymentResponseProcessor implements PaymentResponseProcessorInterfac
         string $code,
         Request $request,
         ?PaymentInterface $payment
-    ): string
-    {
+    ): string {
         $result = null;
         if (null !== $payment) {
             $result = $this->processForPaymentSpecified($code, $request, $payment);

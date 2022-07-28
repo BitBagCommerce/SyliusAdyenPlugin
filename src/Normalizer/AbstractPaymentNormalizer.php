@@ -20,8 +20,7 @@ abstract class AbstractPaymentNormalizer implements NormalizerInterface
         $data,
         string $format = null,
         array $context = []
-    ): bool
-    {
+    ): bool {
         return isset($context[self::NORMALIZER_ENABLED]);
     }
 }

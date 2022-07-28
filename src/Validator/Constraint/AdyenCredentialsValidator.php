@@ -62,8 +62,7 @@ class AdyenCredentialsValidator extends ConstraintValidator
         string $environment,
         ?string $merchantAccount,
         ?string $apiKey
-    ): bool
-    {
+    ): bool {
         $this->validateArguments($merchantAccount, $apiKey);
 
         $payload = [

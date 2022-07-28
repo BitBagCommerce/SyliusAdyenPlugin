@@ -62,8 +62,7 @@ class DropinConfigurationAction
         Request $request,
         string $code,
         ?string $orderToken = null
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $order = $this->getOrder($orderToken);
 
         if (null === $order || null === $order->getId()) {

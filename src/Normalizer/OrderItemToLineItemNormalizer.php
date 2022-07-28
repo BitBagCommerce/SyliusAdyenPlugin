@@ -46,8 +46,7 @@ final class OrderItemToLineItemNormalizer extends AbstractPaymentNormalizer
         $data,
         string $format = null,
         array $context = []
-    ): bool
-    {
+    ): bool {
         return parent::supportsNormalization($data, $format, $context) && $data instanceof OrderItemInterface;
     }
 
@@ -58,8 +57,7 @@ final class OrderItemToLineItemNormalizer extends AbstractPaymentNormalizer
         $object,
         string $format = null,
         array $context = []
-    ): array
-    {
+    ): array {
         Assert::isInstanceOf($object, OrderItemInterface::class);
 
         $locale = $this->getLocale();

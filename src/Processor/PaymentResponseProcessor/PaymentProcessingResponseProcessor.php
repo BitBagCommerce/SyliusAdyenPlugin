@@ -48,8 +48,7 @@ final class PaymentProcessingResponseProcessor extends AbstractProcessor
         string $code,
         Request $request,
         PaymentInterface $payment
-    ): string
-    {
+    ): string {
         $this->dispatchPaymentStatusReceived($payment);
         $this->addFlash($request, self::FLASH_INFO, self::LABEL_PROCESSING);
 

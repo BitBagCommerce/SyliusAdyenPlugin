@@ -54,8 +54,7 @@ class SuccessfulResponseProcessor extends AbstractProcessor
         string $code,
         Request $request,
         PaymentInterface $payment
-    ): string
-    {
+    ): string {
         $targetRoute = self::THANKS_ROUTE_NAME;
 
         $this->dispatchPaymentStatusReceived($payment);

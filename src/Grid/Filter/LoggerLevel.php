@@ -14,8 +14,7 @@ final class LoggerLevel implements FilterInterface
         string $name,
         $data,
         array $options
-    ): void
-    {
+    ): void {
         /** @psalm-suppress MixedArrayAccess */
         $dataSource->restrict($dataSource->getExpressionBuilder()->equals('level', $data['loggerLevel']));
     }

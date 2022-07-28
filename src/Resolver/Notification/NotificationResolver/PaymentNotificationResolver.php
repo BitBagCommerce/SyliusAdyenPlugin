@@ -38,8 +38,7 @@ final class PaymentNotificationResolver implements CommandResolver
         string $paymentCode,
         string $reference,
         ?string $originalReference
-    ): PaymentInterface
-    {
+    ): PaymentInterface {
         try {
             $reference = $this->adyenReferenceRepository->getOneByCodeAndReference(
                 $paymentCode,

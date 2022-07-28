@@ -45,8 +45,7 @@ final class AdditionalDetailsNormalizer extends AbstractPaymentNormalizer implem
         $data,
         string $format = null,
         array $context = []
-    ): bool
-    {
+    ): bool {
         return parent::supportsNormalization($data, $format, $context) && $data instanceof OrderInterface;
     }
 
@@ -82,8 +81,7 @@ final class AdditionalDetailsNormalizer extends AbstractPaymentNormalizer implem
         $object,
         string $format = null,
         array $context = []
-    ): array
-    {
+    ): array {
         Assert::isInstanceOf($object, OrderInterface::class);
 
         $customer = $object->getCustomer();

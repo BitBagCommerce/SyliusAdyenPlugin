@@ -33,8 +33,7 @@ final class PaymentMethodChoiceType extends ChoiceType
         FormView $view,
         FormInterface $form,
         array $options
-    ): void
-    {
+    ): void {
         parent::buildView($view, $form, $options);
         $view->vars['environment'] = $options['environment'];
         $view->vars['payment_methods'] = $options['payment_methods'];

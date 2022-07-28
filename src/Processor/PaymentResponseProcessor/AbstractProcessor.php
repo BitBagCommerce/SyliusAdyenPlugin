@@ -48,8 +48,7 @@ abstract class AbstractProcessor implements ProcessorInterface
         Request $request,
         string $type,
         string $message
-    ): void
-    {
+    ): void {
         if (null !== $this->translator) {
             $message = $this->translator->trans($message);
         }

@@ -69,8 +69,7 @@ final class FailedResponseProcessor extends AbstractProcessor
         string $code,
         Request $request,
         PaymentInterface $payment
-    ): string
-    {
+    ): string {
         $this->addFlash($request, self::FLASH_ERROR, self::LABEL_PAYMENT_FAILED);
 
         $this->dispatchPaymentStatusReceived($payment);

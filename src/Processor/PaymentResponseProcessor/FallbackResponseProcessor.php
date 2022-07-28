@@ -35,8 +35,7 @@ final class FallbackResponseProcessor extends AbstractProcessor
         string $code,
         Request $request,
         PaymentInterface $payment
-    ): string
-    {
+    ): string {
         $tokenValue = $request->query->get('tokenValue');
         if (null === $tokenValue) {
             $this->setActiveOrderViaPayment($request, $payment);

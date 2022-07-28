@@ -32,8 +32,7 @@ final class AddressNormalizer extends AbstractPaymentNormalizer
         $data,
         string $format = null,
         array $context = []
-    ): bool
-    {
+    ): bool {
         return parent::supportsNormalization($data, $format, $context) && $data instanceof AddressInterface;
     }
 
@@ -44,8 +43,7 @@ final class AddressNormalizer extends AbstractPaymentNormalizer
         $object,
         string $format = null,
         array $context = []
-    ): array
-    {
+    ): array {
         Assert::isInstanceOf($object, AddressInterface::class);
 
         $address = [

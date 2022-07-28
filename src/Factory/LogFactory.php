@@ -26,8 +26,7 @@ final class LogFactory implements FactoryInterface, LogFactoryInterface
         string $message,
         int $level,
         int $errorCode
-    ): LogInterface
-    {
+    ): LogInterface {
         /** @var LogInterface $log */
         $log = $this->createNew();
 

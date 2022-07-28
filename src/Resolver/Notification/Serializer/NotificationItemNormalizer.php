@@ -35,8 +35,7 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
         string $type,
         string $format = null,
         array $context = []
-    )
-    {
+    ) {
         if (!isset($data[self::DENORMALIZATION_PROCESSED_FLAG]) && is_array($data)) {
             $data['eventCode'] = strtolower((string) $data['eventCode']);
             $data[self::DENORMALIZATION_PROCESSED_FLAG] = true;
@@ -49,8 +48,7 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
         $data,
         string $type,
         string $format = null
-    ): bool
-    {
+    ): bool {
         return
             NotificationItemData::class === $type
             && isset($data['eventCode'], $data['paymentMethod'])
@@ -77,8 +75,7 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
         $object,
         string $format = null,
         array $context = []
-    )
-    {
+    ) {
         if (!isset($context[$this->getNormalizationMarking($object)])) {
             $context[$this->getNormalizationMarking($object)] = true;
         }
@@ -99,8 +96,7 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
         $data,
         string $format = null,
         array $context = []
-    )
-    {
+    ) {
         return
             $data instanceof NotificationItemData
             && !isset($context[$this->getNormalizationMarking($data)])

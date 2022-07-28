@@ -65,8 +65,7 @@ class RemoveStoredTokenAction
         string $code,
         string $paymentReference,
         Request $request
-    ): Response
-    {
+    ): Response {
         /**
          * @var ?CustomerInterface $customer
          */
