@@ -31,8 +31,8 @@ final class FilterManualRefundConfirmationSubscriber implements EventSubscriberI
     public function filter(TransitionEvent $event): void
     {
         if (
-            $event->getStateMachine()->getGraph() !== RefundPaymentTransitions::GRAPH
-            || $event->getTransition() !== RefundPaymentTransitions::TRANSITION_COMPLETE
+            RefundPaymentTransitions::GRAPH !== $event->getStateMachine()->getGraph()
+            || RefundPaymentTransitions::TRANSITION_COMPLETE !== $event->getTransition()
         ) {
             return;
         }

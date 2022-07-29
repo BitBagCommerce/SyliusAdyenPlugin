@@ -42,16 +42,22 @@ final class OrderItemToLineItemNormalizer extends AbstractPaymentNormalizer
     /**
      * @param mixed|OrderItemInterface $data
      */
-    public function supportsNormalization($data, string $format = null, array $context = []): bool
-    {
+    public function supportsNormalization(
+        $data,
+        string $format = null,
+        array $context = []
+    ): bool {
         return parent::supportsNormalization($data, $format, $context) && $data instanceof OrderItemInterface;
     }
 
     /**
      * @param mixed $object
      */
-    public function normalize($object, string $format = null, array $context = []): array
-    {
+    public function normalize(
+        $object,
+        string $format = null,
+        array $context = []
+    ): array {
         Assert::isInstanceOf($object, OrderItemInterface::class);
 
         $locale = $this->getLocale();
@@ -83,7 +89,7 @@ final class OrderItemToLineItemNormalizer extends AbstractPaymentNormalizer
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if ($request === null) {
+        if (null === $request) {
             return self::DEFAULT_DESCRIPTION_LOCALE;
         }
 

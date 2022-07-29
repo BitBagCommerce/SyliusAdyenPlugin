@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 final class BitBagSyliusAdyenExtension extends ConfigurableExtension implements PrependExtensionInterface
 {
     public const TRANSPORT_FACTORY_ID = 'bitbag.sylius_adyen_plugin.client.adyen_transport_factory';
+
     public const SUPPORTED_PAYMENT_METHODS_LIST = 'bitbag.sylius_adyen_plugin.supported_payment_methods';
 
     public function prepend(ContainerBuilder $container): void
@@ -44,7 +45,7 @@ final class BitBagSyliusAdyenExtension extends ConfigurableExtension implements 
 
         $container->setParameter(self::SUPPORTED_PAYMENT_METHODS_LIST, (array) $config['supported_types']);
 
-        if ($config['logger'] !== null) {
+        if (null !== $config['logger']) {
             $container->setAlias('bitbag.sylius_adyen_plugin.logger', (string) $config['logger']);
         }
 

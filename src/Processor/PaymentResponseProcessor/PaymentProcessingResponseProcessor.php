@@ -21,7 +21,9 @@ final class PaymentProcessingResponseProcessor extends AbstractProcessor
     use ProcessableResponseTrait;
 
     public const PAYMENT_PROCESSING_CODES = ['received', 'processing'];
+
     public const LABEL_PROCESSING = 'bitbag_sylius_adyen_plugin.ui.payment_processing';
+
     public const REDIRECT_TARGET_ROUTE = 'sylius_shop_homepage';
 
     /** @var UrlGeneratorInterface */
@@ -42,8 +44,11 @@ final class PaymentProcessingResponseProcessor extends AbstractProcessor
         return $this->isResultCodeSupportedForPayment($payment, self::PAYMENT_PROCESSING_CODES);
     }
 
-    public function process(string $code, Request $request, PaymentInterface $payment): string
-    {
+    public function process(
+        string $code,
+        Request $request,
+        PaymentInterface $payment
+    ): string {
         $this->dispatchPaymentStatusReceived($payment);
         $this->addFlash($request, self::FLASH_INFO, self::LABEL_PROCESSING);
 

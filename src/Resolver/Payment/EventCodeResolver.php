@@ -16,7 +16,7 @@ final class EventCodeResolver implements EventCodeResolverInterface
 {
     public function resolve(NotificationItemData $notificationData): string
     {
-        if ($notificationData->eventCode !== self::AUTHORIZATION) {
+        if (self::AUTHORIZATION !== $notificationData->eventCode) {
             return (string) $notificationData->eventCode;
         }
 

@@ -31,12 +31,16 @@ class DropinConfigurationAction
 
     /** @var CartContextInterface */
     private $cartContext;
+
     /** @var PaymentMethodsForOrderProvider */
     private $paymentMethodsForOrderProvider;
+
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
+
     /** @var OrderRepositoryInterface */
     private $orderRepository;
+
     /** @var TranslatorInterface */
     private $translator;
 
@@ -54,11 +58,14 @@ class DropinConfigurationAction
         $this->translator = $translator;
     }
 
-    public function __invoke(Request $request, string $code, ?string $orderToken = null): JsonResponse
-    {
+    public function __invoke(
+        Request $request,
+        string $code,
+        ?string $orderToken = null
+    ): JsonResponse {
         $order = $this->getOrder($orderToken);
 
-        if ($order === null || $order->getId() === null) {
+        if (null === $order || null === $order->getId()) {
             return $this->getResponseForDroppedOrder($request);
         }
 
@@ -119,7 +126,7 @@ class DropinConfigurationAction
          * @var ?OrderInterface $result
          */
         $result =
-            $orderToken !== null
+            null !== $orderToken
             ? $this->orderRepository->findOneByTokenValue($orderToken)
             : $this->cartContext->getCart()
         ;
@@ -137,7 +144,7 @@ class DropinConfigurationAction
         );
 
         try {
-            if ($tokenValue === null) {
+            if (null === $tokenValue) {
                 throw new NotFoundHttpException();
             }
         } finally {

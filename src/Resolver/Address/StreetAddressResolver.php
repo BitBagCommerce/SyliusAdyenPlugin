@@ -15,12 +15,14 @@ use BitBag\SyliusAdyenPlugin\Model\StreetAddressModelInterface;
 
 /**
  * Ported from:
- * @link https://github.com/Adyen/adyen-magento2/blob/master/Helper/Address.php
+ *
+ * @see https://github.com/Adyen/adyen-magento2/blob/master/Helper/Address.php
  */
 final class StreetAddressResolver implements StreetAddressResolverInterface
 {
     // Regex to extract the house number from the street line if needed (e.g. 'Street address 1 A' => '1 A')
     private const STREET_FIRST_REGEX = "/(?<streetName>[[:alnum:].'\- ]+)\s+(?<houseNumber>\d{1,10}((\s)?\w{1,3})?(\/\d{1,10})?)$/";
+
     private const NUMBER_FIRST_REGEX = "/^(?<houseNumber>\d{1,10}((\s)?\w{1,3})?(\/\d{1,10})?)\s+(?<streetName>[[:alnum:].'\- ]+)/u";
 
     public function resolve(string $streetAddress): StreetAddressModelInterface
@@ -31,9 +33,10 @@ final class StreetAddressResolver implements StreetAddressResolverInterface
         // Match addresses where the house number comes first, e.g. 10 D John-Paul's Ave.
         \preg_match(self::NUMBER_FIRST_REGEX, \trim($streetAddress), $numberFirstAddress);
 
-        if (\count($streetFirstAddress) > 0) {
+        if (0 < \count($streetFirstAddress)) {
             return $this->getAddress($streetFirstAddress['streetName'] ?? '', $streetFirstAddress['houseNumber'] ?? '');
-        } elseif (\count($numberFirstAddress) > 0) {
+        }
+        if (0 < \count($numberFirstAddress)) {
             return $this->getAddress($numberFirstAddress['streetName'] ?? '', $numberFirstAddress['houseNumber'] ?? '');
         }
 

@@ -17,5 +17,9 @@ interface ProcessorInterface
 {
     public function accepts(Request $request, ?PaymentInterface $payment): bool;
 
-    public function process(string $code, Request $request, PaymentInterface $payment): string;
+    public function process(
+        string $code,
+        Request $request,
+        PaymentInterface $payment
+    ): string;
 }

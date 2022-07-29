@@ -42,7 +42,7 @@ final class PaymentCheckoutOrderResolver implements PaymentCheckoutOrderResolver
     private function getCurrentRequest(): Request
     {
         $result = $this->requestStack->getCurrentRequest();
-        if ($result === null) {
+        if (null === $result) {
             throw new BadRequestException('No request provided');
         }
 

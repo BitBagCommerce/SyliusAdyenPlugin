@@ -23,6 +23,7 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 final class PaymentMethodsForOrderProvider implements PaymentMethodsForOrderProviderInterface
 {
     use PaymentFromOrderTrait;
+
     use GatewayConfigFromPaymentTrait;
 
     public const CONFIGURATION_KEYS_WHITELIST = [
@@ -62,7 +63,7 @@ final class PaymentMethodsForOrderProvider implements PaymentMethodsForOrderProv
         );
         $result['paymentMethods'] = $this->adyenPaymentMethods($order, $code, $token);
         $result['code'] = $paymentMethod->getCode();
-        $result['canBeStored'] = $token !== null;
+        $result['canBeStored'] = null !== $token;
 
         return $result;
     }
@@ -73,7 +74,7 @@ final class PaymentMethodsForOrderProvider implements PaymentMethodsForOrderProv
          * @var ?CustomerInterface $customer
          */
         $customer = $order->getCustomer();
-        if ($customer === null || !$customer->hasUser()) {
+        if (null === $customer || !$customer->hasUser()) {
             return null;
         }
 
@@ -111,7 +112,7 @@ final class PaymentMethodsForOrderProvider implements PaymentMethodsForOrderProv
 
     private function getPaymentMethod(OrderInterface $order, ?string $code = null): PaymentMethodInterface
     {
-        if ($code !== null) {
+        if (null !== $code) {
             return $this->paymentMethodRepository->getOneForAdyenAndCode($code);
         }
 

@@ -15,5 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface PaymentResponseProcessorInterface
 {
-    public function process(string $code, Request $request, PaymentInterface $payment): string;
+    public function process(
+        string $code,
+        Request $request,
+        PaymentInterface $payment
+    ): string;
 }

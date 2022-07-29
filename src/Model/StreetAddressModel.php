@@ -12,14 +12,10 @@ namespace BitBag\SyliusAdyenPlugin\Model;
 
 final class StreetAddressModel implements StreetAddressModelInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $street;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $houseNumber;
 
     public function __construct(string $street, string $houseNumberOrName)

@@ -77,9 +77,9 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         ?AdyenTokenInterface $adyenToken = null
     ): array {
         $address = $order->getBillingAddress();
-        $countryCode = $address !== null ? (string) $address->getCountryCode() : '';
+        $countryCode = null !== $address ? (string) $address->getCountryCode() : '';
         $request = $this->requestStack->getCurrentRequest();
-        $locale = $request !== null ? $request->getLocale() : '';
+        $locale = null !== $request ? $request->getLocale() : '';
 
         $payload = [
             'amount' => [
@@ -119,7 +119,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         ?AdyenTokenInterface $adyenToken = null
     ): array {
         $billingAddress = $order->getBillingAddress();
-        $countryCode = $billingAddress !== null
+        $countryCode = null !== $billingAddress
             ? (string) $billingAddress->getCountryCode()
             : null
         ;
@@ -263,13 +263,13 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
 
     private function isTokenizationSupported(array $payload, ?AdyenTokenInterface $customerIdentifier): bool
     {
-        if ($customerIdentifier === null) {
+        if (null === $customerIdentifier) {
             return false;
         }
 
         if (
             isset($payload['paymentMethod']['type'])
-            && $payload['paymentMethod']['type'] !== AdyenClientInterface::CREDIT_CARD_TYPE
+            && AdyenClientInterface::CREDIT_CARD_TYPE !== $payload['paymentMethod']['type']
         ) {
             return false;
         }
@@ -281,7 +281,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         array $payload,
         ?AdyenTokenInterface $customerIdentifier
     ): array {
-        if ($customerIdentifier !== null) {
+        if (null !== $customerIdentifier) {
             $payload['shopperReference'] = $customerIdentifier->getIdentifier();
         }
 
@@ -292,7 +292,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
     {
         if (
             isset($receivedPayload['paymentMethod']['type'])
-            && $receivedPayload['paymentMethod']['type'] == 'scheme'
+            && 'scheme' == $receivedPayload['paymentMethod']['type']
         ) {
             $payload['additionalData'] = [
                 'allow3DS2' => true,

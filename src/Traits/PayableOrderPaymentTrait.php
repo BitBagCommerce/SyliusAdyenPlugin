@@ -19,11 +19,11 @@ trait PayableOrderPaymentTrait
     {
         $payment = $order->getLastPayment(PaymentInterface::STATE_NEW);
 
-        if ($payment === null) {
+        if (null === $payment) {
             $payment = $order->getLastPayment(PaymentInterface::STATE_CART);
         }
 
-        if ($payment === null) {
+        if (null === $payment) {
             throw new \InvalidArgumentException(
                 sprintf('Order #%d has no Payment associated', (int) $order->getId())
             );

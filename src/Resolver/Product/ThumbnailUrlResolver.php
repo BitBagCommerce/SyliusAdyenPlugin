@@ -19,7 +19,9 @@ use Webmozart\Assert\Assert;
 final class ThumbnailUrlResolver implements ThumbnailUrlResolverInterface
 {
     private const FILTER_NAME = 'sylius_shop_product_thumbnail';
+
     private const IMAGE_TYPE = 'main';
+
     /** @var CacheManager */
     private $cacheManager;
 
@@ -34,7 +36,7 @@ final class ThumbnailUrlResolver implements ThumbnailUrlResolverInterface
          * @var ProductInterface|null $product
          */
         $product = $productVariant->getProduct();
-        if ($product === null) {
+        if (null === $product) {
             return [];
         }
 
@@ -58,7 +60,7 @@ final class ThumbnailUrlResolver implements ThumbnailUrlResolverInterface
     public function resolve(ProductVariantInterface $productVariant): ?string
     {
         $image = $this->getProductImage($productVariant);
-        if ($image === null) {
+        if (null === $image) {
             return null;
         }
 

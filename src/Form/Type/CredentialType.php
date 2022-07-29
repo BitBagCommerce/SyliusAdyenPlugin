@@ -21,9 +21,12 @@ final class CredentialType extends PasswordType
 {
     public const CREDENTIAL_PLACEHOLDER = '#CREDENTIAL_PLACEHOLDER#';
 
-    public function buildView(FormView $view, FormInterface $form, array $options): void
-    {
-        if (strlen((string) $view->vars['value']) === 0 || $form->isSubmitted()) {
+    public function buildView(
+        FormView $view,
+        FormInterface $form,
+        array $options
+    ): void {
+        if (0 === strlen((string) $view->vars['value']) || $form->isSubmitted()) {
             return;
         }
 
@@ -35,7 +38,7 @@ final class CredentialType extends PasswordType
         $builder->addEventListener(
             FormEvents::SUBMIT,
             function (SubmitEvent $event): void {
-                if ($event->getData() !== self::CREDENTIAL_PLACEHOLDER) {
+                if (self::CREDENTIAL_PLACEHOLDER !== $event->getData()) {
                     return;
                 }
 

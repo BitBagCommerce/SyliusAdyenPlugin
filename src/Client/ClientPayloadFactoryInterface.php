@@ -20,17 +20,31 @@ interface ClientPayloadFactoryInterface
 {
     public const NO_COUNTRY_AVAILABLE_PLACEHOLDER = 'ZZ';
 
-    public function createForAvailablePaymentMethods(ArrayObject $options, OrderInterface $order, ?AdyenTokenInterface $adyenToken = null): array;
+    public function createForAvailablePaymentMethods(
+        ArrayObject $options,
+        OrderInterface $order,
+        ?AdyenTokenInterface $adyenToken = null
+    ): array;
 
     public function createForPaymentDetails(array $receivedPayload, ?AdyenTokenInterface $adyenToken = null): array;
 
-    public function createForSubmitPayment(ArrayObject $options, string $url, array $receivedPayload, OrderInterface $order, ?AdyenTokenInterface $adyenToken = null): array;
+    public function createForSubmitPayment(
+        ArrayObject $options,
+        string $url,
+        array $receivedPayload,
+        OrderInterface $order,
+        ?AdyenTokenInterface $adyenToken = null
+    ): array;
 
     public function createForCapture(ArrayObject $options, PaymentInterface $payment): array;
 
     public function createForCancel(ArrayObject $options, PaymentInterface $payment): array;
 
-    public function createForTokenRemove(ArrayObject $options, string $paymentReference, AdyenTokenInterface $adyenToken): array;
+    public function createForTokenRemove(
+        ArrayObject $options,
+        string $paymentReference,
+        AdyenTokenInterface $adyenToken
+    ): array;
 
     public function createForRefund(
         ArrayObject $options,

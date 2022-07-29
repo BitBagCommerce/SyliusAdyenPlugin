@@ -16,8 +16,11 @@ abstract class AbstractPaymentNormalizer implements NormalizerInterface
 {
     public const NORMALIZER_ENABLED = 'bitbag_adyen_payment_normalizer';
 
-    public function supportsNormalization($data, string $format = null, array $context = []): bool
-    {
+    public function supportsNormalization(
+        $data,
+        string $format = null,
+        array $context = []
+    ): bool {
         return isset($context[self::NORMALIZER_ENABLED]);
     }
 }

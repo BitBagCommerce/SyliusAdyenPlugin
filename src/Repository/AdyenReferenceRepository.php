@@ -45,6 +45,7 @@ final class AdyenReferenceRepository extends EntityRepository implements AdyenRe
     /**
      * @psalm-suppress MixedReturnStatement
      * @psalm-suppress MixedInferredReturnType
+     *
      * @throws NoResultException
      */
     public function getOneForRefundByCodeAndReference(string $code, string $pspReference): AdyenReferenceInterface

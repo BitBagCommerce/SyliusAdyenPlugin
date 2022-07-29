@@ -22,6 +22,7 @@ final class PaymentNotificationResolver implements CommandResolver
 {
     /** @var DispatcherInterface */
     private $dispatcher;
+
     /** @var AdyenReferenceRepositoryInterface */
     private $adyenReferenceRepository;
 
@@ -33,8 +34,11 @@ final class PaymentNotificationResolver implements CommandResolver
         $this->adyenReferenceRepository = $adyenReferenceRepository;
     }
 
-    private function fetchPayment(string $paymentCode, string $reference, ?string $originalReference): PaymentInterface
-    {
+    private function fetchPayment(
+        string $paymentCode,
+        string $reference,
+        ?string $originalReference
+    ): PaymentInterface {
         try {
             $reference = $this->adyenReferenceRepository->getOneByCodeAndReference(
                 $paymentCode,

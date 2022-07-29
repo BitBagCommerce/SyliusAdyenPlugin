@@ -49,7 +49,7 @@ class RemoveStoredTokenAction
     private function getUser(): ShopUserInterface
     {
         $token = $this->tokenStorage->getToken();
-        if ($token === null) {
+        if (null === $token) {
             throw TokenRemovalFailureException::forAnonymous();
         }
 
@@ -61,20 +61,23 @@ class RemoveStoredTokenAction
         return $user;
     }
 
-    public function __invoke(string $code, string $paymentReference, Request $request): Response
-    {
+    public function __invoke(
+        string $code,
+        string $paymentReference,
+        Request $request
+    ): Response {
         /**
          * @var ?CustomerInterface $customer
          */
         $customer = $this->getUser()->getCustomer();
-        if ($customer === null) {
+        if (null === $customer) {
             throw TokenRemovalFailureException::forAnonymous();
         }
 
         $paymentMethod = $this->paymentMethodRepository->getOneForAdyenAndCode($code);
 
         $token = $this->adyenTokenRepository->findOneByPaymentMethodAndCustomer($paymentMethod, $customer);
-        if ($token === null) {
+        if (null === $token) {
             throw TokenRemovalFailureException::forNonExistingToken();
         }
 

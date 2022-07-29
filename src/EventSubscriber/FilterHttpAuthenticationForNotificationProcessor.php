@@ -51,7 +51,7 @@ final class FilterHttpAuthenticationForNotificationProcessor implements EventSub
     private function getConfiguration(string $code): array
     {
         $paymentMethod = $this->paymentMethodRepository->findOneForAdyenAndCode($code);
-        if ($paymentMethod === null) {
+        if (null === $paymentMethod) {
             throw new NotFoundHttpException();
         }
 
@@ -89,7 +89,7 @@ final class FilterHttpAuthenticationForNotificationProcessor implements EventSub
     public function filterAuthentication(RequestEvent $requestEvent): void
     {
         $request = $requestEvent->getRequest();
-        if ($request->attributes->get('_route') !== self::ROUTE_NAME) {
+        if (self::ROUTE_NAME !== $request->attributes->get('_route')) {
             return;
         }
 

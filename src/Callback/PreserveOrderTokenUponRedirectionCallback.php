@@ -29,7 +29,7 @@ class PreserveOrderTokenUponRedirectionCallback
     {
         $tokenValue = $order->getTokenValue();
 
-        if ($tokenValue === null) {
+        if (null === $tokenValue) {
             return;
         }
 

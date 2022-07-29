@@ -43,11 +43,11 @@ final class RoutePaymentCompleteTransitionSubscriber implements EventSubscriberI
 
     private function isProcessableAdyenPayment(TransitionEvent $event): bool
     {
-        if ($event->getStateMachine()->getGraph() !== PaymentTransitions::GRAPH) {
+        if (PaymentTransitions::GRAPH !== $event->getStateMachine()->getGraph()) {
             return false;
         }
 
-        if ($event->getTransition() !== PaymentTransitions::TRANSITION_COMPLETE) {
+        if (PaymentTransitions::TRANSITION_COMPLETE !== $event->getTransition()) {
             return false;
         }
         if (!isset($this->getObject($event)->getDetails()['pspReference'])) {
@@ -63,7 +63,7 @@ final class RoutePaymentCompleteTransitionSubscriber implements EventSubscriberI
          * @var ?PaymentInterface $object
          */
         $object = $event->getStateMachine()->getObject();
-        if ($object === null) {
+        if (null === $object) {
             throw new UnprocessablePaymentException();
         }
 
@@ -74,8 +74,8 @@ final class RoutePaymentCompleteTransitionSubscriber implements EventSubscriberI
     {
         if (
             !$this->isProcessableAdyenPayment($event)
-            || $event->getState() !== PaymentInterface::STATE_PROCESSING
-            || $event->getTransition() === PaymentTransitions::TRANSITION_CAPTURE
+            || PaymentInterface::STATE_PROCESSING !== $event->getState()
+            || PaymentTransitions::TRANSITION_CAPTURE === $event->getTransition()
         ) {
             return;
         }

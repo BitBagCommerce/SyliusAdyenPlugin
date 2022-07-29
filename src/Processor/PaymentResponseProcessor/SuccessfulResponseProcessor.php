@@ -50,8 +50,11 @@ class SuccessfulResponseProcessor extends AbstractProcessor
         return $this->isResultCodeSupportedForPayment($payment, self::PAYMENT_PROCEED_CODES);
     }
 
-    public function process(string $code, Request $request, PaymentInterface $payment): string
-    {
+    public function process(
+        string $code,
+        Request $request,
+        PaymentInterface $payment
+    ): string {
         $targetRoute = self::THANKS_ROUTE_NAME;
 
         $this->dispatchPaymentStatusReceived($payment);
@@ -66,11 +69,11 @@ class SuccessfulResponseProcessor extends AbstractProcessor
 
     private function shouldTheAlternativeThanksPageBeShown(Request $request): bool
     {
-        if ($request->query->get(self::TOKEN_VALUE_KEY) !== null) {
+        if (null !== $request->query->get(self::TOKEN_VALUE_KEY)) {
             return true;
         }
 
-        if ($request->getSession()->get(self::ORDER_ID_KEY) !== null) {
+        if (null !== $request->getSession()->get(self::ORDER_ID_KEY)) {
             return false;
         }
 

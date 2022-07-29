@@ -19,7 +19,7 @@ trait GatewayConfigFromPaymentTrait
     private function getGatewayConfig(PaymentMethodInterface $paymentMethod): GatewayConfigInterface
     {
         $gatewayConfig = $paymentMethod->getGatewayConfig();
-        if ($gatewayConfig === null) {
+        if (null === $gatewayConfig) {
             throw new AdyenNotConfiguredException((string) $paymentMethod->getCode());
         }
 

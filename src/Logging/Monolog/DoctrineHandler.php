@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Logging\Monolog;
 
@@ -8,7 +10,7 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class DoctrineHandler extends AbstractProcessingHandler
 {
-    /** @var LogFactoryInterface  */
+    /** @var LogFactoryInterface */
     private $logFactory;
 
     /** @var RepositoryInterface */

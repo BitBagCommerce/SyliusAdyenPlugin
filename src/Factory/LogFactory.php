@@ -22,8 +22,11 @@ final class LogFactory implements FactoryInterface, LogFactoryInterface
         return $this->factory->createNew();
     }
 
-    public function create(string $message, int $level, int $errorCode): LogInterface
-    {
+    public function create(
+        string $message,
+        int $level,
+        int $errorCode
+    ): LogInterface {
         /** @var LogInterface $log */
         $log = $this->createNew();
 

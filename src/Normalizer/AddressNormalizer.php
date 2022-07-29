@@ -17,9 +17,7 @@ use Webmozart\Assert\Assert;
 
 final class AddressNormalizer extends AbstractPaymentNormalizer
 {
-    /**
-     * @var StreetAddressResolverInterface
-     */
+    /** @var StreetAddressResolverInterface */
     private $streetAddressResolver;
 
     public function __construct(StreetAddressResolverInterface $streetAddressResolver)
@@ -30,16 +28,22 @@ final class AddressNormalizer extends AbstractPaymentNormalizer
     /**
      * @param mixed|AddressInterface $data
      */
-    public function supportsNormalization($data, string $format = null, array $context = []): bool
-    {
+    public function supportsNormalization(
+        $data,
+        string $format = null,
+        array $context = []
+    ): bool {
         return parent::supportsNormalization($data, $format, $context) && $data instanceof AddressInterface;
     }
 
     /**
      * @param mixed $object
      */
-    public function normalize($object, string $format = null, array $context = []): array
-    {
+    public function normalize(
+        $object,
+        string $format = null,
+        array $context = []
+    ): array {
         Assert::isInstanceOf($object, AddressInterface::class);
 
         $address = [

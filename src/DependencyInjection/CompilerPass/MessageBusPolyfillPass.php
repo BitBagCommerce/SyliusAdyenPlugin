@@ -19,6 +19,7 @@ class MessageBusPolyfillPass implements CompilerPassInterface
         'sylius.command_bus' => 'sylius_default.bus',
         'sylius.event_bus' => 'sylius_event.bus',
     ];
+
     public const COMMAND_BUS_TAG = 'bitbag.sylius_adyen_plugin.command_bus';
 
     private function setupDefaultCommandBus(array $buses, ContainerBuilder $container): void

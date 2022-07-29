@@ -62,7 +62,7 @@ final class RefundPaymentGeneratedHandler implements MessageHandlerInterface
         PaymentInterface $payment
     ): void {
         $refund = $this->refundPaymentRepository->find($refundPaymentGenerated->id());
-        if ($refund === null) {
+        if (null === $refund) {
             return;
         }
 
@@ -97,8 +97,8 @@ final class RefundPaymentGeneratedHandler implements MessageHandlerInterface
         $payment = $this->paymentRepository->find($refundPaymentGenerated->paymentId());
         $paymentMethod = $this->paymentMethodRepository->find($refundPaymentGenerated->paymentMethodId());
 
-        if ($payment === null
-            || $paymentMethod === null
+        if (null === $payment
+            || null === $paymentMethod
             || !isset($this->getGatewayConfig($paymentMethod)->getConfig()[AdyenClientProviderInterface::FACTORY_NAME])
         ) {
             return;
