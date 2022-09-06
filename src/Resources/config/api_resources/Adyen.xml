@@ -1,0 +1,237 @@
+<?xml version="1.0" ?>
+
+<!--
+
+ This file is part of the Sylius package.
+
+ (c) Paweł Jędrzejewski
+
+ For the full copyright and license information, please view the LICENSE
+ file that was distributed with this source code.
+
+-->
+
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata https://api-platform.com/schema/metadata/metadata-2.0.xsd"
+>
+    <resource class="%bitbag_sylius_adyen_plugin.model.adyen_token.class%" shortName="Adyen">
+        <attribute name="validation_groups">sylius</attribute>
+
+        <collectionOperations>
+            <collectionOperation name="shop_get_dropin_configuration">
+                <attribute name="method">GET</attribute>
+                <attribute name="path">/shop/payment/adyen/{code}/{orderToken}</attribute>
+                <attribute name="controller">bitbag.sylius_adyen_plugin.controller.shop.dropin_configuration_action</attribute>
+                <attribute name="pagination_enabled">false</attribute>
+                <attribute name="openapi_context">
+                    <attribute name="summary">Fetches dropin configuration</attribute>
+                    <attribute name="responses">
+                        <attribute name="200">
+                            <attribute name="description">Adyen dropin configuration</attribute>
+                            <attribute name="content">
+                                <attribute name="application/json">
+                                    <attribute name="schema">
+                                        <attribute name="type">object</attribute>
+                                        <attribute name="properties">
+                                            <attribute name="billingAddress">
+                                                <attribute name="type">object</attribute>
+                                                <attribute name="properties">
+                                                    <attribute name="firstName">
+                                                        <attribute name="type">string</attribute>
+                                                    </attribute>
+                                                    <attribute name="lastName">
+                                                        <attribute name="type">string</attribute>
+                                                    </attribute>
+                                                    <attribute name="countryCode">
+                                                        <attribute name="type">string</attribute>
+                                                    </attribute>
+                                                    <attribute name="province">
+                                                        <attribute name="type">string</attribute>
+                                                    </attribute>
+                                                    <attribute name="city">
+                                                        <attribute name="type">string</attribute>
+                                                    </attribute>
+                                                    <attribute name="postcode">
+                                                        <attribute name="type">string</attribute>
+                                                    </attribute>
+                                                </attribute>
+                                            </attribute>
+                                            <attribute name="paymentMethods">
+                                                <attribute name="type">object</attribute>
+                                                <attribute name="properties">
+                                                    <attribute name="paymentMethods">
+                                                        <attribute name="type">array</attribute>
+                                                        <attribute name="items">
+                                                            <attribute name="oneOf">
+                                                                <attribute>
+                                                                    <attribute name="type">object</attribute>
+                                                                    <attribute name="properties">
+                                                                        <attribute name="issuers">
+                                                                            <attribute name="type">array</attribute>
+                                                                            <attribute name="items">
+                                                                                <attribute name="type">object</attribute>
+                                                                                <attribute name="properties">
+                                                                                    <attribute name="disabled">
+                                                                                        <attribute name="type">boolean</attribute>
+                                                                                    </attribute>
+                                                                                    <attribute name="id">
+                                                                                        <attribute name="type">string</attribute>
+                                                                                    </attribute>
+                                                                                    <attribute name="name">
+                                                                                        <attribute name="type">string</attribute>
+                                                                                    </attribute>
+                                                                                </attribute>
+                                                                            </attribute>
+                                                                        </attribute>
+                                                                        <attribute name="name">
+                                                                            <attribute name="type">string</attribute>
+                                                                        </attribute>
+                                                                        <attribute name="type">
+                                                                            <attribute name="type">string</attribute>
+                                                                        </attribute>
+                                                                    </attribute>
+                                                                </attribute>
+                                                                <attribute>
+                                                                    <attribute name="type">object</attribute>
+                                                                    <attribute name="properties">
+                                                                        <attribute name="brands">
+                                                                            <attribute name="type">array</attribute>
+                                                                            <attribute name="items">
+                                                                                <attribute name="type">string</attribute>
+                                                                            </attribute>
+                                                                        </attribute>
+                                                                        <attribute name="configuration">
+                                                                            <attribute name="type">object</attribute>
+                                                                            <attribute name="properties">
+                                                                                <attribute name="merchantId">
+                                                                                    <attribute name="type">string</attribute>
+                                                                                </attribute>
+                                                                                <attribute name="gatewayMerchantId">
+                                                                                    <attribute name="type">string</attribute>
+                                                                                </attribute>
+                                                                                <attribute name="merchantName">
+                                                                                    <attribute name="type">string</attribute>
+                                                                                </attribute>
+                                                                            </attribute>
+                                                                        </attribute>
+                                                                        <attribute name="name">
+                                                                            <attribute name="type">string</attribute>
+                                                                        </attribute>
+                                                                        <attribute name="type">
+                                                                            <attribute name="type">string</attribute>
+                                                                        </attribute>
+                                                                    </attribute>
+                                                                </attribute>
+                                                            </attribute>
+                                                        </attribute>
+                                                    </attribute>
+                                                </attribute>
+                                            </attribute>
+                                            <attribute name="clientKey">
+                                                <attribute name="type">string</attribute>
+                                            </attribute>
+                                            <attribute name="locale">
+                                                <attribute name="type">string</attribute>
+                                            </attribute>
+                                            <attribute name="environment">
+                                                <attribute name="type">string</attribute>
+                                            </attribute>
+                                            <attribute name="canBeStored">
+                                                <attribute name="type">boolean</attribute>
+                                            </attribute>
+                                            <attribute name="amount">
+                                                <attribute name="type">object</attribute>
+                                                <attribute name="properties">
+                                                    <attribute name="currency">
+                                                        <attribute name="type">string</attribute>
+                                                    </attribute>
+                                                    <attribute name="value">
+                                                        <attribute name="type">integer</attribute>
+                                                    </attribute>
+                                                </attribute>
+                                            </attribute>
+                                            <attribute name="path">
+                                                <attribute name="type">object</attribute>
+                                                <attribute name="properties">
+                                                    <attribute name="payments">
+                                                        <attribute name="type">string</attribute>
+                                                    </attribute>
+                                                    <attribute name="paymentDetails">
+                                                        <attribute name="type">string</attribute>
+                                                    </attribute>
+                                                    <attribute name="deleteToken">
+                                                        <attribute name="type">string</attribute>
+                                                    </attribute>
+                                                </attribute>
+                                            </attribute>
+                                            <attribute name="translations">
+                                                <attribute name="type">object</attribute>
+                                                <attribute name="properties">
+                                                    <attribute name="bitbag_sylius_adyen_plugin.runtime.payment_failed_try_again">
+                                                        <attribute name="type">string</attribute>
+                                                    </attribute>
+                                                </attribute>
+                                            </attribute>
+                                        </attribute>
+                                    </attribute>
+                                </attribute>
+                            </attribute>
+                        </attribute>
+                    </attribute>
+                    <attribute name="parameters">
+                        <attribute>
+                            <attribute name="name">code</attribute>
+                            <attribute name="in">path</attribute>
+                            <attribute name="required">true</attribute>
+                            <attribute name="schema">
+                                <attribute name="type">string</attribute>
+                            </attribute>
+                        </attribute>
+                        <attribute>
+                            <attribute name="name">orderToken</attribute>
+                            <attribute name="in">path</attribute>
+                            <attribute name="required">true</attribute>
+                            <attribute name="schema">
+                                <attribute name="type">string</attribute>
+                            </attribute>
+                        </attribute>
+                    </attribute>
+                </attribute>
+            </collectionOperation>
+
+            <collectionOperation name="shop_get_custom_thank_you_page">
+                <attribute name="method">GET</attribute>
+                <attribute name="path">/shop/payment/adyen/{code}/thanks</attribute>
+                <attribute name="controller">bitbag.sylius_adyen_plugin.controller.shop.redirect_target_action</attribute>
+                <attribute name="pagination_enabled">false</attribute>
+                <attribute name="openapi_context">
+                    <attribute name="summary">Custom thank-you page, that needs to be intercepted.</attribute>
+                    <attribute name="responses">
+                        <attribute name="200">
+                            <attribute name="description">HTML response</attribute>
+                            <attribute name="content">
+                                <attribute name="text/html">
+                                    <attribute name="schema">
+                                        <attribute name="type">string</attribute>
+                                    </attribute>
+                                </attribute>
+                            </attribute>
+                        </attribute>
+                    </attribute>
+                    <attribute name="parameters">
+                        <attribute>
+                            <attribute name="name">code</attribute>
+                            <attribute name="in">path</attribute>
+                            <attribute name="required">true</attribute>
+                            <attribute name="schema">
+                                <attribute name="type">string</attribute>
+                            </attribute>
+                        </attribute>
+                    </attribute>
+                </attribute>
+            </collectionOperation>
+        </collectionOperations>
+        <itemOperations />
+    </resource>
+</resources>
