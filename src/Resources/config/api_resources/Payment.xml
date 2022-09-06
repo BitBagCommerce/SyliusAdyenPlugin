@@ -42,6 +42,7 @@
                 <attribute name="responses" />
                 <attribute name="openapi_context">
                     <attribute name="summary">Fetches dropin configuration</attribute>
+                    <attribute name="responses" />
                     <attribute name="parameters">
                         <attribute>
                             <attribute name="name">code</attribute>
