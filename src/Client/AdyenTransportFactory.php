@@ -45,11 +45,11 @@ final class AdyenTransportFactory implements AdyenTransportFactoryInterface
         }
 
         $client->setXApiKey($options['apiKey']);
-        $client->setEnvironment(
-            AdyenClientInterface::TEST_ENVIRONMENT == $options['environment']
-                ? Environment::TEST
-                : Environment::LIVE
-        );
+        if (AdyenClientInterface::TEST_ENVIRONMENT == $options['environment']){
+            $client->setEnvironment(Environment::TEST);
+        }else{
+            $client->setEnvironment(Environment::LIVE, $options['liveEndpointUrlPrefix'] );
+        }
         $client->setTimeout(30);
 
         return $client;

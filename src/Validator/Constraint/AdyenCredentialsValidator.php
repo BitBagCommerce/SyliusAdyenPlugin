@@ -61,7 +61,8 @@ class AdyenCredentialsValidator extends ConstraintValidator
     public function isApiKeyValid(
         string $environment,
         ?string $merchantAccount,
-        ?string $apiKey
+        ?string $apiKey,
+        ?string $liveEndpointUrlPrefix
     ): bool {
         $this->validateArguments($merchantAccount, $apiKey);
 
@@ -71,6 +72,7 @@ class AdyenCredentialsValidator extends ConstraintValidator
         $options = [
             'environment' => $environment,
             'apiKey' => $apiKey,
+            'liveEndpointUrlPrefix' => $liveEndpointUrlPrefix
         ];
 
         try {
@@ -93,7 +95,8 @@ class AdyenCredentialsValidator extends ConstraintValidator
             $this->isApiKeyValid(
                 (string) $value['environment'],
                 (string) $value['merchantAccount'],
-                (string) $value['apiKey']
+                (string) $value['apiKey'],
+                (string) $value['liveEndpointUrlPrefix'],
             );
         } catch (InvalidApiKeyException $ex) {
             $this->context->buildViolation($constraint->messageInvalidApiKey)->addViolation();

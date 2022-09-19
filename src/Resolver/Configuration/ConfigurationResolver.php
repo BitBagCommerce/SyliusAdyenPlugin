@@ -27,6 +27,7 @@ class ConfigurationResolver
             'environment' => AdyenClientInterface::TEST_ENVIRONMENT,
             'adyen' => 0,
             'merchantAccount' => '',
+            'liveEndpointUrlPrefix' => '',
         ]);
         $resolver->setRequired($resolver->getDefinedOptions());
 
