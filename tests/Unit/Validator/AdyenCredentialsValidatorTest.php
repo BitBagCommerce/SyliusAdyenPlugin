@@ -42,6 +42,7 @@ class AdyenCredentialsValidatorTest extends ConstraintValidatorTestCase
             'environment' => AdyenClientInterface::TEST_ENVIRONMENT,
             'merchantAccount' => 'mer',
             'apiKey' => 'api',
+            'liveEndpointUrlPrefix' => 'prefix',
         ], $constraint);
 
         $this->assertNoViolation();

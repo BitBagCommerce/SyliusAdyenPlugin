@@ -48,7 +48,9 @@ final class AdyenTransportFactory implements AdyenTransportFactoryInterface
         if (AdyenClientInterface::TEST_ENVIRONMENT == $options['environment']) {
             $client->setEnvironment(Environment::TEST);
         } else {
-            $client->setEnvironment(Environment::LIVE, $options['liveEndpointUrlPrefix']);
+            /** @var string $prefix */
+            $prefix = $options['liveEndpointUrlPrefix'];
+            $client->setEnvironment(Environment::LIVE, $prefix);
         }
         $client->setTimeout(30);
 
