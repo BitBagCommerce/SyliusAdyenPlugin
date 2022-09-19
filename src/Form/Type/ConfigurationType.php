@@ -49,7 +49,7 @@ final class ConfigurationType extends AbstractType
                 ],
             ])
             ->add('liveEndpointUrlPrefix', TextType::class, [
-                'label' => 'bitbag_sylius_adyen_plugin.ui.live_endpoint_url_prefix'
+                'label' => 'bitbag_sylius_adyen_plugin.ui.live_endpoint_url_prefix',
             ])
             ->add('apiKey', CredentialType::class, [
                 'label' => 'bitbag_sylius_adyen_plugin.ui.api_key',

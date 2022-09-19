@@ -72,7 +72,7 @@ class AdyenCredentialsValidator extends ConstraintValidator
         $options = [
             'environment' => $environment,
             'apiKey' => $apiKey,
-            'liveEndpointUrlPrefix' => $liveEndpointUrlPrefix
+            'liveEndpointUrlPrefix' => $liveEndpointUrlPrefix,
         ];
 
         try {
