@@ -122,14 +122,20 @@ class DropinConfigurationAction
 
     private function getOrder(?string $orderToken = null): ?OrderInterface
     {
+        if (null === $orderToken) {
+            $order = $this->cartContext->getCart();
+        } else {
+            $order = $this->orderRepository->findOneByTokenValue($orderToken);
+
+            if (null === $order) {
+                $order = $this->orderRepository->findCartByTokenValue($orderToken);
+            }
+        }
+
         /**
          * @var ?OrderInterface $result
          */
-        $result =
-            null !== $orderToken
-            ? $this->orderRepository->findOneByTokenValue($orderToken) ? $this->orderRepository->findOneByTokenValue($orderToken) : $this->orderRepository->findCartByTokenValue($orderToken)
-            : $this->cartContext->getCart()
-        ;
+        $result = $order;
 
         return $result;
     }
