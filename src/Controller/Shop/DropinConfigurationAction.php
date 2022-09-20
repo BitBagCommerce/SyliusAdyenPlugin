@@ -127,7 +127,7 @@ class DropinConfigurationAction
          */
         $result =
             null !== $orderToken
-            ? $this->orderRepository->findOneByTokenValue($orderToken)
+            ? $this->orderRepository->findOneByTokenValue($orderToken) ?: $this->orderRepository->findCartByTokenValue($orderToken)
             : $this->cartContext->getCart()
         ;
 
