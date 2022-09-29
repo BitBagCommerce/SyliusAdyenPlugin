@@ -19,6 +19,74 @@
         <attribute name="validation_groups">sylius</attribute>
 
         <collectionOperations>
+            <collectionOperation name="shop_get_adyen_details">
+                <attribute name="method">GET</attribute>
+                <attribute name="path">/shop/payment/adyen/{code}/details</attribute>
+                <attribute name="controller">bitbag.sylius_adyen_plugin.controller.shop.adyen_details_action</attribute>
+                <attribute name="pagination_enabled">false</attribute>
+                <attribute name="openapi_context">
+                    <attribute name="summary">Adyen payment details</attribute>
+                    <attribute name="responses">
+                        <attribute name="200">
+                            <attribute name="description">Adyen payment details</attribute>
+                            <attribute name="content">
+                                <attribute name="application/json">
+                                    <attribute name="schema">
+                                        <attribute name="type">object</attribute>
+                                        <attribute name="properties">
+                                            <attribute name="pspReference">
+                                                <attribute name="type">string</attribute>
+                                            </attribute>
+                                            <attribute name="refusalReason">
+                                                <attribute name="type">string</attribute>
+                                            </attribute>
+                                            <attribute name="resultCode">
+                                                <attribute name="type">string</attribute>
+                                            </attribute>
+                                            <attribute name="refusalReasonCode">
+                                                <attribute name="type">string</attribute>
+                                            </attribute>
+                                            <attribute name="amount">
+                                                <attribute name="type">object</attribute>
+                                                <attribute name="properties">
+                                                    <attribute name="currency">
+                                                        <attribute name="type">string</attribute>
+                                                    </attribute>
+                                                    <attribute name="value">
+                                                        <attribute name="type">integer</attribute>
+                                                    </attribute>
+                                                </attribute>
+                                            </attribute>
+                                            <attribute name="merchantReference">
+                                                <attribute name="type">string</attribute>
+                                            </attribute>
+                                        </attribute>
+                                    </attribute>
+                                </attribute>
+                            </attribute>
+                        </attribute>
+                    </attribute>
+                    <attribute name="parameters">
+                        <attribute>
+                            <attribute name="name">code</attribute>
+                            <attribute name="in">path</attribute>
+                            <attribute name="required">true</attribute>
+                            <attribute name="schema">
+                                <attribute name="type">string</attribute>
+                            </attribute>
+                        </attribute>
+                        <attribute>
+                            <attribute name="name">redirectResult</attribute>
+                            <attribute name="in">query</attribute>
+                            <attribute name="required">true</attribute>
+                            <attribute name="schema">
+                                <attribute name="type">string</attribute>
+                            </attribute>
+                        </attribute>
+                    </attribute>
+                </attribute>
+            </collectionOperation>
+
             <collectionOperation name="shop_get_dropin_configuration">
                 <attribute name="method">GET</attribute>
                 <attribute name="path">/shop/payment/adyen/{code}/{orderToken}</attribute>

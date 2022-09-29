@@ -63,5 +63,14 @@
 
             <tag name="controller.service_arguments"/>
         </service>
+
+        <service
+                class="BitBag\SyliusAdyenPlugin\Controller\Shop\AdyenDetailsAction"
+                id="bitbag.sylius_adyen_plugin.controller.shop.adyen_details_action"
+        >
+            <argument type="service" id="bitbag.sylius_adyen_plugin.resolver.payment.payment_details_resolver"/>
+
+            <tag name="controller.service_arguments"/>
+        </service>
     </services>
 </container>
