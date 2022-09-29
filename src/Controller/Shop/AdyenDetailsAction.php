@@ -11,13 +11,13 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
 use BitBag\SyliusAdyenPlugin\Resolver\Payment\PaymentDetailsResolverInterface;
-use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdyenDetailsAction
 {
-    public const REDIRECT_RESULT_KEY = 'redirectResult';
+    public const REFERENCE_ID_KEY = 'referenceId';
 
     /** @var PaymentDetailsResolverInterface */
     private $paymentDetailsResolver;
@@ -28,29 +28,17 @@ class AdyenDetailsAction
         $this->paymentDetailsResolver = $paymentDetailsResolver;
     }
 
-    public function __invoke(Request $request, string $code): JsonResponse
+    public function __invoke(Request $request, string $code): Response
     {
-        $payment = $this->retrieveCurrentPayment($code, $request);
+        /** @var ?string $referenceId */
+        $referenceId = $request->query->get(self::REFERENCE_ID_KEY);
 
-        return new JsonResponse($payment->getDetails());
-    }
-
-    private function retrieveCurrentPayment(string $code, Request $request): ?PaymentInterface
-    {
-        $referenceId = $this->getReferenceId($request);
-
-        if (null !== $referenceId) {
-            return $this->paymentDetailsResolver->resolve($code, $referenceId);
+        if (null === $referenceId) {
+            return new Response('Reference ID is missing', Response::HTTP_BAD_REQUEST);
         }
 
-        return null;
-    }
+        $payment = $this->paymentDetailsResolver->resolve($code, $referenceId);
 
-    private function getReferenceId(Request $request): ?string
-    {
-        return $request->query->has(self::REDIRECT_RESULT_KEY)
-            ? (string) $request->query->get(self::REDIRECT_RESULT_KEY)
-            : null
-            ;
+        return new JsonResponse($payment->getDetails());
     }
 }

@@ -76,7 +76,7 @@
                             </attribute>
                         </attribute>
                         <attribute>
-                            <attribute name="name">redirectResult</attribute>
+                            <attribute name="name">referenceId</attribute>
                             <attribute name="in">query</attribute>
                             <attribute name="required">true</attribute>
                             <attribute name="schema">
