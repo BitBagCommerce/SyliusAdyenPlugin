@@ -3,6 +3,10 @@ bitbag_adyen_payment_details:
   methods: [POST]
   controller: bitbag.sylius_adyen_plugin.controller.shop.payment_details_action
 
+bitbag_adyen_details:
+  path: /payment/adyen/{code}/details
+  controller: bitbag.sylius_adyen_plugin.controller.shop.adyen_details_action
+
 bitbag_adyen_payments:
   path: /payment/adyen/{code}
   methods: [POST]
