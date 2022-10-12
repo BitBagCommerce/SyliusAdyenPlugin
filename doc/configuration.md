@@ -55,3 +55,8 @@
    ![Adyen notifications endpoint](notifications-endpoint.png)
  
 13. Now you're ready to save and test the webhooks. If everything goes green, you're done and ready to go.
+
+14. Before going to production you will have to create and set up your api url prefix
+
+   ![API URLs](adyen-api-urls.png)
+   ![API production prefix](adyen-api-production-prefix.png)
