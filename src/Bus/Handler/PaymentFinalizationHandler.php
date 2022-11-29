@@ -68,7 +68,7 @@ final class PaymentFinalizationHandler implements MessageHandlerInterface
         }
         $order = $payment->getOrder();
         $this->updatePaymentState($payment, $command->getPaymentTransition());
-        if (null !== $order){
+        if (null !== $order) {
             $this->commandBus->dispatch(new SendOrderConfirmation($order->getTokenValue()));
         }
 
