@@ -13,11 +13,13 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentFinalizationCommand;
 use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
 use SM\Factory\FactoryInterface;
+use Sylius\Bundle\ApiBundle\Command\SendOrderConfirmation;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Payment\PaymentTransitions;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 final class PaymentFinalizationHandler implements MessageHandlerInterface
 {
@@ -29,12 +31,16 @@ final class PaymentFinalizationHandler implements MessageHandlerInterface
     /** @var RepositoryInterface */
     private $orderRepository;
 
+    private MessageBusInterface $commandBus;
+
     public function __construct(
         FactoryInterface $stateMachineFactory,
-        RepositoryInterface $orderRepository
+        RepositoryInterface $orderRepository,
+        MessageBusInterface $commandBus
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
         $this->orderRepository = $orderRepository;
+        $this->commandBus = $commandBus;
     }
 
     private function updatePaymentState(PaymentInterface $payment, string $transition): void
@@ -60,8 +66,12 @@ final class PaymentFinalizationHandler implements MessageHandlerInterface
         if (!$this->isAccepted($payment)) {
             return;
         }
-
+        $order = $payment->getOrder();
         $this->updatePaymentState($payment, $command->getPaymentTransition());
+        if (null !== $order){
+            $this->commandBus->dispatch(new SendOrderConfirmation($order->getTokenValue()));
+        }
+
         $this->updatePayment($payment);
     }
 
