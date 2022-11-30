@@ -13,7 +13,6 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PaymentFinalizationCommand;
 use BitBag\SyliusAdyenPlugin\Traits\OrderFromPaymentTrait;
 use SM\Factory\FactoryInterface;
-use Sylius\Bundle\ApiBundle\Command\SendOrderConfirmation;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Payment\PaymentTransitions;
@@ -70,10 +69,14 @@ final class PaymentFinalizationHandler implements MessageHandlerInterface
         $this->updatePaymentState($payment, $command->getPaymentTransition());
         if (null !== $order) {
             $token = $order->getTokenValue();
+
+            // This is necessary because in Sylius 1.11 namespace of SendOrderConfirmation has been changed
             if (null !== $token) {
+                /** @psalm-suppress MixedArgument */
                 if (class_exists('\Sylius\Bundle\ApiBundle\Command\SendOrderConfirmation')) {
                     $this->commandBus->dispatch(new \Sylius\Bundle\ApiBundle\Command\SendOrderConfirmation($token));
                 } elseif (class_exists('\Sylius\Bundle\ApiBundle\Command\Checkout\SendOrderConfirmation')) {
+                    /** @psalm-suppress UndefinedClass */
                     $this->commandBus->dispatch(new \Sylius\Bundle\ApiBundle\Command\Checkout\SendOrderConfirmation($token));
                 }
             }
