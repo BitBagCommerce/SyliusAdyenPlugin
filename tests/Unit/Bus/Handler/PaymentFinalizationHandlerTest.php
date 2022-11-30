@@ -19,6 +19,7 @@ use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\Payment;
 use Sylius\Component\Core\OrderPaymentStates;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class PaymentFinalizationHandlerTest extends TestCase
 {
@@ -30,15 +31,21 @@ class PaymentFinalizationHandlerTest extends TestCase
     /** @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository */
     private $orderRepository;
 
+    /** @var mixed|\Symfony\Component\Messenger\MessageBusInterface */
+    private $commandBus;
+
     protected function setUp(): void
     {
         $this->setupStateMachineMocks();
 
         $this->orderRepository = $this->createMock(EntityRepository::class);
 
+        $this->commandBus = $this->createMock(MessageBusInterface::class);
+
         $this->handler = new PaymentFinalizationHandler(
             $this->stateMachineFactory,
-            $this->orderRepository
+            $this->orderRepository,
+            $this->commandBus,
         );
     }
 
