@@ -71,7 +71,11 @@ final class PaymentFinalizationHandler implements MessageHandlerInterface
         if (null !== $order) {
             $token = $order->getTokenValue();
             if (null !== $token) {
-                $this->commandBus->dispatch(new SendOrderConfirmation($token));
+                if (class_exists('\Sylius\Bundle\ApiBundle\Command\SendOrderConfirmation')) {
+                    $this->commandBus->dispatch(new \Sylius\Bundle\ApiBundle\Command\SendOrderConfirmation($token));
+                } elseif (class_exists('\Sylius\Bundle\ApiBundle\Command\Checkout\SendOrderConfirmation')) {
+                    $this->commandBus->dispatch(new \Sylius\Bundle\ApiBundle\Command\Checkout\SendOrderConfirmation($token));
+                }
             }
         }
 
