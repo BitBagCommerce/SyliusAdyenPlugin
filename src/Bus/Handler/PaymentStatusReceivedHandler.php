@@ -21,6 +21,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 final class PaymentStatusReceivedHandler implements MessageHandlerInterface
 {
@@ -40,16 +41,21 @@ final class PaymentStatusReceivedHandler implements MessageHandlerInterface
     /** @var RepositoryInterface */
     private $orderRepository;
 
+    /** @var MessageBusInterface */
+    private $commandBus;
+
     public function __construct(
         FactoryInterface $stateMachineFactory,
         RepositoryInterface $paymentRepository,
         RepositoryInterface $orderRepository,
-        DispatcherInterface $dispatcher
+        DispatcherInterface $dispatcher,
+        MessageBusInterface $commandBus
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
         $this->paymentRepository = $paymentRepository;
         $this->dispatcher = $dispatcher;
         $this->orderRepository = $orderRepository;
+        $this->commandBus = $commandBus;
     }
 
     public function __invoke(PaymentStatusReceived $command): void
@@ -84,9 +90,30 @@ final class PaymentStatusReceivedHandler implements MessageHandlerInterface
     private function updateOrderState(OrderInterface $order): void
     {
         $sm = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
-        $sm->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE, true);
+        if ($sm->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)) {
+            $sm->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE, true);
 
-        $this->orderRepository->add($order);
+            $this->orderRepository->add($order);
+
+            $token = $order->getTokenValue();
+
+            // This is necessary because in Sylius 1.11 namespace of SendOrderConfirmation has been changed
+            if (null !== $token) {
+                /**
+                 * @psalm-suppress MixedArgument
+                 * @psalm-suppress UndefinedClass
+                 */
+                if (class_exists('\Sylius\Bundle\ApiBundle\Command\SendOrderConfirmation')) {
+                    $this->commandBus->dispatch(new \Sylius\Bundle\ApiBundle\Command\SendOrderConfirmation($token));
+                } elseif (class_exists('\Sylius\Bundle\ApiBundle\Command\Checkout\SendOrderConfirmation')) {
+                    /**
+                     * @psalm-suppress MixedArgument
+                     * @psalm-suppress UndefinedClass
+                     */
+                    $this->commandBus->dispatch(new \Sylius\Bundle\ApiBundle\Command\Checkout\SendOrderConfirmation($token));
+                }
+            }
+        }
     }
 
     private function getResultCode(PaymentInterface $payment): string

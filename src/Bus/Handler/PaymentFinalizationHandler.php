@@ -18,7 +18,6 @@ use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Payment\PaymentTransitions;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 final class PaymentFinalizationHandler implements MessageHandlerInterface
 {
@@ -30,16 +29,12 @@ final class PaymentFinalizationHandler implements MessageHandlerInterface
     /** @var RepositoryInterface */
     private $orderRepository;
 
-    private MessageBusInterface $commandBus;
-
     public function __construct(
         FactoryInterface $stateMachineFactory,
-        RepositoryInterface $orderRepository,
-        MessageBusInterface $commandBus
+        RepositoryInterface $orderRepository
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
         $this->orderRepository = $orderRepository;
-        $this->commandBus = $commandBus;
     }
 
     private function updatePaymentState(PaymentInterface $payment, string $transition): void
@@ -65,29 +60,8 @@ final class PaymentFinalizationHandler implements MessageHandlerInterface
         if (!$this->isAccepted($payment)) {
             return;
         }
-        $order = $payment->getOrder();
+
         $this->updatePaymentState($payment, $command->getPaymentTransition());
-        if (null !== $order) {
-            $token = $order->getTokenValue();
-
-            // This is necessary because in Sylius 1.11 namespace of SendOrderConfirmation has been changed
-            if (null !== $token) {
-                /**
-                 * @psalm-suppress MixedArgument
-                 * @psalm-suppress UndefinedClass
-                 */
-                if (class_exists('\Sylius\Bundle\ApiBundle\Command\SendOrderConfirmation')) {
-                    $this->commandBus->dispatch(new \Sylius\Bundle\ApiBundle\Command\SendOrderConfirmation($token));
-                } elseif (class_exists('\Sylius\Bundle\ApiBundle\Command\Checkout\SendOrderConfirmation')) {
-                    /**
-                     * @psalm-suppress MixedArgument
-                     * @psalm-suppress UndefinedClass
-                     */
-                    $this->commandBus->dispatch(new \Sylius\Bundle\ApiBundle\Command\Checkout\SendOrderConfirmation($token));
-                }
-            }
-        }
-
         $this->updatePayment($payment);
     }
 
