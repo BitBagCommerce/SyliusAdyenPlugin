@@ -17,6 +17,7 @@ use PHPUnit\Framework\TestCase;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\Payment;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class PaymentStatusReceivedHandlerTest extends TestCase
 {
@@ -36,6 +37,9 @@ class PaymentStatusReceivedHandlerTest extends TestCase
     /** @var \PHPUnit\Framework\MockObject\MockObject|EntityRepository */
     private $orderRepository;
 
+    /** @var mixed|\Symfony\Component\Messenger\MessageBusInterface */
+    private $commandBus;
+
     protected function setUp(): void
     {
         $this->setupStateMachineMocks();
@@ -43,11 +47,13 @@ class PaymentStatusReceivedHandlerTest extends TestCase
         $this->paymentRepository = $this->createMock(EntityRepository::class);
         $this->orderRepository = $this->createMock(EntityRepository::class);
         $this->dispatcher = $this->createMock(DispatcherInterface::class);
+        $this->commandBus = $this->createMock(MessageBusInterface::class);
         $this->handler = new PaymentStatusReceivedHandler(
             $this->stateMachineFactory,
             $this->paymentRepository,
             $this->orderRepository,
-            $this->dispatcher
+            $this->dispatcher,
+            $this->commandBus,
         );
     }
 
@@ -85,7 +91,7 @@ class PaymentStatusReceivedHandlerTest extends TestCase
         $invocation = $shouldPass ? $this->once() : $this->never();
         $this->stateMachine
             ->expects($invocation)
-            ->method('apply')
+            ->method('can')
         ;
 
         $this->dispatcher

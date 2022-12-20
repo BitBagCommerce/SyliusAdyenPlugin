@@ -31,21 +31,15 @@ class PaymentFinalizationHandlerTest extends TestCase
     /** @var mixed|\PHPUnit\Framework\MockObject\MockObject|EntityRepository */
     private $orderRepository;
 
-    /** @var mixed|\Symfony\Component\Messenger\MessageBusInterface */
-    private $commandBus;
-
     protected function setUp(): void
     {
         $this->setupStateMachineMocks();
 
         $this->orderRepository = $this->createMock(EntityRepository::class);
 
-        $this->commandBus = $this->createMock(MessageBusInterface::class);
-
         $this->handler = new PaymentFinalizationHandler(
             $this->stateMachineFactory,
-            $this->orderRepository,
-            $this->commandBus,
+            $this->orderRepository
         );
     }
 
