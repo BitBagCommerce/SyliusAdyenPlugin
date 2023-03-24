@@ -1,11 +1,5 @@
 <?php
 
-/*
- * This file was created by developers working at BitBag
- * Do you need more information about us and what we do? Visit our https://bitbag.io website!
- * We are hiring developers from all over the world. Join us and start your new, exciting adventure and become part of us: https://bitbag.io/career
-*/
-
 declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusAdyenPlugin\Application;
@@ -18,7 +12,6 @@ use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
 final class Kernel extends BaseKernel
@@ -65,7 +58,7 @@ final class Kernel extends BaseKernel
         }
     }
 
-    protected function configureRoutes(RoutingConfigurator $routes): void
+    protected function configureRoutes(RouteCollectionBuilder $routes): void
     {
         foreach ($this->getConfigurationDirectories() as $confDir) {
             $this->loadRoutesConfiguration($routes, $confDir);
@@ -74,7 +67,7 @@ final class Kernel extends BaseKernel
 
     protected function getContainerBaseClass(): string
     {
-        if ($this->isTestEnvironment() && class_exists(MockerContainer::class)) {
+        if ($this->isTestEnvironment()) {
             return MockerContainer::class;
         }
 
@@ -94,11 +87,11 @@ final class Kernel extends BaseKernel
         $loader->load($confDir . '/{services}_' . $this->environment . self::CONFIG_EXTS, 'glob');
     }
 
-    private function loadRoutesConfiguration(RoutingConfigurator $routes, string $confDir): void
+    private function loadRoutesConfiguration(RouteCollectionBuilder $routes, string $confDir): void
     {
-        $routes->import($confDir . '/{routes}/*' . self::CONFIG_EXTS);
-        $routes->import($confDir . '/{routes}/' . $this->environment . '/**/*' . self::CONFIG_EXTS);
-        $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS);
+        $routes->import($confDir . '/{routes}/*' . self::CONFIG_EXTS, '/', 'glob');
+        $routes->import($confDir . '/{routes}/' . $this->environment . '/**/*' . self::CONFIG_EXTS, '/', 'glob');
+        $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS, '/', 'glob');
     }
 
     /**

@@ -46,8 +46,8 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
     }
 
     public function supportsDenormalization(
-        mixed $data,
-        ?string $type,
+        $data,
+        string $type,
         string $format = null
     ): bool {
         return
@@ -94,10 +94,10 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
      * @param mixed $data
      */
     public function supportsNormalization(
-        mixed $data,
-        ?string $format = null,
+        $data,
+        string $format = null,
         array $context = []
-    ): bool {
+    ) {
         return
             $data instanceof NotificationItemData
             && !isset($context[$this->getNormalizationMarking($data)])
