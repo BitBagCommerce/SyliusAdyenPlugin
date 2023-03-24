@@ -2,7 +2,6 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "chart.js": "3.7.1",
-    "cha"
     "global": "^4.4.0",
     "jquery": "^3.4.0",
     "jquery.dirtyforms": "^2.0.0",
