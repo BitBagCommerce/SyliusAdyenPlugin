@@ -24,7 +24,6 @@ class PaymentResponseProcessorTest extends KernelTestCase
 
     protected function setUp(): void
     {
-//        $this->bootKernel();
         self::bootKernel();
     }
 
