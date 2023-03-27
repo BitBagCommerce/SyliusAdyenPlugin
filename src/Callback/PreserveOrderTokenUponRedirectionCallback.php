@@ -23,12 +23,17 @@ class PreserveOrderTokenUponRedirectionCallback
 
     public function __construct(RequestStack $session)
     {
-
+        if(null == $session->getMainRequest() ) {
+            return;
+        }
         $this->session = $session->getSession();
     }
 
     public function __invoke(OrderInterface $order): void
     {
+        if(null === $this->session){
+            return;
+        }
         $tokenValue = $order->getTokenValue();
 
         if (null === $tokenValue) {
