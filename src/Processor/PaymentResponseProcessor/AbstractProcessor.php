@@ -53,8 +53,10 @@ abstract class AbstractProcessor implements ProcessorInterface
         if (null !== $this->translator) {
             $message = $this->translator->trans($message);
         }
+
         /** @var FlashBagAwareSessionInterface $session */
         $session = $request->getSession();
+        /** @phpstan-ignore-next-line  */
         $session->getFlashBag()->add($type, $message);
     }
 }
