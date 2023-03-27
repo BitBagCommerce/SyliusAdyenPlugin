@@ -24,6 +24,7 @@ class PaymentResponseProcessorTest extends KernelTestCase
 
     protected function setUp(): void
     {
+//        $this->bootKernel();
         self::bootKernel();
     }
 
@@ -31,7 +32,7 @@ class PaymentResponseProcessorTest extends KernelTestCase
     {
         return new PaymentResponseProcessor(
             $processors,
-            AbstractProcessorTest::getRouter(self::$container)
+            AbstractProcessorTest::getRouter($this->getContainer())
         );
     }
 

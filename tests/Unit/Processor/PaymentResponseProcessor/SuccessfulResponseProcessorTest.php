@@ -22,9 +22,9 @@ class SuccessfulResponseProcessorTest extends AbstractProcessorTest
         parent::setUp();
 
         $this->processor = new SuccessfulResponseProcessor(
-            self::$container->get('tests.bitbag.sylius_adyen_plugin.bus.dispatcher'),
-            self::getRouter(self::$container),
-            self::$container->get('translator')
+            $this->getContainer()->get('tests.bitbag.sylius_adyen_plugin.bus.dispatcher'),
+            self::getRouter($this->getContainer()),
+            $this->getContainer()->get('translator')
         );
     }
 
@@ -76,7 +76,7 @@ class SuccessfulResponseProcessorTest extends AbstractProcessorTest
 
     private function assertIsPaymentScheduledForFinalization(): void
     {
-        $messenger = self::$container->get('tests.bitbag.sylius_adyen_plugin.message_bus');
+        $messenger = $this->getContainer()->get('tests.bitbag.sylius_adyen_plugin.message_bus');
         $commands = $messenger->getDispatchedMessages();
 
         $this->assertNotEmpty($commands);

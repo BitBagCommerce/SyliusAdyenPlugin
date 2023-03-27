@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Resolver\Version;
 
 use PackageVersions\FallbackVersions;
-use Sylius\Bundle\CoreBundle\Application\Kernel;
+use Sylius\Bundle\CoreBundle\SyliusCoreBundle as Kernel;
 
 final class VersionResolver implements VersionResolverInterface
 {

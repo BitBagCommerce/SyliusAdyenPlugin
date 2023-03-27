@@ -12,6 +12,7 @@ namespace BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor;
 
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractProcessor implements ProcessorInterface
@@ -23,7 +24,7 @@ abstract class AbstractProcessor implements ProcessorInterface
     public const FLASH_ERROR = 'error';
 
     /** @var TranslatorInterface|null */
-    protected $translator;
+    protected ?TranslatorInterface $translator;
 
     protected function isResultCodeSupportedForPayment(?PaymentInterface $payment, array $resultCodes): bool
     {
@@ -51,9 +52,9 @@ abstract class AbstractProcessor implements ProcessorInterface
         if (null !== $this->translator) {
             $message = $this->translator->trans($message);
         }
-
+        /** @var Session $session */
         $session = $request->getSession();
-        /** @phpstan-ignore-next-line  */
+
         $session->getFlashBag()->add($type, $message);
     }
 }

@@ -18,7 +18,7 @@ class PreserveOrderTokenUponRedirectionCallback
 {
     public const NON_FINALIZED_CART_SESSION_KEY = '_ADYEN_PAYMENT_IN_PROGRESS';
 
-    /** @var SessionInterface */
+    /** @var ?SessionInterface */
     private $session;
 
     public function __construct(RequestStack $session)
