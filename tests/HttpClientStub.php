@@ -36,8 +36,7 @@ class HttpClientStub implements ClientInterface
         Service $service,
         $requestUrl,
         $params
-    )
-    {
+    ) {
         if (null !== self::$jsonHandler) {
             return call_user_func(static::$jsonHandler, $service, $requestUrl, $params);
         }
@@ -51,8 +50,7 @@ class HttpClientStub implements ClientInterface
         Service $service,
         $requestUrl,
         $params
-    )
-    {
+    ) {
         if (null !== self::$postHandler) {
             return call_user_func(static::$postHandler, $service, $requestUrl, $params);
         }

@@ -62,8 +62,7 @@ class AdditionalDetailsNormalizerTest extends TestCase
         array $context,
         ?OrderInterface $order,
         bool $pass
-    ): void
-    {
+    ): void {
         $this->assertEquals($pass, $this->normalizer->supportsNormalization($order, null, $context));
     }
 

@@ -27,8 +27,7 @@ final class StreetAddressResolverTest extends TestCase
         string $streetAddress,
         string $street,
         string $houseNumber
-    ): void
-    {
+    ): void {
         $model = $this->streetAddressResolver->resolve($streetAddress);
 
         self::assertEquals($street, $model->getStreet());
@@ -40,8 +39,7 @@ final class StreetAddressResolverTest extends TestCase
         string $streetAddress,
         string $street,
         string $houseNumber
-    ): void
-    {
+    ): void {
         $model = $this->streetAddressResolver->resolve($streetAddress);
 
         self::assertEquals($street, $model->getStreet());

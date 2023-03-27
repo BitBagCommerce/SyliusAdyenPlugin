@@ -23,7 +23,6 @@ abstract class AbstractProcessor implements ProcessorInterface
 
     public const FLASH_ERROR = 'error';
 
-    /** @var TranslatorInterface|null */
     protected ?TranslatorInterface $translator;
 
     protected function isResultCodeSupportedForPayment(?PaymentInterface $payment, array $resultCodes): bool

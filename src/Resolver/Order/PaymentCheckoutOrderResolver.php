@@ -13,7 +13,6 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Order;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Order\Repository\OrderRepositoryInterface;
-use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -26,7 +25,6 @@ final class PaymentCheckoutOrderResolver implements PaymentCheckoutOrderResolver
 
     /** @var CartContextInterface */
     private $cartContext;
-
 
     private OrderRepositoryInterface $orderRepository;
 

@@ -60,8 +60,7 @@ class AddressNormalizerTest extends TestCase
         array $context,
         ?AddressInterface $order,
         bool $pass
-    ): void
-    {
+    ): void {
         $this->assertEquals($pass, $this->normalizer->supportsNormalization($order, null, $context));
     }
 

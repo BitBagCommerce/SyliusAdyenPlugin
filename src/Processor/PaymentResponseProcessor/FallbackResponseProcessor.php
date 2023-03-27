@@ -17,7 +17,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * @psalm-suppress PropertyNotSetInConstructor
  */
-
 final class FallbackResponseProcessor extends AbstractProcessor
 {
     public const REDIRECT_TARGET_ACTION = 'bitbag_adyen_thank_you';

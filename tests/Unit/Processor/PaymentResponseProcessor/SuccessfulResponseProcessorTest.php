@@ -58,8 +58,7 @@ class SuccessfulResponseProcessorTest extends AbstractProcessorTest
         Request $request,
         string $expectedUrlEnding,
         bool $expectFlash = false
-    )
-    {
+    ) {
         $payment = $this->createMock(PaymentInterface::class);
 
         $result = $this->processor->process('Szczebrzeszyn', $request, $payment);

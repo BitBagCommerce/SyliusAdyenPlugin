@@ -57,8 +57,7 @@ class PaymentMethodsFilterTest extends TestCase
         array $paymentMethodsResponseList,
         ?array $supportedMethodsList,
         array $expected
-    ): void
-    {
+    ): void {
         $response = [
             'paymentMethods' => $paymentMethodsResponseList,
         ];
