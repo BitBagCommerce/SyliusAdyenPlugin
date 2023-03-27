@@ -49,8 +49,8 @@ final class VersionResolver implements VersionResolverInterface
     private function resolveApplicationInfo(): array
     {
         $version = '';
-        if(Symfony::MAJOR_VERSION === 5) {
-            $version = Kernel::VERSION;
+        if(constant('Kernel::VERSION') === 5) {
+            $version = constant('Kernel::VERSION');
         }
         else if(defined('SyliusKernel::VERSION')){
             /** @var string $version */
