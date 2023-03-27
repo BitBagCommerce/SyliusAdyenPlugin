@@ -66,7 +66,7 @@ final class PaymentCheckoutOrderResolver implements PaymentCheckoutOrderResolver
             return null;
         }
         /**
-         * @psalm-suppress MixedReturnStatement
+         * @phpstan-ignore-next-line
          */
         return $this->orderRepository->findOneBy(['tokenValue' => $tokenValue]);
     }

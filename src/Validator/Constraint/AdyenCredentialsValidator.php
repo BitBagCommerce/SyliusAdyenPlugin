@@ -86,7 +86,7 @@ class AdyenCredentialsValidator extends ConstraintValidator
         return true;
     }
 
-    public function validate($value, Constraint $constraint): void
+    public function validate(mixed $value, Constraint $constraint): void
     {
         Assert::isInstanceOf($constraint, AdyenCredentials::class);
         Assert::isArray($value);
