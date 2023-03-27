@@ -53,9 +53,7 @@ abstract class AbstractProcessor implements ProcessorInterface
             $message = $this->translator->trans($message);
         }
 
-
         $session = $request->getSession();
-        /** @var SessionBagInterface $bag */
         $session->getFlashBag()->add($type, $message);
     }
 }
