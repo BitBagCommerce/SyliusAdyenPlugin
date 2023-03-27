@@ -12,6 +12,7 @@
         "php": "^8.0",
         "adyen/php-api-library": "^11.0",
         "composer/package-versions-deprecated": "^1.11",
+        "doctrine/annotations": "^1.14",
         "nyholm/psr7": "^1.4",
         "psalm/plugin-symfony": "^4.0",
         "sylius/refund-plugin": "~1.0.0 || ^1.1",
@@ -48,7 +49,7 @@
         "symfony/intl": "^5.4 || ^6.0",
         "symfony/web-profiler-bundle": "^5.4 || ^6.0",
         "symplify/easy-coding-standard": "^9.3, !=9.3.27",
-        "vimeo/psalm": "^4.4.1"
+        "vimeo/psalm": "^4.4.1 || ^5.0.0"
     },
     "config": {
         "sort-packages": true,

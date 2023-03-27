@@ -16,7 +16,7 @@ jobs:
     tests:
         runs-on: ubuntu-22.04
 
-        name: "PHP ${{ matrix.php }}, MySQL ${{ matrix.mysql }}, Sylius ${{ matrix.sylius }}"
+        name: "Sylius ${{ matrix.sylius }}, PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }}, MySQL ${{ matrix.mysql }}"
 
         strategy:
             fail-fast: false
