@@ -13,7 +13,6 @@ namespace BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
-use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractProcessor implements ProcessorInterface
