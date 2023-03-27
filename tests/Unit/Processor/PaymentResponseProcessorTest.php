@@ -45,7 +45,7 @@ class PaymentResponseProcessorTest extends KernelTestCase
             ;
         }
 
-        if ($response !== null) {
+        if (null !== $response) {
             $result
                 ->method('process')
                 ->willReturn($response)

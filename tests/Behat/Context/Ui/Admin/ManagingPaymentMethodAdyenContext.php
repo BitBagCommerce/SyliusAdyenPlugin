@@ -68,7 +68,11 @@ final class ManagingPaymentMethodAdyenContext extends MinkContext implements Con
         $this->kernel
             ->getContainer()
             ->get('tests.bitbag.sylius_adyen_plugin.behat.context.api_mock_client')
-            ->setJsonHandler(function (Service $service, string $url, array $payload) use ($merchantAccount, $apiKey) {
+            ->setJsonHandler(function (
+        Service $service,
+        string $url,
+        array $payload
+    ) use ($merchantAccount, $apiKey) {
                 $config = $service->getClient()->getConfig();
 
                 if ($config->getXApiKey() !== $apiKey) {

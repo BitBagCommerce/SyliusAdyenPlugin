@@ -83,11 +83,11 @@ class AlterPaymentHandlerTest extends TestCase
         ;
 
         $order = new Order();
-        if ($orderPaymentState !== null) {
+        if (null !== $orderPaymentState) {
             $order->setPaymentState($orderPaymentState);
         }
 
-        if ($payment !== null) {
+        if (null !== $payment) {
             $order->addPayment($payment);
         }
 

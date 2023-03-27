@@ -90,9 +90,6 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
         return $result;
     }
 
-    /**
-     * @param mixed $data
-     */
     public function supportsNormalization(
         mixed $data,
         ?string $format = null,

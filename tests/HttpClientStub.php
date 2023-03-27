@@ -32,9 +32,13 @@ class HttpClientStub implements ClientInterface
         self::$postHandler = $postHandler;
     }
 
-    public function requestJson(Service $service, $requestUrl, $params)
+    public function requestJson(
+        Service $service,
+        $requestUrl,
+        $params
+    )
     {
-        if (self::$jsonHandler !== null) {
+        if (null !== self::$jsonHandler) {
             return call_user_func(static::$jsonHandler, $service, $requestUrl, $params);
         }
 
@@ -43,9 +47,13 @@ class HttpClientStub implements ClientInterface
         return $client->requestJson($service, $requestUrl, $params);
     }
 
-    public function requestPost(Service $service, $requestUrl, $params)
+    public function requestPost(
+        Service $service,
+        $requestUrl,
+        $params
+    )
     {
-        if (self::$postHandler !== null) {
+        if (null !== self::$postHandler) {
             return call_user_func(static::$postHandler, $service, $requestUrl, $params);
         }
 

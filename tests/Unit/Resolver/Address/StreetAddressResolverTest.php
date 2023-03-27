@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\BitBag\SyliusAdyenPlugin\Unit\Resolver\Address;
 
@@ -21,7 +23,11 @@ final class StreetAddressResolverTest extends TestCase
     }
 
     /** @dataProvider provideHouseNumberFirst */
-    public function testResolveHouseNumberFirst(string $streetAddress, string $street, string $houseNumber): void
+    public function testResolveHouseNumberFirst(
+        string $streetAddress,
+        string $street,
+        string $houseNumber
+    ): void
     {
         $model = $this->streetAddressResolver->resolve($streetAddress);
 
@@ -30,7 +36,11 @@ final class StreetAddressResolverTest extends TestCase
     }
 
     /** @dataProvider provideHouseNumberLast */
-    public function testResolveHouseNumberLast(string $streetAddress, string $street, string $houseNumber): void
+    public function testResolveHouseNumberLast(
+        string $streetAddress,
+        string $street,
+        string $houseNumber
+    ): void
     {
         $model = $this->streetAddressResolver->resolve($streetAddress);
 
@@ -73,7 +83,7 @@ final class StreetAddressResolverTest extends TestCase
             ['1 Montfortanenlaan', 'Montfortanenlaan', '1'],
             ['2D Gasthuislaan', 'Gasthuislaan', '2D'],
             ['98 W Molstraat', 'Molstraat', '98 W'],
-            ['76B/2 ul. Akacjowa', 'ul. Akacjowa', '76B/2']
+            ['76B/2 ul. Akacjowa', 'ul. Akacjowa', '76B/2'],
         ];
     }
 }

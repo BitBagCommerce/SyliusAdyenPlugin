@@ -58,7 +58,11 @@ class AdditionalDetailsNormalizerTest extends TestCase
     /**
      * @dataProvider provideForSupportsNormalization
      */
-    public function testSupportsNormalization(array $context, ?OrderInterface $order, bool $pass): void
+    public function testSupportsNormalization(
+        array $context,
+        ?OrderInterface $order,
+        bool $pass
+    ): void
     {
         $this->assertEquals($pass, $this->normalizer->supportsNormalization($order, null, $context));
     }

@@ -54,7 +54,11 @@ class SuccessfulResponseProcessorTest extends AbstractProcessorTest
     /**
      * @dataProvider provideForTestRedirect
      */
-    public function testRedirect(Request $request, string $expectedUrlEnding, bool $expectFlash = false)
+    public function testRedirect(
+        Request $request,
+        string $expectedUrlEnding,
+        bool $expectFlash = false
+    )
     {
         $payment = $this->createMock(PaymentInterface::class);
 
