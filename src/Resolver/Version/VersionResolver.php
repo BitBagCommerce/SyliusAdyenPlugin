@@ -44,12 +44,12 @@ final class VersionResolver implements VersionResolverInterface
     private function resolveApplicationInfo(): array
     {
         $version = '';
-        if (5 === constant('Kernel::VERSION')) {
+        if (5 === constant('Symfony\Component\HttpKernel\Kernel::VERSION')) {
             /** @var string $version */
-            $version = constant('Kernel::VERSION');
-        } elseif (defined('SyliusKernel::VERSION')) {
+            $version = constant('Sylius\Bundle\CoreBundle\Application\Kernel::VERSION');
+        } elseif (defined('Sylius\Bundle\CoreBundle\SyliusCoreBundle::VERSION')) {
             /** @var string $version */
-            $version = constant('SyliusKernel::VERSION');
+            $version = constant('Sylius\Bundle\CoreBundle\SyliusCoreBundle::VERSION');
         }
 
         return [
