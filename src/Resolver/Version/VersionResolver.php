@@ -45,6 +45,7 @@ final class VersionResolver implements VersionResolverInterface
     {
         $version = '';
         if (5 === constant('Kernel::VERSION')) {
+            /** @var string $version */
             $version = constant('Kernel::VERSION');
         } elseif (defined('SyliusKernel::VERSION')) {
             /** @var string $version */
