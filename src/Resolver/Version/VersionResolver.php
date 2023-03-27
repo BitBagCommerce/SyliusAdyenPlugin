@@ -12,11 +12,6 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Version;
 
 use PackageVersions\FallbackVersions;
 
-use Symfony\Component\HttpKernel\Kernel as Symfony;
-use Sylius\Bundle\CoreBundle\Application\Kernel;
-
-use Sylius\Bundle\CoreBundle\SyliusCoreBundle as SyliusKernel;
-
 final class VersionResolver implements VersionResolverInterface
 {
     private const PACKAGE_NAME = 'bitbag/sylius-adyen-plugin';
@@ -49,13 +44,13 @@ final class VersionResolver implements VersionResolverInterface
     private function resolveApplicationInfo(): array
     {
         $version = '';
-        if(constant('Kernel::VERSION') === 5) {
+        if (5 === constant('Kernel::VERSION')) {
             $version = constant('Kernel::VERSION');
-        }
-        else if(defined('SyliusKernel::VERSION')){
+        } elseif (defined('SyliusKernel::VERSION')) {
             /** @var string $version */
             $version = constant('SyliusKernel::VERSION');
         }
+
         return [
             'merchantApplication' => [
                 'name' => 'adyen-sylius',
