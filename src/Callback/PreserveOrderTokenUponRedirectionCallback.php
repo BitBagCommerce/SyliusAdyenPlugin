@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Callback;
 
 use Sylius\Component\Core\Model\OrderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class PreserveOrderTokenUponRedirectionCallback
@@ -20,9 +21,10 @@ class PreserveOrderTokenUponRedirectionCallback
     /** @var SessionInterface */
     private $session;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(RequestStack $session)
     {
-        $this->session = $session;
+
+        $this->session = $session->getSession();
     }
 
     public function __invoke(OrderInterface $order): void
