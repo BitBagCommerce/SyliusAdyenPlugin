@@ -43,13 +43,13 @@ final class VersionResolver implements VersionResolverInterface
 
     private function resolveApplicationInfo(): array
     {
-        $version = '';
+        $syliusVersion = '';
         if (5 === constant('Symfony\Component\HttpKernel\Kernel::MAJOR_VERSION')) {
             /** @var string $version */
-            $version = constant('Sylius\Bundle\CoreBundle\Application\Kernel::VERSION');
+            $syliusVersion = constant('Sylius\Bundle\CoreBundle\Application\Kernel::VERSION');
         } elseif (defined('Sylius\Bundle\CoreBundle\SyliusCoreBundle::VERSION')) {
             /** @var string $version */
-            $version = constant('Sylius\Bundle\CoreBundle\SyliusCoreBundle::VERSION');
+            $syliusVersion = constant('Sylius\Bundle\CoreBundle\SyliusCoreBundle::VERSION');
         }
 
         return [
@@ -59,7 +59,7 @@ final class VersionResolver implements VersionResolverInterface
             ],
             'externalPlatform' => [
                 'name' => 'Sylius',
-                'version' => $version,
+                'version' => $syliusVersion,
                 'integrator' => 'BitBag',
             ],
         ];
