@@ -45,10 +45,10 @@ final class VersionResolver implements VersionResolverInterface
     {
         $syliusVersion = '';
         if (5 === constant('Symfony\Component\HttpKernel\Kernel::MAJOR_VERSION')) {
-            /** @var string $version */
+            /** @var string $syliusVersion */
             $syliusVersion = constant('Sylius\Bundle\CoreBundle\Application\Kernel::VERSION');
         } elseif (defined('Sylius\Bundle\CoreBundle\SyliusCoreBundle::VERSION')) {
-            /** @var string $version */
+            /** @var string $syliusVersion */
             $syliusVersion = constant('Sylius\Bundle\CoreBundle\SyliusCoreBundle::VERSION');
         }
 
