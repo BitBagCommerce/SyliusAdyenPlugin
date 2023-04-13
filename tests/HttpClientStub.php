@@ -37,7 +37,7 @@ class HttpClientStub implements ClientInterface
         Service $service,
         $requestUrl,
         $params
-    ): mixed  {
+    ): mixed {
         if (null !== self::$jsonHandler) {
             return call_user_func(static::$jsonHandler, $service, $requestUrl, $params);
         }
