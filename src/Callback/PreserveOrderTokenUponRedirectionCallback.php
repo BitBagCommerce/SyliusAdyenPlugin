@@ -34,12 +34,12 @@ class PreserveOrderTokenUponRedirectionCallback
     public function __invoke(OrderInterface $order): void
     {
         if (null === $this->session) {
-            throw new SessionNotFoundException();
+            return;
         }
         $tokenValue = $order->getTokenValue();
 
         if (null === $tokenValue) {
-            throw new TokenNotFoundException();
+            return;
         }
 
         $this->session->set(
