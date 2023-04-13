@@ -64,10 +64,11 @@ final class PaymentCheckoutOrderResolver implements PaymentCheckoutOrderResolver
         if (null === $tokenValue) {
             return null;
         }
-        /**
-         * @phpstan-ignore-next-line
-         */
-        return $this->orderRepository->findOneBy(['tokenValue' => $tokenValue]);
+
+        /** @var OrderInterface $order */
+        $order = $this->orderRepository->findOneBy(['tokenValue' => $tokenValue]);
+
+        return $order;
     }
 
     public function resolve(): OrderInterface

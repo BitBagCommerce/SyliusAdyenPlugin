@@ -11,8 +11,10 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Callback;
 
 use Sylius\Component\Core\Model\OrderInterface;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 
 class PreserveOrderTokenUponRedirectionCallback
 {
@@ -32,12 +34,12 @@ class PreserveOrderTokenUponRedirectionCallback
     public function __invoke(OrderInterface $order): void
     {
         if (null === $this->session) {
-            return;
+            throw new SessionNotFoundException();
         }
         $tokenValue = $order->getTokenValue();
 
         if (null === $tokenValue) {
-            return;
+            throw new TokenNotFoundException();
         }
 
         $this->session->set(
