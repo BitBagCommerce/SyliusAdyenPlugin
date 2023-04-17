@@ -26,6 +26,7 @@ winzou_state_machine:
         from: [awaiting_payment, partially_paid, authorized, processing]
 
   sylius_refund_refund_payment:
+    class: Sylius\RefundPlugin\Entity\RefundPayment
     transitions:
       confirm:
         from: [new]
