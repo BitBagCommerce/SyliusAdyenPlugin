@@ -1,13 +1,13 @@
 const path = require('path');
 const Encore = require('@symfony/webpack-encore');
-const [bitbagCsShop, bitbagCsAdmin] = require('../../webpack.config.js');
 
 const syliusBundles = path.resolve(__dirname, '../../vendor/sylius/sylius/src/Sylius/Bundle/');
 const uiBundleScripts = path.resolve(syliusBundles, 'UiBundle/Resources/private/js/');
 const uiBundleResources = path.resolve(syliusBundles, 'UiBundle/Resources/private/');
 
 // Shop config
-Encore.setOutputPath('public/build/shop/')
+Encore
+    .setOutputPath('public/build/shop/')
     .setPublicPath('/build/shop')
     .addEntry('shop-entry', './assets/shop/entry.js')
     .disableSingleRuntimeChunk()
@@ -26,7 +26,8 @@ shopConfig.name = 'shop';
 Encore.reset();
 
 // Admin config
-Encore.setOutputPath('public/build/admin/')
+Encore
+    .setOutputPath('public/build/admin/')
     .setPublicPath('/build/admin')
     .addEntry('admin-entry', './assets/admin/entry.js')
     .disableSingleRuntimeChunk()
@@ -45,4 +46,4 @@ adminConfig.externals = Object.assign({}, adminConfig.externals, {window: 'windo
 
 adminConfig.name = 'admin';
 
-module.exports = [shopConfig, adminConfig, bitbagCsShop, bitbagCsAdmin];
+module.exports = [shopConfig, adminConfig];
