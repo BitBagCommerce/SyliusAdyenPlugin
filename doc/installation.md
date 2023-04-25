@@ -58,7 +58,15 @@ monolog:
          - adyen
 ```
 
-8. Copy Sylius templates overridden by plug-in to your templates directory (`templates/bundles/`):
+8. Configure config/packages/webpack_encore.yaml
+```yaml
+    builds:
+        *: *
+        shop: '%kernel.project_dir%/public/build/shop'
+        admin: '%kernel.project_dir%/public/build/admin'
+```
+
+9. Copy Sylius templates overridden by plug-in to your templates directory (`templates/bundles/`):
 
 ```
 mkdir -p templates/bundles/SyliusAdminBundle/
@@ -68,19 +76,19 @@ cp -R vendor/bitbag/sylius-adyen-plugin/tests/Application/templates/bundles/Syli
 cp -R vendor/bitbag/sylius-adyen-plugin/tests/Application/templates/bundles/SyliusShopBundle/* templates/bundles/SyliusShopBundle/
 ```
 
-9. Execute migrations
+10. Execute migrations
 
 ```
 bin/console doctrine:migrations:migrate
 ```
 
-10. Install assets
+11. Install assets
 
 ```
 bin/console assets:install
 ```
 
-11. Clear cache
+12. Clear cache
 
 ```
 bin/console cache:clear
@@ -88,7 +96,7 @@ bin/console cache:clear
 
 **Note:** If you are running it on production, add the `-e prod` flag to this command.
 
-12. [Obtain Adyen credentials and configure the payment method](configuration.md)
+13. [Obtain Adyen credentials and configure the payment method](configuration.md)
 
 
-13. If you want to access the log page, visit /adyen/log.
+14. If you want to access the log page, visit /adyen/log.

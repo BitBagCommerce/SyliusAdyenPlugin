@@ -70,7 +70,7 @@ abstract class AbstractProcessorTest extends KernelTestCase
     protected function getPayment(?string $resultCode = null, ?string $orderToken = null): PaymentInterface
     {
         $details = [];
-        if ($resultCode !== null) {
+        if (null !== $resultCode) {
             $details['resultCode'] = $resultCode;
         }
 
@@ -80,7 +80,7 @@ abstract class AbstractProcessorTest extends KernelTestCase
             ->willReturn($details)
         ;
 
-        if ($orderToken !== null) {
+        if (null !== $orderToken) {
             $order = $this->createMock(OrderInterface::class);
             $order
                 ->method('getTokenValue')

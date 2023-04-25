@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "chart.js": "^2.9.3",
+    "chart.js": "^3.7.1",
     "global": "^4.4.0",
     "jquery": "^3.4.0",
     "jquery.dirtyforms": "^2.0.0",
@@ -46,7 +46,7 @@
     "yargs": "^6.4.0"
   },
   "scripts": {
-    "build": "gulp build",
+    "build": "yarn encore prod",
     "gulp": "gulp build",
     "lint": "yarn lint:js",
     "lint:js": "eslint gulpfile.babel.js"

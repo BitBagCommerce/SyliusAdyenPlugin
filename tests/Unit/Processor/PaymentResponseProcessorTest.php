@@ -31,7 +31,7 @@ class PaymentResponseProcessorTest extends KernelTestCase
     {
         return new PaymentResponseProcessor(
             $processors,
-            AbstractProcessorTest::getRouter(self::$container)
+            AbstractProcessorTest::getRouter($this->getContainer())
         );
     }
 
@@ -45,7 +45,7 @@ class PaymentResponseProcessorTest extends KernelTestCase
             ;
         }
 
-        if ($response !== null) {
+        if (null !== $response) {
             $result
                 ->method('process')
                 ->willReturn($response)

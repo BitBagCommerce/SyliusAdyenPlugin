@@ -27,8 +27,8 @@ class FailedResponseProcessorTest extends AbstractProcessorTest
         $this->dispatcher = $this->createMock(DispatcherInterface::class);
 
         $this->processor = new FailedResponseProcessor(
-            self::getRouter(self::$container),
-            self::$container->get('translator'),
+            self::getRouter($this->getContainer()),
+            $this->getContainer()->get('translator'),
             $this->dispatcher
         );
     }

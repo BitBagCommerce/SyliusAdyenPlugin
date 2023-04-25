@@ -22,7 +22,7 @@
                 class="BitBag\SyliusAdyenPlugin\Callback\PreserveOrderTokenUponRedirectionCallback"
                 id="bitbag.sylius_adyen_plugin.callback.preserve_order_token_upon_redirection_callback"
         >
-            <argument type="service" id="session"/>
+            <argument type="service" id="request_stack"/>
         </service>
 
         <service

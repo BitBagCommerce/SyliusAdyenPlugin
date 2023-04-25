@@ -19,7 +19,6 @@ use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\Payment;
 use Sylius\Component\Core\OrderPaymentStates;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 class PaymentFinalizationHandlerTest extends TestCase
 {

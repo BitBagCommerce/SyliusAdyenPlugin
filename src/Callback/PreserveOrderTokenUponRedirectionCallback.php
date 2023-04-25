@@ -11,22 +11,29 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Callback;
 
 use Sylius\Component\Core\Model\OrderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class PreserveOrderTokenUponRedirectionCallback
 {
     public const NON_FINALIZED_CART_SESSION_KEY = '_ADYEN_PAYMENT_IN_PROGRESS';
 
-    /** @var SessionInterface */
+    /** @var ?SessionInterface */
     private $session;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(RequestStack $session)
     {
-        $this->session = $session;
+        if (null == $session->getMainRequest()) {
+            return;
+        }
+        $this->session = $session->getSession();
     }
 
     public function __invoke(OrderInterface $order): void
     {
+        if (null === $this->session) {
+            return;
+        }
         $tokenValue = $order->getTokenValue();
 
         if (null === $tokenValue) {

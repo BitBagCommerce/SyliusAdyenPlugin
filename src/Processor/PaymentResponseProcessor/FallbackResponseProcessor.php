@@ -13,6 +13,7 @@ namespace BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class FallbackResponseProcessor extends AbstractProcessor
 {
@@ -21,9 +22,10 @@ final class FallbackResponseProcessor extends AbstractProcessor
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(UrlGeneratorInterface $urlGenerator, TranslatorInterface $translator)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->translator = $translator;
     }
 
     public function accepts(Request $request, ?PaymentInterface $payment): bool

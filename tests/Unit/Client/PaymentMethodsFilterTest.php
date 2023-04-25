@@ -53,8 +53,11 @@ class PaymentMethodsFilterTest extends TestCase
     /**
      * @dataProvider provideForTestFilter
      */
-    public function testFilter(array $paymentMethodsResponseList, ?array $supportedMethodsList, array $expected): void
-    {
+    public function testFilter(
+        array $paymentMethodsResponseList,
+        ?array $supportedMethodsList,
+        array $expected
+    ): void {
         $response = [
             'paymentMethods' => $paymentMethodsResponseList,
         ];

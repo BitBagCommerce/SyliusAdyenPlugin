@@ -23,8 +23,7 @@ abstract class AbstractProcessor implements ProcessorInterface
 
     public const FLASH_ERROR = 'error';
 
-    /** @var TranslatorInterface|null */
-    protected $translator;
+    protected ?TranslatorInterface $translator;
 
     protected function isResultCodeSupportedForPayment(?PaymentInterface $payment, array $resultCodes): bool
     {
@@ -52,11 +51,9 @@ abstract class AbstractProcessor implements ProcessorInterface
         if (null !== $this->translator) {
             $message = $this->translator->trans($message);
         }
-
-        /**
-         * @var Session $session
-         */
+        /** @var Session $session */
         $session = $request->getSession();
+
         $session->getFlashBag()->add($type, $message);
     }
 }

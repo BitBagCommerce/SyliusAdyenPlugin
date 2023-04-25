@@ -85,15 +85,15 @@ This **open-source plugin was developed to help the Sylius community** and make 
 
 We work on stable, supported and up-to-date versions of packages. We recommend you to do the same.
 
-| Package | Version |
-| --- | --- |
-| PHP |  ^7.4 or ^8.0 |
-| ext-json:  | * |
-| sylius/refund-plugin |  ^1.0.0|
-| sylius/resource-bundle | ^1.8 |
-| sylius/sylius |  ^1.10.0 or ^1.11.0 |
-| symfony/messenger |   ^4.4 |
-| adyen/php-api-library | ^10.1 |
+| Package | Version            |
+| --- |--------------------|
+| PHP | ^8.0               |
+| ext-json:  | *                  |
+| sylius/refund-plugin | ^1.0.0             |
+| sylius/resource-bundle | ^1.8               |
+| sylius/sylius | ^1.11.0 or ^1.12.0 |
+| symfony/messenger | ^5.4               |
+| adyen/php-api-library | ^10.1              |
 
 ----
 
@@ -155,6 +155,8 @@ $ cd tests/Application
 $ bin/console assets:install -e test
 $ bin/console doctrine:database:create -e test
 $ bin/console doctrine:schema:create -e test
+$ yarn install
+$ yarn encore dev
 $ bin/console server:run 127.0.0.1:8080 -e test
 $ bin/phpunit
 $ bin/behat

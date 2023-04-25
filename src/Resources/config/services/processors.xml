@@ -52,7 +52,7 @@
             id="bitbag.sylius_adyen_plugin.processor.payment_response_processor.fallback_response_processor"
         >
             <argument type="service" id="router"/>
-
+            <argument type="service" id="translator"/>
             <tag name="bitbag.sylius_adyen_plugin.processor.payment_response" priority="-100"/>
         </service>
 

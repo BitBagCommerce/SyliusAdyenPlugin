@@ -60,7 +60,7 @@ final class BitBagSyliusAdyenExtension extends ConfigurableExtension implements 
         return new Configuration();
     }
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'bitbag_sylius_adyen';
     }

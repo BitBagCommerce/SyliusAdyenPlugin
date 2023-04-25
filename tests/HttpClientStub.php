@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -32,9 +33,12 @@ class HttpClientStub implements ClientInterface
         self::$postHandler = $postHandler;
     }
 
-    public function requestJson(Service $service, $requestUrl, $params)
-    {
-        if (self::$jsonHandler !== null) {
+    public function requestJson(
+        Service $service,
+        $requestUrl,
+        $params
+    ): mixed {
+        if (null !== self::$jsonHandler) {
             return call_user_func(static::$jsonHandler, $service, $requestUrl, $params);
         }
 
@@ -43,9 +47,12 @@ class HttpClientStub implements ClientInterface
         return $client->requestJson($service, $requestUrl, $params);
     }
 
-    public function requestPost(Service $service, $requestUrl, $params)
-    {
-        if (self::$postHandler !== null) {
+    public function requestPost(
+        Service $service,
+        $requestUrl,
+        $params
+    ) {
+        if (null !== self::$postHandler) {
             return call_user_func(static::$postHandler, $service, $requestUrl, $params);
         }
 

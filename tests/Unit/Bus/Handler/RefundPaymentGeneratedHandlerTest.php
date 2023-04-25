@@ -101,7 +101,7 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
             ->method('find')
             ->willReturn($payment);
 
-        if ($payment !== null) {
+        if (null !== $payment) {
             $this->paymentMethodRepository
                 ->method('find')
                 ->willReturn($payment->getMethod())
@@ -183,7 +183,7 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
             ->expects($this->once())
             ->method('dispatch')
             ->with($this->callback(static function (CreateReferenceForRefund $command) {
-                return $command->getRefundReference() === self::NEW_PSP_REFERENCE;
+                return self::NEW_PSP_REFERENCE === $command->getRefundReference();
             }));
 
         ($this->handler)($command);
