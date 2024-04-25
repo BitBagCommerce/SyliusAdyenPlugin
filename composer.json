@@ -60,6 +60,7 @@
         }
     },
     "conflict": {
+        "behat/mink-selenium2-driver": ">=1.7.0",
         "doctrine/dbal": "^3.0"
     },
     "extra": {
