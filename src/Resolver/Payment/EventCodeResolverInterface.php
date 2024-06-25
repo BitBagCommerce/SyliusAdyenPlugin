@@ -15,7 +15,6 @@ use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 interface EventCodeResolverInterface
 {
     public const CAPTURE = 'capture';
-
     public const AUTHORIZATION = 'authorisation';
 
     public const PAYMENT_METHOD_TYPES = [

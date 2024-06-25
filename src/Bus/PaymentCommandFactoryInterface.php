@@ -22,6 +22,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
 
 interface PaymentCommandFactoryInterface
 {
+    public const CAPTURE_METHOD_AUTO = 'auto';
     public const MAPPING = [
         'authorisation' => AuthorizePayment::class,
         'payment_status_received' => PaymentStatusReceived::class,

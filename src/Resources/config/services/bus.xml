@@ -43,6 +43,7 @@
             id="bitbag.sylius_adyen_plugin.bus.payment_command_factory"
         >
             <argument type="service" id="bitbag.sylius_adyen_plugin.resolver.payment.event_code_resolver"/>
+            <argument>%bitbag.sylius_adyen_plugin.capture_method%</argument>
         </service>
 
         <service

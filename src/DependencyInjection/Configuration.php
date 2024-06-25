@@ -16,10 +16,11 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 final class Configuration implements ConfigurationInterface
 {
     public const DEFAULT_LOGGER = 'logger';
-
     public const DEFAULT_PAYMENT_METHODS = [
         'scheme', 'dotpay', 'ideal', 'alipay', 'applepay', 'blik', 'amazonpay', 'sepadirectdebit',
     ];
+    public const CAPTURE_METHODS = ['auto', 'delayed_manual'];
+    public const DEFAULT_CAPTURE_METHOD = 'delayed_manual';
 
     public function getConfigTreeBuilder(): TreeBuilder
     {
@@ -40,7 +41,13 @@ final class Configuration implements ConfigurationInterface
                     ->treatTrueLike(self::DEFAULT_LOGGER)
                     ->defaultNull()
                 ->end()
-
+                ->scalarNode('capture_method')
+                    ->defaultValue(self::DEFAULT_CAPTURE_METHOD)
+                    ->validate()
+                        ->ifNotInArray(self::CAPTURE_METHODS)
+                        ->thenInvalid('Invalid config value %s should be one of: '.implode(', ', self::CAPTURE_METHODS))
+                    ->end()
+                ->end()
             ->end()
             ->beforeNormalization()
             ->always(static function ($arg) {
