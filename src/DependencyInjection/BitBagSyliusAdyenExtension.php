@@ -22,6 +22,7 @@ final class BitBagSyliusAdyenExtension extends ConfigurableExtension implements 
     public const TRANSPORT_FACTORY_ID = 'bitbag.sylius_adyen_plugin.client.adyen_transport_factory';
 
     public const SUPPORTED_PAYMENT_METHODS_LIST = 'bitbag.sylius_adyen_plugin.supported_payment_methods';
+    public const SUPPORTED_CAPTURE_METHODS = 'bitbag.sylius_adyen_plugin.capture_method';
 
     public function prepend(ContainerBuilder $container): void
     {
@@ -48,6 +49,8 @@ final class BitBagSyliusAdyenExtension extends ConfigurableExtension implements 
         if (null !== $config['logger']) {
             $container->setAlias('bitbag.sylius_adyen_plugin.logger', (string) $config['logger']);
         }
+
+        $container->setParameter(self::SUPPORTED_CAPTURE_METHODS, $config['capture_method']);
 
         // fallback for previous version
         if (!$container->has('sylius.command_bus')) {

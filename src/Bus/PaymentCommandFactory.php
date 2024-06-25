@@ -24,19 +24,26 @@ final class PaymentCommandFactory implements PaymentCommandFactoryInterface
 
     /** @var EventCodeResolverInterface */
     private $eventCodeResolver;
+    private string $captureMethod;
 
     public function __construct(
         EventCodeResolverInterface $eventCodeResolver,
+        string $captureMethod,
         array $mapping = []
     ) {
         $this->mapping = array_merge_recursive(self::MAPPING, $mapping);
         $this->eventCodeResolver = $eventCodeResolver;
+        $this->captureMethod = $captureMethod;
     }
 
     private function createObject(string $eventName, PaymentInterface $payment): PaymentLifecycleCommand
     {
         if (!isset($this->mapping[$eventName])) {
             throw new UnmappedAdyenActionException(sprintf('Event "%s" has no handler registered', $eventName));
+        }
+
+        if ($eventName === EventCodeResolverInterface::AUTHORIZATION && $this->captureMethod === self::CAPTURE_METHOD_AUTO) {
+            $eventName = EventCodeResolverInterface::CAPTURE;
         }
 
         $class = (string) $this->mapping[$eventName];
