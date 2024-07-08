@@ -157,6 +157,7 @@ $ bin/console doctrine:database:create -e test
 $ bin/console doctrine:schema:create -e test
 $ yarn install
 $ yarn encore dev
+$ yarn gulp
 $ bin/console server:run 127.0.0.1:8080 -e test
 $ bin/phpunit
 $ bin/behat
