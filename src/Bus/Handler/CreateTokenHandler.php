@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -26,7 +27,7 @@ final class CreateTokenHandler implements MessageHandlerInterface
 
     public function __construct(
         AdyenTokenFactoryInterface $tokenFactory,
-        RepositoryInterface $tokenRepository
+        RepositoryInterface $tokenRepository,
     ) {
         $this->tokenFactory = $tokenFactory;
         $this->tokenRepository = $tokenRepository;
@@ -36,7 +37,7 @@ final class CreateTokenHandler implements MessageHandlerInterface
     {
         $token = $this->tokenFactory->create(
             $createToken->getPaymentMethod(),
-            $createToken->getCustomer()
+            $createToken->getCustomer(),
         );
 
         $this->tokenRepository->add($token);

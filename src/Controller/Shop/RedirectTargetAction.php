@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -29,7 +30,7 @@ class RedirectTargetAction
 
     public function __construct(
         PaymentResponseProcessor $paymentResponseProcessor,
-        PaymentDetailsResolverInterface $paymentDetailsResolver
+        PaymentDetailsResolverInterface $paymentDetailsResolver,
     ) {
         $this->paymentResponseProcessor = $paymentResponseProcessor;
         $this->paymentDetailsResolver = $paymentDetailsResolver;

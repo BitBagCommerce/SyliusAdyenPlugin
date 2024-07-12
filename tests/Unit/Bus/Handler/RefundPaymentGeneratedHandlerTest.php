@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -65,7 +66,7 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
             $this->paymentRepository,
             $this->paymentMethodRepository,
             $this->refundPaymentRepository,
-            $this->dispatcher
+            $this->dispatcher,
         );
     }
 
@@ -115,7 +116,7 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
                 10,
                 'EUR',
                 1,
-                1
+                1,
             )
         );
 
@@ -159,7 +160,7 @@ class RefundPaymentGeneratedHandlerTest extends TestCase
             4242,
             'EUR',
             1,
-            1
+            1,
         );
 
         $this->adyenClient

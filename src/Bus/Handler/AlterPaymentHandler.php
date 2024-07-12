@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -46,9 +47,9 @@ final class AlterPaymentHandler implements MessageHandlerInterface
          */
         $method = $payment->getMethod();
         if (
-            null === $method
-            || null === $method->getGatewayConfig()
-            || !isset($this->getGatewayConfig($method)->getConfig()[AdyenClientProviderInterface::FACTORY_NAME])
+            null === $method ||
+            null === $method->getGatewayConfig() ||
+            !isset($this->getGatewayConfig($method)->getConfig()[AdyenClientProviderInterface::FACTORY_NAME])
         ) {
             return false;
         }
@@ -73,11 +74,11 @@ final class AlterPaymentHandler implements MessageHandlerInterface
     private function dispatchRemoteAction(
         PaymentInterface $payment,
         AlterPaymentCommand $alterPaymentCommand,
-        AdyenClientInterface $adyenClient
+        AdyenClientInterface $adyenClient,
     ): void {
         if ($alterPaymentCommand instanceof RequestCapture) {
             $adyenClient->requestCapture(
-                $payment
+                $payment,
             );
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -56,7 +57,7 @@ class PaymentMethodsFilterTest extends TestCase
     public function testFilter(
         array $paymentMethodsResponseList,
         ?array $supportedMethodsList,
-        array $expected
+        array $expected,
     ): void {
         $response = [
             'paymentMethods' => $paymentMethodsResponseList,

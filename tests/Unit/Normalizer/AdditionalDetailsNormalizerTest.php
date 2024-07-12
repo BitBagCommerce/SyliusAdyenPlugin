@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -25,14 +26,18 @@ use Tests\BitBag\SyliusAdyenPlugin\Unit\OrderMother;
 class AdditionalDetailsNormalizerTest extends TestCase
 {
     private const EXPECTED_DELEGATED_NORMALIZER_RESULT = ['Bakłażan', 'ze', 'Szczebrzeszyna'];
+
     private const EXPECTED_SHIPPING_LINE = ['do', 'chrząszcza'];
 
     /** @var \BitBag\SyliusAdyenPlugin\Normalizer\AdditionalDetailsNormalizer|object|null */
     private $normalizer;
+
     /** @var \PHPUnit\Framework\MockObject\MockObject|NormalizerInterface */
     private $delegatedNormalizer;
+
     /** @var RequestStack */
     private $requestStack;
+
     /** @var ShippingLineGeneratorInterface|\PHPUnit\Framework\MockObject\MockObject */
     private $shippingLineGenerator;
 
@@ -61,7 +66,7 @@ class AdditionalDetailsNormalizerTest extends TestCase
     public function testSupportsNormalization(
         array $context,
         ?OrderInterface $order,
-        bool $pass
+        bool $pass,
     ): void {
         $this->assertEquals($pass, $this->normalizer->supportsNormalization($order, null, $context));
     }

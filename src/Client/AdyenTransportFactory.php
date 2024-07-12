@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -27,7 +28,7 @@ final class AdyenTransportFactory implements AdyenTransportFactoryInterface
 
     public function __construct(
         ?LoggerInterface $logger = null,
-        ?ClientInterface $adyenHttpClient = null
+        ?ClientInterface $adyenHttpClient = null,
     ) {
         $this->logger = $logger;
         $this->adyenHttpClient = $adyenHttpClient ?? new CurlClient();

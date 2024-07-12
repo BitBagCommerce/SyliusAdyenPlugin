@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -23,7 +24,7 @@ interface ClientPayloadFactoryInterface
     public function createForAvailablePaymentMethods(
         ArrayObject $options,
         OrderInterface $order,
-        ?AdyenTokenInterface $adyenToken = null
+        ?AdyenTokenInterface $adyenToken = null,
     ): array;
 
     public function createForPaymentDetails(array $receivedPayload, ?AdyenTokenInterface $adyenToken = null): array;
@@ -33,7 +34,7 @@ interface ClientPayloadFactoryInterface
         string $url,
         array $receivedPayload,
         OrderInterface $order,
-        ?AdyenTokenInterface $adyenToken = null
+        ?AdyenTokenInterface $adyenToken = null,
     ): array;
 
     public function createForCapture(ArrayObject $options, PaymentInterface $payment): array;
@@ -43,12 +44,12 @@ interface ClientPayloadFactoryInterface
     public function createForTokenRemove(
         ArrayObject $options,
         string $paymentReference,
-        AdyenTokenInterface $adyenToken
+        AdyenTokenInterface $adyenToken,
     ): array;
 
     public function createForRefund(
         ArrayObject $options,
         PaymentInterface $payment,
-        RefundPaymentGenerated $refund
+        RefundPaymentGenerated $refund,
     ): array;
 }

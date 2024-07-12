@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -54,7 +55,7 @@ abstract class AbstractProcessorTest extends KernelTestCase
         $payment = $this->getPayment($code);
         $this->assertEquals(
             $accepts,
-            $this->processor->accepts(Request::create('/'), $payment)
+            $this->processor->accepts(Request::create('/'), $payment),
         );
     }
 

@@ -1,12 +1,13 @@
 <?php
 
-declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
  * You can find more information about us on https://bitbag.io and write us
  * an email on hello@bitbag.io.
  */
+
+declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
@@ -49,7 +50,7 @@ class DropinConfigurationAction
         PaymentMethodsForOrderProvider $paymentMethodsForOrderProvider,
         UrlGeneratorInterface $urlGenerator,
         OrderRepositoryInterface $orderRepository,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
     ) {
         $this->cartContext = $cartContext;
         $this->paymentMethodsForOrderProvider = $paymentMethodsForOrderProvider;
@@ -61,7 +62,7 @@ class DropinConfigurationAction
     public function __invoke(
         Request $request,
         string $code,
-        ?string $orderToken = null
+        ?string $orderToken = null,
     ): JsonResponse {
         $order = $this->getOrder($orderToken);
 
@@ -103,7 +104,7 @@ class DropinConfigurationAction
                 'paymentDetails' => $this->urlGenerator->generate('bitbag_adyen_payment_details', $pathParams),
                 'deleteToken' => $this->urlGenerator->generate(
                     'bitbag_adyen_remove_token',
-                    $pathParams + ['paymentReference' => '_REFERENCE_']
+                    $pathParams + ['paymentReference' => '_REFERENCE_'],
                 ),
             ],
             'translations' => $this->getTranslations(),
@@ -146,7 +147,7 @@ class DropinConfigurationAction
          * @var ?string $tokenValue
          */
         $tokenValue = $request->getSession()->get(
-            PreserveOrderTokenUponRedirectionCallback::NON_FINALIZED_CART_SESSION_KEY
+            PreserveOrderTokenUponRedirectionCallback::NON_FINALIZED_CART_SESSION_KEY,
         );
 
         try {
@@ -155,7 +156,7 @@ class DropinConfigurationAction
             }
         } finally {
             $request->getSession()->remove(
-                PreserveOrderTokenUponRedirectionCallback::NON_FINALIZED_CART_SESSION_KEY
+                PreserveOrderTokenUponRedirectionCallback::NON_FINALIZED_CART_SESSION_KEY,
             );
         }
 

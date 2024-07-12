@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -36,7 +37,7 @@ final class GetTokenHandler implements MessageHandlerInterface
     public function __construct(
         AdyenTokenRepositoryInterface $adyenTokenRepository,
         DispatcherInterface $dispatcher,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
     ) {
         $this->adyenTokenRepository = $adyenTokenRepository;
         $this->dispatcher = $dispatcher;
@@ -74,12 +75,12 @@ final class GetTokenHandler implements MessageHandlerInterface
         Assert::isInstanceOf(
             $customer,
             CustomerInterface::class,
-            'Customer doesn\'t implement a core CustomerInterface'
+            'Customer doesn\'t implement a core CustomerInterface',
         );
 
         $token = $this->adyenTokenRepository->findOneByPaymentMethodAndCustomer(
             $getTokenQuery->getPaymentMethod(),
-            $customer
+            $customer,
         );
 
         if (null !== $token) {
@@ -87,7 +88,7 @@ final class GetTokenHandler implements MessageHandlerInterface
         }
 
         return $this->dispatcher->dispatch(
-            new CreateToken($getTokenQuery->getPaymentMethod(), $customer)
+            new CreateToken($getTokenQuery->getPaymentMethod(), $customer),
         );
     }
 }

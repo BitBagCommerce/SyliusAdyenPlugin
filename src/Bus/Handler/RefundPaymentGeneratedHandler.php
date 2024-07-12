@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -47,7 +48,7 @@ final class RefundPaymentGeneratedHandler implements MessageHandlerInterface
         PaymentRepositoryInterface $paymentRepository,
         PaymentMethodRepositoryInterface $paymentMethodRepository,
         RefundPaymentRepositoryInterface $refundPaymentRepository,
-        DispatcherInterface $dispatcher
+        DispatcherInterface $dispatcher,
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->paymentMethodRepository = $paymentMethodRepository;
@@ -59,7 +60,7 @@ final class RefundPaymentGeneratedHandler implements MessageHandlerInterface
     private function createReference(
         string $newReference,
         RefundPaymentGenerated $refundPaymentGenerated,
-        PaymentInterface $payment
+        PaymentInterface $payment,
     ): void {
         $refund = $this->refundPaymentRepository->find($refundPaymentGenerated->id());
         if (null === $refund) {
@@ -72,19 +73,19 @@ final class RefundPaymentGeneratedHandler implements MessageHandlerInterface
     private function sendRefundRequest(
         RefundPaymentGenerated $refundPaymentGenerated,
         PaymentMethodInterface $paymentMethod,
-        PaymentInterface $payment
+        PaymentInterface $payment,
     ): string {
         Assert::keyExists(
             $payment->getDetails(),
             'pspReference',
-            'Payment has not been initialized by Adyen'
+            'Payment has not been initialized by Adyen',
         );
 
         $client = $this->adyenClientProvider->getForPaymentMethod($paymentMethod);
 
         $result = $client->requestRefund(
             $payment,
-            $refundPaymentGenerated
+            $refundPaymentGenerated,
         );
 
         Assert::keyExists($result, 'pspReference');
@@ -97,9 +98,9 @@ final class RefundPaymentGeneratedHandler implements MessageHandlerInterface
         $payment = $this->paymentRepository->find($refundPaymentGenerated->paymentId());
         $paymentMethod = $this->paymentMethodRepository->find($refundPaymentGenerated->paymentMethodId());
 
-        if (null === $payment
-            || null === $paymentMethod
-            || !isset($this->getGatewayConfig($paymentMethod)->getConfig()[AdyenClientProviderInterface::FACTORY_NAME])
+        if (null === $payment ||
+            null === $paymentMethod ||
+            !isset($this->getGatewayConfig($paymentMethod)->getConfig()[AdyenClientProviderInterface::FACTORY_NAME])
         ) {
             return;
         }

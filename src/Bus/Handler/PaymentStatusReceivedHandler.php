@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -49,7 +50,7 @@ final class PaymentStatusReceivedHandler implements MessageHandlerInterface
         RepositoryInterface $paymentRepository,
         RepositoryInterface $orderRepository,
         DispatcherInterface $dispatcher,
-        MessageBusInterface $commandBus
+        MessageBusInterface $commandBus,
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
         $this->paymentRepository = $paymentRepository;

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -28,7 +29,7 @@ final class CreateReferenceForRefund
     public function __construct(
         string $refundReference,
         RefundPaymentInterface $refundPayment,
-        PaymentInterface $payment
+        PaymentInterface $payment,
     ) {
         $details = $payment->getDetails();
         Assert::keyExists($details, 'pspReference', 'Payment pspReference is not present');

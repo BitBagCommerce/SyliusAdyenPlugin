@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -39,7 +40,7 @@ final class PaymentMethodsFilter implements PaymentMethodsFilterInterface
 
         if (0 < count((array) $this->supportedMethodsList)) {
             $paymentMethodsResponse['paymentMethods'] = $this->doFilter(
-                (array) $paymentMethodsResponse['paymentMethods']
+                (array) $paymentMethodsResponse['paymentMethods'],
             );
         }
 

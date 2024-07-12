@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -28,7 +29,7 @@ final class CreateReferenceForPaymentHandler implements MessageHandlerInterface
 
     public function __construct(
         AdyenReferenceRepositoryInterface $adyenReferenceRepository,
-        AdyenReferenceFactoryInterface $adyenReferenceFactory
+        AdyenReferenceFactoryInterface $adyenReferenceFactory,
     ) {
         $this->adyenReferenceRepository = $adyenReferenceRepository;
         $this->adyenReferenceFactory = $adyenReferenceFactory;
@@ -47,7 +48,7 @@ final class CreateReferenceForPaymentHandler implements MessageHandlerInterface
         try {
             return $this->adyenReferenceRepository->getOneByCodeAndReference(
                 $code,
-                (string) $adyenReference->getPspReference()
+                (string) $adyenReference->getPspReference(),
             );
         } catch (NoResultException $ex) {
             return null;

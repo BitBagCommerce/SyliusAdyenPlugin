@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -39,14 +40,14 @@ abstract class AbstractProcessor implements ProcessorInterface
         return in_array(
             strtolower((string) $details['resultCode']),
             $resultCodes,
-            true
+            true,
         );
     }
 
     protected function addFlash(
         Request $request,
         string $type,
-        string $message
+        string $message,
     ): void {
         if (null !== $this->translator) {
             $message = $this->translator->trans($message);

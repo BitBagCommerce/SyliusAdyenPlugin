@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -31,8 +32,8 @@ final class FilterManualRefundConfirmationSubscriber implements EventSubscriberI
     public function filter(TransitionEvent $event): void
     {
         if (
-            RefundPaymentTransitions::GRAPH !== $event->getStateMachine()->getGraph()
-            || RefundPaymentTransitions::TRANSITION_COMPLETE !== $event->getTransition()
+            RefundPaymentTransitions::GRAPH !== $event->getStateMachine()->getGraph() ||
+            RefundPaymentTransitions::TRANSITION_COMPLETE !== $event->getTransition()
         ) {
             return;
         }

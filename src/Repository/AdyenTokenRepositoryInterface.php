@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -23,6 +24,6 @@ interface AdyenTokenRepositoryInterface extends RepositoryInterface
      */
     public function findOneByPaymentMethodAndCustomer(
         PaymentMethodInterface $paymentMethod,
-        CustomerInterface $customer
+        CustomerInterface $customer,
     ): ?AdyenTokenInterface;
 }

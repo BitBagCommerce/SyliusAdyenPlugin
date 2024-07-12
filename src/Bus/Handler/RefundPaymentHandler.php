@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -27,7 +28,7 @@ final class RefundPaymentHandler implements MessageHandlerInterface
 
     public function __construct(
         FactoryInterface $stateMachineFactory,
-        EntityManagerInterface $refundPaymentManager
+        EntityManagerInterface $refundPaymentManager,
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
         $this->refundPaymentManager = $refundPaymentManager;

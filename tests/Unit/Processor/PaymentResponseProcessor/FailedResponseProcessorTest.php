@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -17,6 +18,7 @@ use Tests\BitBag\SyliusAdyenPlugin\Unit\Mock\RequestMother;
 class FailedResponseProcessorTest extends AbstractProcessorTest
 {
     private const TOKEN_VALUE = 'Szczebrzeszyn';
+
     /** @var DispatcherInterface|\PHPUnit\Framework\MockObject\MockObject */
     private $dispatcher;
 
@@ -29,7 +31,7 @@ class FailedResponseProcessorTest extends AbstractProcessorTest
         $this->processor = new FailedResponseProcessor(
             self::getRouter($this->getContainer()),
             $this->getContainer()->get('translator'),
-            $this->dispatcher
+            $this->dispatcher,
         );
     }
 

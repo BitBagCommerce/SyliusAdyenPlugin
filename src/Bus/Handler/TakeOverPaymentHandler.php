@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -21,7 +22,6 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 final class TakeOverPaymentHandler implements MessageHandlerInterface
 {
     use PayableOrderPaymentTrait;
-
     use PaymentFromOrderTrait;
 
     /** @var PaymentMethodRepositoryInterface */
@@ -32,7 +32,7 @@ final class TakeOverPaymentHandler implements MessageHandlerInterface
 
     public function __construct(
         PaymentMethodRepositoryInterface $paymentMethodRepository,
-        EntityManagerInterface $paymentManager
+        EntityManagerInterface $paymentManager,
     ) {
         $this->paymentMethodRepository = $paymentMethodRepository;
         $this->paymentManager = $paymentManager;

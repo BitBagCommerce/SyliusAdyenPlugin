@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -22,6 +23,6 @@ interface AdyenReferenceFactoryInterface extends FactoryInterface
     public function createForRefund(
         string $reference,
         PaymentInterface $payment,
-        RefundPaymentInterface $refundPayment
+        RefundPaymentInterface $refundPayment,
     ): AdyenReferenceInterface;
 }

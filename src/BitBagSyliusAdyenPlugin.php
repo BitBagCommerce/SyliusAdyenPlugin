@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -34,13 +35,13 @@ final class BitBagSyliusAdyenPlugin extends Bundle
         $container->addCompilerPass(
             new MessageBusPolyfillPass(),
             PassConfig::TYPE_BEFORE_OPTIMIZATION,
-            1
+            1,
         );
 
         $container->addCompilerPass(
             new AuthenticationManagerPolyfillPass(),
             PassConfig::TYPE_BEFORE_OPTIMIZATION,
-            1
+            1,
         );
     }
 }

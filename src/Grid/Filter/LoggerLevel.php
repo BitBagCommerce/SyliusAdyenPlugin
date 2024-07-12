@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file has been created by developers from BitBag.
+ * Feel free to contact us once you face any issues or want to start
+ * You can find more information about us on https://bitbag.io and write us
+ * an email on hello@bitbag.io.
+ */
+
 declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Grid\Filter;
@@ -13,7 +20,7 @@ final class LoggerLevel implements FilterInterface
         DataSourceInterface $dataSource,
         string $name,
         $data,
-        array $options
+        array $options,
     ): void {
         /** @psalm-suppress MixedArrayAccess */
         $dataSource->restrict($dataSource->getExpressionBuilder()->equals('level', $data['loggerLevel']));

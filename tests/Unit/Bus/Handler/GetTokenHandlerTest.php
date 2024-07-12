@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -34,6 +35,7 @@ class GetTokenHandlerTest extends TestCase
 
     /** @var GetTokenHandler */
     private $handler;
+
     /** @var \PHPUnit\Framework\MockObject\MockObject|TokenStorageInterface */
     private $tokenStorage;
 
@@ -75,7 +77,7 @@ class GetTokenHandlerTest extends TestCase
         $token
             ->method('getUser')
             ->willReturn(
-                $this->createMock(UserInterface::class)
+                $this->createMock(UserInterface::class),
             )
         ;
 
@@ -89,7 +91,7 @@ class GetTokenHandlerTest extends TestCase
     private function setupMocks(
         bool $existingToken,
         PaymentMethodInterface $paymentMethod,
-        CustomerInterface $customer
+        CustomerInterface $customer,
     ): void {
         $this->makeUserAuthenticated();
 
@@ -112,8 +114,8 @@ class GetTokenHandlerTest extends TestCase
             ->expects($this->once())
             ->method('dispatch')
             ->with($this->callback(function (CreateToken $command) use ($paymentMethod, $customer) {
-                return $command->getPaymentMethod() === $paymentMethod
-                    && $command->getCustomer() === $customer;
+                return $command->getPaymentMethod() === $paymentMethod &&
+                    $command->getCustomer() === $customer;
             }))
             ->willReturn(new AdyenToken())
         ;
@@ -153,7 +155,7 @@ class GetTokenHandlerTest extends TestCase
     {
         return new GetToken(
             $this->createMock(PaymentMethodInterface::class),
-            $this->createMock(OrderInterface::class)
+            $this->createMock(OrderInterface::class),
         );
     }
 }

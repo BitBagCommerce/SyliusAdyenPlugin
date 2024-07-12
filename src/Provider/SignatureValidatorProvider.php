@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -23,7 +24,7 @@ final class SignatureValidatorProvider implements SignatureValidatorProviderInte
     private $paymentMethodRepository;
 
     public function __construct(
-        PaymentMethodRepositoryInterface $paymentMethodRepository
+        PaymentMethodRepositoryInterface $paymentMethodRepository,
     ) {
         $this->paymentMethodRepository = $paymentMethodRepository;
     }
@@ -38,7 +39,7 @@ final class SignatureValidatorProvider implements SignatureValidatorProviderInte
         $gatewayConfig = $this->getGatewayConfig($paymentMethod);
 
         return new SignatureValidator(
-            (string) $gatewayConfig->getConfig()['hmacKey']
+            (string) $gatewayConfig->getConfig()['hmacKey'],
         );
     }
 }

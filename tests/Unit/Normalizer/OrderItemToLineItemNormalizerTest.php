@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -24,14 +25,18 @@ use Tests\BitBag\SyliusAdyenPlugin\Unit\OrderMother;
 class OrderItemToLineItemNormalizerTest extends TestCase
 {
     private const EXPECTED_PERMALINK = 'https://example.com';
+
     private const EXPECTED_IMAGE_LINK = 'https://example.com/42.jpg';
 
     /** @var RequestStack */
     private $requestStack;
+
     /** @var \PHPUnit\Framework\MockObject\MockObject|UrlGeneratorInterface */
     private $urlGenerator;
+
     /** @var ThumbnailUrlResolverInterface|\PHPUnit\Framework\MockObject\MockObject */
     private $thumbnailUrlResolver;
+
     /** @var OrderItemToLineItemNormalizer */
     private $normalizer;
 
@@ -44,7 +49,7 @@ class OrderItemToLineItemNormalizerTest extends TestCase
         $this->normalizer = new OrderItemToLineItemNormalizer(
             $this->requestStack,
             $this->urlGenerator,
-            $this->thumbnailUrlResolver
+            $this->thumbnailUrlResolver,
         );
     }
 
@@ -63,7 +68,7 @@ class OrderItemToLineItemNormalizerTest extends TestCase
     public function testSupportsNormalization(
         array $context,
         ?OrderItemInterface $order,
-        bool $pass
+        bool $pass,
     ): void {
         $this->assertEquals($pass, $this->normalizer->supportsNormalization($order, null, $context));
     }

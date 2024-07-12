@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -39,7 +40,7 @@ final class FailedResponseProcessor extends AbstractProcessor
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         TranslatorInterface $translator,
-        DispatcherInterface $dispatcher
+        DispatcherInterface $dispatcher,
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->translator = $translator;
@@ -61,14 +62,14 @@ final class FailedResponseProcessor extends AbstractProcessor
 
         return $this->urlGenerator->generate(
             self::FAILURE_REDIRECT_TARGET,
-            ['tokenValue' => $order->getTokenValue()]
+            ['tokenValue' => $order->getTokenValue()],
         );
     }
 
     public function process(
         string $code,
         Request $request,
-        PaymentInterface $payment
+        PaymentInterface $payment,
     ): string {
         $this->addFlash($request, self::FLASH_ERROR, self::LABEL_PAYMENT_FAILED);
 

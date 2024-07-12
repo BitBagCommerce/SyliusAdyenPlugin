@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -26,7 +27,7 @@ final class SignatureValidator implements SignatureValidatorInterface
     private function getReceiver(): NotificationReceiver
     {
         return new NotificationReceiver(
-            new HmacSignature()
+            new HmacSignature(),
         );
     }
 

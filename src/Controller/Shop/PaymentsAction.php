@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -29,7 +30,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class PaymentsAction
 {
     use PayableOrderPaymentTrait;
-
     use PaymentFromOrderTrait;
 
     public const REDIRECT_TARGET_ACTION = 'bitbag_adyen_thank_you';
@@ -56,7 +56,7 @@ class PaymentsAction
         UrlGeneratorInterface $urlGenerator,
         PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver,
         DispatcherInterface $dispatcher,
-        PaymentResponseProcessorInterface $paymentResponseProcessor
+        PaymentResponseProcessorInterface $paymentResponseProcessor,
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->urlGenerator = $urlGenerator;
@@ -68,7 +68,7 @@ class PaymentsAction
     private function prepareTargetUrl(OrderInterface $order): string
     {
         $method = $this->getMethod(
-            $this->getPayment($order)
+            $this->getPayment($order),
         );
 
         return $this->urlGenerator->generate(
@@ -76,7 +76,7 @@ class PaymentsAction
             [
                 'code' => $method->getCode(),
             ],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
     }
 
@@ -114,7 +114,7 @@ class PaymentsAction
             $url,
             $request->request->all(),
             $order,
-            $customerIdentifier
+            $customerIdentifier,
         );
 
         $payment->setDetails($result);
@@ -127,9 +127,9 @@ class PaymentsAction
                 'redirect' => $this->paymentResponseProcessor->process(
                     (string) $paymentMethod->getCode(),
                     $request,
-                    $payment
+                    $payment,
                 ),
-            ]
+            ],
         );
     }
 }

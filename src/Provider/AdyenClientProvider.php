@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -47,7 +48,7 @@ final class AdyenClientProvider implements AdyenClientProviderInterface
         ChannelContextInterface $channelContext,
         AdyenTransportFactory $adyenTransportFactory,
         ClientPayloadFactoryInterface $clientPayloadFactory,
-        PaymentMethodsFilterInterface $paymentMethodsFilter
+        PaymentMethodsFilterInterface $paymentMethodsFilter,
     ) {
         $this->paymentMethodRepository = $paymentMethodRepository;
         $this->channelContext = $channelContext;
@@ -59,7 +60,7 @@ final class AdyenClientProvider implements AdyenClientProviderInterface
     public function getDefaultClient(): AdyenClientInterface
     {
         $paymentMethod = $this->paymentMethodRepository->findOneByChannel(
-            $this->channelContext->getChannel()
+            $this->channelContext->getChannel(),
         );
 
         if (null === $paymentMethod) {
@@ -72,7 +73,7 @@ final class AdyenClientProvider implements AdyenClientProviderInterface
             $config,
             $this->adyenTransportFactory,
             $this->clientPayloadFactory,
-            $this->paymentMethodsFilter
+            $this->paymentMethodsFilter,
         );
     }
 
@@ -88,7 +89,7 @@ final class AdyenClientProvider implements AdyenClientProviderInterface
             $gatewayConfig->getConfig(),
             $this->adyenTransportFactory,
             $this->clientPayloadFactory,
-            $this->paymentMethodsFilter
+            $this->paymentMethodsFilter,
         );
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -39,7 +40,7 @@ final class AdyenClient implements AdyenClientInterface
         array $options,
         AdyenTransportFactoryInterface $adyenTransportFactory,
         ClientPayloadFactoryInterface $clientPayloadFactory,
-        PaymentMethodsFilterInterface $paymentMethodsFilter
+        PaymentMethodsFilterInterface $paymentMethodsFilter,
     ) {
         $options = ArrayObject::ensureArrayObject($options);
         $options->defaults(self::DEFAULT_OPTIONS);
@@ -61,30 +62,30 @@ final class AdyenClient implements AdyenClientInterface
     private function getCheckout(): Checkout
     {
         return new Checkout(
-            $this->transport
+            $this->transport,
         );
     }
 
     private function getModification(): Modification
     {
         return new Modification(
-            $this->transport
+            $this->transport,
         );
     }
 
     private function getRecurring(): Recurring
     {
         return new Recurring(
-            $this->transport
+            $this->transport,
         );
     }
 
     public function getAvailablePaymentMethods(
         OrderInterface $order,
-        ?AdyenTokenInterface $adyenToken = null
+        ?AdyenTokenInterface $adyenToken = null,
     ): array {
         $paymentMethods = (array) $this->getCheckout()->paymentMethods(
-            $this->clientPayloadFactory->createForAvailablePaymentMethods($this->options, $order, $adyenToken)
+            $this->clientPayloadFactory->createForAvailablePaymentMethods($this->options, $order, $adyenToken),
         );
 
         Assert::keyExists($paymentMethods, 'paymentMethods');
@@ -94,11 +95,11 @@ final class AdyenClient implements AdyenClientInterface
 
     public function paymentDetails(
         array $receivedPayload,
-        ?AdyenTokenInterface $adyenToken = null
+        ?AdyenTokenInterface $adyenToken = null,
     ): array {
         $payload = $this->clientPayloadFactory->createForPaymentDetails(
             $receivedPayload,
-            $adyenToken
+            $adyenToken,
         );
 
         return (array) $this->getCheckout()->paymentsDetails($payload);
@@ -108,7 +109,7 @@ final class AdyenClient implements AdyenClientInterface
         string $redirectUrl,
         array $receivedPayload,
         OrderInterface $order,
-        ?AdyenTokenInterface $customerIdentifier = null
+        ?AdyenTokenInterface $customerIdentifier = null,
     ): array {
         if (!isset($receivedPayload['paymentMethod'])) {
             throw new \InvalidArgumentException();
@@ -119,14 +120,14 @@ final class AdyenClient implements AdyenClientInterface
             $redirectUrl,
             $receivedPayload,
             $order,
-            $customerIdentifier
+            $customerIdentifier,
         );
 
         return (array) $this->getCheckout()->payments($payload);
     }
 
     public function requestCapture(
-        PaymentInterface $payment
+        PaymentInterface $payment,
     ): array {
         $params = $this->clientPayloadFactory->createForCapture($this->options, $payment);
 
@@ -134,7 +135,7 @@ final class AdyenClient implements AdyenClientInterface
     }
 
     public function requestCancellation(
-        PaymentInterface $payment
+        PaymentInterface $payment,
     ): array {
         $params = $this->clientPayloadFactory->createForCancel($this->options, $payment);
 
@@ -143,7 +144,7 @@ final class AdyenClient implements AdyenClientInterface
 
     public function removeStoredToken(
         string $paymentReference,
-        AdyenTokenInterface $adyenToken
+        AdyenTokenInterface $adyenToken,
     ): array {
         $params = $this->clientPayloadFactory->createForTokenRemove($this->options, $paymentReference, $adyenToken);
 
@@ -152,7 +153,7 @@ final class AdyenClient implements AdyenClientInterface
 
     public function requestRefund(
         PaymentInterface $payment,
-        RefundPaymentGenerated $refund
+        RefundPaymentGenerated $refund,
     ): array {
         $params = $this->clientPayloadFactory->createForRefund($this->options, $payment, $refund);
 

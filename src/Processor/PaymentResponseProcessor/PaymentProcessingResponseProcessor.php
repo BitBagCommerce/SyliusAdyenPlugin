@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -32,7 +33,7 @@ final class PaymentProcessingResponseProcessor extends AbstractProcessor
     public function __construct(
         DispatcherInterface $dispatcher,
         UrlGeneratorInterface $urlGenerator,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
     ) {
         $this->dispatcher = $dispatcher;
         $this->urlGenerator = $urlGenerator;
@@ -47,7 +48,7 @@ final class PaymentProcessingResponseProcessor extends AbstractProcessor
     public function process(
         string $code,
         Request $request,
-        PaymentInterface $payment
+        PaymentInterface $payment,
     ): string {
         $this->dispatchPaymentStatusReceived($payment);
         $this->addFlash($request, self::FLASH_INFO, self::LABEL_PROCESSING);

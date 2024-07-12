@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -45,14 +46,14 @@ class RefundPaymentHandlerTest extends TestCase
             42,
             'EUR',
             RefundPaymentInterface::STATE_NEW,
-            new PaymentMethod()
+            new PaymentMethod(),
         );
 
         $this->stateMachine
             ->expects($this->once())
             ->method('apply')
             ->with(
-                $this->equalTo(RefundPaymentTransitions::TRANSITION_CONFIRM)
+                $this->equalTo(RefundPaymentTransitions::TRANSITION_CONFIRM),
             )
         ;
 
@@ -60,7 +61,7 @@ class RefundPaymentHandlerTest extends TestCase
             ->expects($this->once())
             ->method('persist')
             ->with(
-                $this->equalTo($entity)
+                $this->equalTo($entity),
             )
         ;
 

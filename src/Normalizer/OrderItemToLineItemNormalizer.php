@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -32,7 +33,7 @@ final class OrderItemToLineItemNormalizer extends AbstractPaymentNormalizer
     public function __construct(
         RequestStack $requestStack,
         UrlGeneratorInterface $urlGenerator,
-        ThumbnailUrlResolverInterface $thumbnailUrlResolver
+        ThumbnailUrlResolverInterface $thumbnailUrlResolver,
     ) {
         $this->requestStack = $requestStack;
         $this->urlGenerator = $urlGenerator;
@@ -45,7 +46,7 @@ final class OrderItemToLineItemNormalizer extends AbstractPaymentNormalizer
     public function supportsNormalization(
         $data,
         string $format = null,
-        array $context = []
+        array $context = [],
     ): bool {
         return parent::supportsNormalization($data, $format, $context) && $data instanceof OrderItemInterface;
     }
@@ -56,7 +57,7 @@ final class OrderItemToLineItemNormalizer extends AbstractPaymentNormalizer
     public function normalize(
         $object,
         string $format = null,
-        array $context = []
+        array $context = [],
     ): array {
         Assert::isInstanceOf($object, OrderItemInterface::class);
 

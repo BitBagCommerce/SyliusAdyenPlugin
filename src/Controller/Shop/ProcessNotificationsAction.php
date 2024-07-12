@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -38,7 +39,7 @@ class ProcessNotificationsAction
         DispatcherInterface $dispatcher,
         NotificationToCommandResolver $notificationCommandResolver,
         NotificationResolver $notificationResolver,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->dispatcher = $dispatcher;
         $this->notificationCommandResolver = $notificationCommandResolver;
@@ -52,13 +53,13 @@ class ProcessNotificationsAction
             if (!$notificationItem->success) {
                 $this->logger->error(\sprintf(
                     'Payment with pspReference [%s] did not return success',
-                    $notificationItem->pspReference ?? ''
+                    $notificationItem->pspReference ?? '',
                 ));
             } else {
                 $this->logger->debug(\sprintf(
                     'Payment with pspReference [%s] finished with event code [%s]',
                     $notificationItem->pspReference ?? '',
-                    $notificationItem->eventCode ?? ''
+                    $notificationItem->eventCode ?? '',
                 ));
             }
 

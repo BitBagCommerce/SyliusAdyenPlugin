@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -98,6 +99,7 @@ final class PaymentMethodRepository implements PaymentMethodRepositoryInterface
 
     /**
      * @return array<int, PaymentMethodInterface>
+     *
      * @psalm-suppress MixedInferredReturnType
      * @psalm-suppress MixedReturnStatement
      */

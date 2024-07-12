@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -31,7 +32,7 @@ final class PaymentFinalizationHandler implements MessageHandlerInterface
 
     public function __construct(
         FactoryInterface $stateMachineFactory,
-        RepositoryInterface $orderRepository
+        RepositoryInterface $orderRepository,
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
         $this->orderRepository = $orderRepository;

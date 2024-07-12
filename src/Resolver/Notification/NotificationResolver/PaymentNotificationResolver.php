@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -28,7 +29,7 @@ final class PaymentNotificationResolver implements CommandResolver
 
     public function __construct(
         DispatcherInterface $dispatcher,
-        AdyenReferenceRepositoryInterface $adyenReferenceRepository
+        AdyenReferenceRepositoryInterface $adyenReferenceRepository,
     ) {
         $this->dispatcher = $dispatcher;
         $this->adyenReferenceRepository = $adyenReferenceRepository;
@@ -37,12 +38,12 @@ final class PaymentNotificationResolver implements CommandResolver
     private function fetchPayment(
         string $paymentCode,
         string $reference,
-        ?string $originalReference
+        ?string $originalReference,
     ): PaymentInterface {
         try {
             $reference = $this->adyenReferenceRepository->getOneByCodeAndReference(
                 $paymentCode,
-                $originalReference ?? $reference
+                $originalReference ?? $reference,
             );
 
             $result = $reference->getPayment();
@@ -60,13 +61,13 @@ final class PaymentNotificationResolver implements CommandResolver
             $payment = $this->fetchPayment(
                 $paymentCode,
                 (string) $notificationData->pspReference,
-                $notificationData->originalReference
+                $notificationData->originalReference,
             );
 
             return $this->dispatcher->getCommandFactory()->createForEvent(
                 (string) $notificationData->eventCode,
                 $payment,
-                $notificationData
+                $notificationData,
             );
         } catch (UnmappedAdyenActionException $ex) {
             throw new NoCommandResolvedException();

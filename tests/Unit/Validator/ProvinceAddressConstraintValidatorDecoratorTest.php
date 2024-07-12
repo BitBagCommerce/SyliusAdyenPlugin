@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -69,7 +70,7 @@ class ProvinceAddressConstraintValidatorDecoratorTest extends ConstraintValidato
      */
     public function testRelatedCountryAndEmptyProvinceWithAlreadyViolatedConstraint(
         string $violationMessage,
-        int $expectedCount
+        int $expectedCount,
     ): void {
         $constraint = new ProvinceAddressConstraint();
         $address = AddressMother::createAddressWithSpecifiedCountryAndEmptyProvince('US');

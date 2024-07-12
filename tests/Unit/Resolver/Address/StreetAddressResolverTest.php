@@ -33,7 +33,7 @@ final class StreetAddressResolverTest extends TestCase
     public function testResolveHouseNumberFirst(
         string $streetAddress,
         string $street,
-        string $houseNumber
+        string $houseNumber,
     ): void {
         $model = $this->streetAddressResolver->resolve($streetAddress);
 
@@ -45,7 +45,7 @@ final class StreetAddressResolverTest extends TestCase
     public function testResolveHouseNumberLast(
         string $streetAddress,
         string $street,
-        string $houseNumber
+        string $houseNumber,
     ): void {
         $model = $this->streetAddressResolver->resolve($streetAddress);
 

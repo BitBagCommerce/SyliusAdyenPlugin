@@ -41,7 +41,7 @@ final class ManagingPaymentMethodAdyenContext extends MinkContext implements Con
         CurrentPageResolverInterface $currentPageResolver,
         CreatePageInterface $createPage,
         UpdatePage $updatePage,
-        KernelInterface $kernel
+        KernelInterface $kernel,
     ) {
         $this->createPage = $createPage;
         $this->currentPageResolver = $currentPageResolver;
@@ -71,7 +71,7 @@ final class ManagingPaymentMethodAdyenContext extends MinkContext implements Con
             ->setJsonHandler(function (
                 Service $service,
                 string $url,
-                array $payload
+                array $payload,
             ) use ($merchantAccount, $apiKey) {
                 $config = $service->getClient()->getConfig();
 

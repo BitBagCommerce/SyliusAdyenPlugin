@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -35,7 +36,7 @@ final class FilterHttpAuthenticationForNotificationProcessor implements EventSub
 
     public function __construct(
         PaymentMethodRepositoryInterface $paymentMethodRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->paymentMethodRepository = $paymentMethodRepository;
         $this->logger = $logger;
@@ -71,8 +72,8 @@ final class FilterHttpAuthenticationForNotificationProcessor implements EventSub
         $authPassword = $configuration['authPassword'];
 
         if (
-            \hash_equals($request->getUser() ?? '', $authUser)
-            && \hash_equals($request->getPassword() ?? '', $authPassword)
+            \hash_equals($request->getUser() ?? '', $authUser) &&
+            \hash_equals($request->getPassword() ?? '', $authPassword)
         ) {
             return true;
         }
@@ -80,7 +81,7 @@ final class FilterHttpAuthenticationForNotificationProcessor implements EventSub
         $this->logger->error(\sprintf(
             'Webhook authentication failed. Check the provided credentials: [%s] [%s]',
             $request->getUser() ?? '',
-            $request->getPassword() ?? ''
+            $request->getPassword() ?? '',
         ));
 
         return false;

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -35,7 +36,7 @@ final class NotificationResolver implements NotificationResolverInterface
     public function __construct(
         DenormalizerInterface $denormalizer,
         ValidatorInterface $validator,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->denormalizer = $denormalizer;
         $this->validator = $validator;
@@ -61,7 +62,7 @@ final class NotificationResolver implements NotificationResolverInterface
             $result[] = $this->denormalizer->denormalize(
                 $notificationRequestItem,
                 NotificationItemData::class,
-                self::DENORMALIZATION_FORMAT
+                self::DENORMALIZATION_FORMAT,
             );
         }
 
@@ -80,7 +81,7 @@ final class NotificationResolver implements NotificationResolverInterface
             $validationResult = $this->validator->validate($item);
             if (0 < $validationResult->count()) {
                 $this->logger->error(
-                    'Denormalization violations: ' . \var_export($validationResult, true)
+                    'Denormalization violations: ' . \var_export($validationResult, true),
                 );
 
                 continue;

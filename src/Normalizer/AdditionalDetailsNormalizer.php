@@ -1,12 +1,13 @@
 <?php
 
-declare(strict_types=1);
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
  * You can find more information about us on https://bitbag.io and write us
  * an email on hello@bitbag.io.
  */
+
+declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Normalizer;
 
@@ -32,7 +33,7 @@ final class AdditionalDetailsNormalizer extends AbstractPaymentNormalizer implem
 
     public function __construct(
         RequestStack $requestStack,
-        ShippingLineGeneratorInterface $shippingLineGenerator
+        ShippingLineGeneratorInterface $shippingLineGenerator,
     ) {
         $this->requestStack = $requestStack;
         $this->shippingLineGenerator = $shippingLineGenerator;
@@ -44,7 +45,7 @@ final class AdditionalDetailsNormalizer extends AbstractPaymentNormalizer implem
     public function supportsNormalization(
         $data,
         string $format = null,
-        array $context = []
+        array $context = [],
     ): bool {
         return parent::supportsNormalization($data, $format, $context) && $data instanceof OrderInterface;
     }
@@ -59,7 +60,7 @@ final class AdditionalDetailsNormalizer extends AbstractPaymentNormalizer implem
         return (array) $this->normalizer->normalize(
             $object,
             null,
-            [AbstractPaymentNormalizer::NORMALIZER_ENABLED => true]
+            [AbstractPaymentNormalizer::NORMALIZER_ENABLED => true],
         );
     }
 
@@ -80,7 +81,7 @@ final class AdditionalDetailsNormalizer extends AbstractPaymentNormalizer implem
     public function normalize(
         $object,
         string $format = null,
-        array $context = []
+        array $context = [],
     ): array {
         Assert::isInstanceOf($object, OrderInterface::class);
 

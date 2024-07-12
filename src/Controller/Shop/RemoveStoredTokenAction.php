@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -38,7 +39,7 @@ class RemoveStoredTokenAction
         TokenStorageInterface $storage,
         AdyenTokenRepositoryInterface $adyenTokenRepository,
         PaymentMethodRepositoryInterface $paymentMethodRepository,
-        AdyenClientProviderInterface $adyenClientProvider
+        AdyenClientProviderInterface $adyenClientProvider,
     ) {
         $this->tokenStorage = $storage;
         $this->adyenTokenRepository = $adyenTokenRepository;
@@ -64,7 +65,7 @@ class RemoveStoredTokenAction
     public function __invoke(
         string $code,
         string $paymentReference,
-        Request $request
+        Request $request,
     ): Response {
         /**
          * @var ?CustomerInterface $customer

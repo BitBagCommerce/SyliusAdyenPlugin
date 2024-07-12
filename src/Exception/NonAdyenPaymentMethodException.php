@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -20,10 +21,10 @@ class NonAdyenPaymentMethodException extends \InvalidArgumentException
         parent::__construct(
             sprintf(
                 'Provided PaymentMethod #%d is not an Adyen instance',
-                (int) $paymentMethod->getId()
+                (int) $paymentMethod->getId(),
             ),
             0,
-            $previous
+            $previous,
         );
     }
 }

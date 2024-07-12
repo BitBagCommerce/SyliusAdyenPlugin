@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -38,7 +39,7 @@ class PaymentFinalizationHandlerTest extends TestCase
 
         $this->handler = new PaymentFinalizationHandler(
             $this->stateMachineFactory,
-            $this->orderRepository
+            $this->orderRepository,
         );
     }
 
@@ -98,7 +99,7 @@ class PaymentFinalizationHandlerTest extends TestCase
             ->expects($this->once())
             ->method('add')
             ->with(
-                $this->equalTo($order)
+                $this->equalTo($order),
             )
         ;
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -26,7 +27,7 @@ final class RequestCancelCallback
 
     public function __construct(
         FactoryInterface $factory,
-        Dispatcher $dispatcher
+        Dispatcher $dispatcher,
     ) {
         $this->dispatcher = $dispatcher;
         $this->factory = $factory;
@@ -41,7 +42,7 @@ final class RequestCancelCallback
         }
 
         $this->dispatcher->dispatch(
-            new CancelPayment($order)
+            new CancelPayment($order),
         );
     }
 }

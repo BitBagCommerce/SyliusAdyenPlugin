@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -31,7 +32,7 @@ class AdyenCredentialsValidatorTest extends ConstraintValidatorTestCase
     protected function createValidator(): AdyenCredentialsValidator
     {
         return new AdyenCredentialsValidator(
-            new AdyenTransportFactory(null, $this->client)
+            new AdyenTransportFactory(null, $this->client),
         );
     }
 

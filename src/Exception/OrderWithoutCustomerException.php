@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -20,7 +21,7 @@ class OrderWithoutCustomerException extends \InvalidArgumentException
         parent::__construct(
             sprintf('An order %d has no customer associated', (int) $order->getId()),
             0,
-            $previous
+            $previous,
         );
     }
 }

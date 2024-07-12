@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -22,7 +23,7 @@ final class RefundNotificationResolver implements CommandResolver
     private $adyenReferenceRepository;
 
     public function __construct(
-        AdyenReferenceRepositoryInterface $adyenReferenceRepository
+        AdyenReferenceRepositoryInterface $adyenReferenceRepository,
     ) {
         $this->adyenReferenceRepository = $adyenReferenceRepository;
     }
@@ -32,7 +33,7 @@ final class RefundNotificationResolver implements CommandResolver
         try {
             $reference = $this->adyenReferenceRepository->getOneForRefundByCodeAndReference(
                 $paymentCode,
-                (string) $notificationData->pspReference
+                (string) $notificationData->pspReference,
             );
 
             $refundPayment = $reference->getRefundPayment();

@@ -36,7 +36,7 @@ class HttpClientStub implements ClientInterface
     public function requestJson(
         Service $service,
         $requestUrl,
-        $params
+        $params,
     ): mixed {
         if (null !== self::$jsonHandler) {
             return call_user_func(static::$jsonHandler, $service, $requestUrl, $params);
@@ -50,7 +50,7 @@ class HttpClientStub implements ClientInterface
     public function requestPost(
         Service $service,
         $requestUrl,
-        $params
+        $params,
     ) {
         if (null !== self::$postHandler) {
             return call_user_func(static::$postHandler, $service, $requestUrl, $params);
