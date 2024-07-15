@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Serializer;
 
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
-use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -20,7 +19,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Webmozart\Assert\Assert;
 
-final class NotificationItemNormalizer implements DenormalizerAwareInterface, DenormalizerInterface, NormalizerAwareInterface, ContextAwareNormalizerInterface
+final class NotificationItemNormalizer implements DenormalizerAwareInterface, DenormalizerInterface, NormalizerAwareInterface
 {
     private const DENORMALIZATION_PROCESSED_FLAG = '_adyen_notification_denormalization_processed';
 

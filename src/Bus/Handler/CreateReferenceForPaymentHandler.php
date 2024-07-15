@@ -16,10 +16,9 @@ use BitBag\SyliusAdyenPlugin\Entity\AdyenReferenceInterface;
 use BitBag\SyliusAdyenPlugin\Factory\AdyenReferenceFactoryInterface;
 use BitBag\SyliusAdyenPlugin\Repository\AdyenReferenceRepositoryInterface;
 use Doctrine\ORM\NoResultException;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Webmozart\Assert\Assert;
 
-final class CreateReferenceForPaymentHandler implements MessageHandlerInterface
+final class CreateReferenceForPaymentHandler
 {
     /** @var AdyenReferenceRepositoryInterface */
     private $adyenReferenceRepository;

@@ -14,9 +14,8 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 use BitBag\SyliusAdyenPlugin\Bus\Command\CreateReferenceForRefund;
 use BitBag\SyliusAdyenPlugin\Factory\AdyenReferenceFactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-final class CreateReferenceForRefundHandler implements MessageHandlerInterface
+final class CreateReferenceForRefundHandler
 {
     /** @var RepositoryInterface */
     private $adyenReferenceRepository;

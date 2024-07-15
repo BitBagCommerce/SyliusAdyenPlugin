@@ -31,6 +31,7 @@ final class CredentialType extends PasswordType
             return;
         }
 
+        /** @psalm-suppress InvalidPropertyAssignmentValue */
         $view->vars['value'] = self::CREDENTIAL_PLACEHOLDER;
     }
 

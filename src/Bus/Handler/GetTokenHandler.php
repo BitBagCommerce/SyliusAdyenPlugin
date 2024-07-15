@@ -18,12 +18,11 @@ use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use BitBag\SyliusAdyenPlugin\Exception\OrderWithoutCustomerException;
 use BitBag\SyliusAdyenPlugin\Repository\AdyenTokenRepositoryInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Webmozart\Assert\Assert;
 
-final class GetTokenHandler implements MessageHandlerInterface
+final class GetTokenHandler
 {
     /** @var AdyenTokenRepositoryInterface */
     private $adyenTokenRepository;

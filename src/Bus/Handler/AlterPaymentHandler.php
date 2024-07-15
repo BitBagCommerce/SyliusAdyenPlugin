@@ -20,10 +20,9 @@ use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Webmozart\Assert\Assert;
 
-final class AlterPaymentHandler implements MessageHandlerInterface
+final class AlterPaymentHandler
 {
     use GatewayConfigFromPaymentTrait;
 

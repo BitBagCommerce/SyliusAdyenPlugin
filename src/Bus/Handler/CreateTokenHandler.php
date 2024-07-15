@@ -15,9 +15,8 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\CreateToken;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use BitBag\SyliusAdyenPlugin\Factory\AdyenTokenFactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-final class CreateTokenHandler implements MessageHandlerInterface
+final class CreateTokenHandler
 {
     /** @var AdyenTokenFactoryInterface */
     private $tokenFactory;

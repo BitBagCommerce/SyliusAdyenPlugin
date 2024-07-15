@@ -21,10 +21,9 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-final class PaymentStatusReceivedHandler implements MessageHandlerInterface
+final class PaymentStatusReceivedHandler
 {
     use OrderFromPaymentTrait;
 

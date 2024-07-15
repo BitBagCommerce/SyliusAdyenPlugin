@@ -21,10 +21,9 @@ use BitBag\SyliusAdyenPlugin\Traits\GatewayConfigFromPaymentTrait;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\RefundPlugin\Event\RefundPaymentGenerated;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Webmozart\Assert\Assert;
 
-final class RefundPaymentGeneratedHandler implements MessageHandlerInterface
+final class RefundPaymentGeneratedHandler
 {
     use GatewayConfigFromPaymentTrait;
 

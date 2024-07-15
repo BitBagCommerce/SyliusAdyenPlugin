@@ -17,9 +17,8 @@ use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
 use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-final class TakeOverPaymentHandler implements MessageHandlerInterface
+final class TakeOverPaymentHandler
 {
     use PayableOrderPaymentTrait;
     use PaymentFromOrderTrait;
