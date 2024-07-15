@@ -26,7 +26,7 @@ security:
                 default_target_path: sylius_admin_dashboard
                 use_forward: false
                 use_referer: true
-                enable_csrf: security.csrf.token_manager
+                enable_csrf: true
                 csrf_parameter: _csrf_admin_security_token
                 csrf_token_id: admin_authenticate
             remember_me:
@@ -56,7 +56,7 @@ security:
             pattern: "%sylius.security.new_api_shop_regex%/.*"
             provider: sylius_api_shop_user_provider
             stateless: true
-            entry_point: true
+            entry_point: jwt
             json_login:
                 check_path: "%sylius.security.new_api_shop_route%/customers/token"
                 username_path: email
@@ -92,8 +92,6 @@ security:
                 path: sylius_shop_logout
                 target: sylius_shop_homepage
                 invalidate_session: false
-                success_handler: sylius.handler.shop_user_logout
-            anonymous: true
 
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/

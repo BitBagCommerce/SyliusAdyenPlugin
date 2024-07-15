@@ -9,7 +9,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
+        "php": "^8.0",
         "adyen/php-api-library": "^11.0",
         "composer/package-versions-deprecated": "^1.11",
         "doctrine/annotations": "^1.14",
@@ -60,8 +60,7 @@
         }
     },
     "conflict": {
-        "behat/mink-selenium2-driver": ">=1.7.0",
-        "doctrine/dbal": "^3.0"
+        "behat/mink-selenium2-driver": ">=1.7.0"
     },
     "extra": {
         "branch-alias": {
