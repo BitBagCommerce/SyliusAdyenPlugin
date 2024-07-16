@@ -231,7 +231,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
 
     private function filterArray(array $payload, array $keysWhitelist): array
     {
-        return array_filter($payload, function (string $key) use ($keysWhitelist): bool {
+        return array_filter($payload, function ($key) use ($keysWhitelist): bool {
             return in_array($key, $keysWhitelist, true);
         }, \ARRAY_FILTER_USE_KEY);
     }

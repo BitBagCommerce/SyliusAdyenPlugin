@@ -64,7 +64,7 @@ final class AdyenClientProvider implements AdyenClientProviderInterface
         );
 
         if (null === $paymentMethod) {
-            throw new UpdateHandlingException(sprintf('No Adyen provider is configured'));
+            throw new UpdateHandlingException('No Adyen provider is configured');
         }
 
         $config = $this->getGatewayConfig($paymentMethod)->getConfig();
