@@ -15,7 +15,7 @@ use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
 use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessor\FailedResponseProcessor;
 use Tests\BitBag\SyliusAdyenPlugin\Unit\Mock\RequestMother;
 
-class FailedResponseProcessorTest extends AbstractProcessorTest
+class FailedResponseProcessorTest extends AbstractProcessor
 {
     private const TOKEN_VALUE = 'Szczebrzeszyn';
 

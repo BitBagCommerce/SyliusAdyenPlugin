@@ -17,7 +17,7 @@ use BitBag\SyliusAdyenPlugin\Processor\PaymentResponseProcessorInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Tests\BitBag\SyliusAdyenPlugin\Unit\Processor\PaymentResponseProcessor\AbstractProcessorTest;
+use Tests\BitBag\SyliusAdyenPlugin\Unit\Processor\PaymentResponseProcessor\AbstractProcessor;
 
 class PaymentResponseProcessorTest extends KernelTestCase
 {
@@ -32,7 +32,7 @@ class PaymentResponseProcessorTest extends KernelTestCase
     {
         return new PaymentResponseProcessor(
             $processors,
-            AbstractProcessorTest::getRouter($this->getContainer()),
+            AbstractProcessor::getRouter($this->getContainer()),
         );
     }
 

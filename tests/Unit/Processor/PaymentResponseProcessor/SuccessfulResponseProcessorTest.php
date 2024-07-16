@@ -16,7 +16,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Tests\BitBag\SyliusAdyenPlugin\Unit\Mock\RequestMother;
 
-class SuccessfulResponseProcessorTest extends AbstractProcessorTest
+class SuccessfulResponseProcessorTest extends AbstractProcessor
 {
     protected function setUp(): void
     {

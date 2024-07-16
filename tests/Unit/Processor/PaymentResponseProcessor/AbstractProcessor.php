@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Router;
 
-abstract class AbstractProcessorTest extends KernelTestCase
+abstract class AbstractProcessor extends KernelTestCase
 {
     protected const DEFAULT_ROUTE_LOCALE = 'en_US';
 
