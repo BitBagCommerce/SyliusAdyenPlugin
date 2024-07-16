@@ -91,9 +91,9 @@ We work on stable, supported and up-to-date versions of packages. We recommend y
 | ext-json:  | *                  |
 | sylius/refund-plugin | ^1.0.0             |
 | sylius/resource-bundle | ^1.8               |
-| sylius/sylius | ^1.11.0 or ^1.12.0 |
-| symfony/messenger | ^5.4               |
-| adyen/php-api-library | ^10.1              |
+| sylius/sylius | ~1.12.0 or ~1.13.0 |
+| symfony/messenger | ^5.4 or ^6.0       |
+| adyen/php-api-library | ^11.0              |
 
 ----
 
