@@ -16,7 +16,9 @@ use BitBag\SyliusAdyenPlugin\RefundPaymentTransitions as BitBagRefundPaymentTran
 use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface;
 use Sylius\RefundPlugin\StateResolver\RefundPaymentTransitions;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 final class RefundPaymentHandler
 {
     /** @var FactoryInterface */
