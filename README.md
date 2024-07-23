@@ -71,6 +71,7 @@ It supports all methods available to [drop-in](https://docs.adyen.com/online-pay
 | [Capture](https://docs.adyen.com/issuing/payment-stages#captures) | Yes |
 | [Partial refunds](https://docs.adyen.com/issuing/payment-stages#refunds) | Yes |
 
+If you want to learn more about plugins functionalities, please go under this [link](https://github.com/BitBagCommerce/SyliusAdyenPlugin/blob/master/doc/functionalities.md).
 
 ## We are here to help
 This **open-source plugin was developed to help the Sylius community** and make Adyen payments platform available to any Sylius store. If you have any additional questions, would like help with installing or configuring the plugin or need any assistance with your Sylius project - let us know!
