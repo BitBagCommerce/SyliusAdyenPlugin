@@ -27,7 +27,7 @@
    
 5. Add an origin; type your shop URL and save it:
    
-   ![Origin](adyen-allowed-origins.png)
+   ![Origin](adyen-allowed-origins-url.png)
 
 6. Create a new Adyen payment method. Fill in the merchant account, API and client keys obtained in step 4. Also, create a username and password to be used for webhook credentials and choose the correct environment, either `live` or `test`. Don't save yet.
 
@@ -50,7 +50,7 @@
 
 11. Save the payment method.
 
-12. Once saved, an additional box will be displayed. Copy the URL and paste it in the Adyen panel. Remember: if you are testing plugin and using tunneling for example: ngrok, remember to change `localhost` to `https://example.ngrok-free.app`
+12. Once saved, an additional box will be displayed. Copy the URL and paste it in the Adyen panel. Remember: if you are testing plugin and using tunneling for example: ngrok, remember to change `localhost:port` to `https://example.ngrok-free.app`
 
    ![Adyen notifications endpoint](notifications-endpoint.png)
  
