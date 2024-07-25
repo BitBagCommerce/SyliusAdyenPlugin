@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -20,10 +21,11 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-final class PaymentStatusReceivedHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class PaymentStatusReceivedHandler
 {
     use OrderFromPaymentTrait;
 
@@ -49,7 +51,7 @@ final class PaymentStatusReceivedHandler implements MessageHandlerInterface
         RepositoryInterface $paymentRepository,
         RepositoryInterface $orderRepository,
         DispatcherInterface $dispatcher,
-        MessageBusInterface $commandBus
+        MessageBusInterface $commandBus,
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
         $this->paymentRepository = $paymentRepository;

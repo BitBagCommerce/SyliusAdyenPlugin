@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -21,7 +22,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Router;
 
-abstract class AbstractProcessorTest extends KernelTestCase
+abstract class AbstractProcessor extends KernelTestCase
 {
     protected const DEFAULT_ROUTE_LOCALE = 'en_US';
 
@@ -54,7 +55,7 @@ abstract class AbstractProcessorTest extends KernelTestCase
         $payment = $this->getPayment($code);
         $this->assertEquals(
             $accepts,
-            $this->processor->accepts(Request::create('/'), $payment)
+            $this->processor->accepts(Request::create('/'), $payment),
         );
     }
 

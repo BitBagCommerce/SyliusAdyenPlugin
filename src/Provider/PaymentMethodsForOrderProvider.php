@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -23,7 +24,6 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 final class PaymentMethodsForOrderProvider implements PaymentMethodsForOrderProviderInterface
 {
     use PaymentFromOrderTrait;
-
     use GatewayConfigFromPaymentTrait;
 
     public const CONFIGURATION_KEYS_WHITELIST = [
@@ -42,7 +42,7 @@ final class PaymentMethodsForOrderProvider implements PaymentMethodsForOrderProv
     public function __construct(
         AdyenClientProviderInterface $adyenClientProvider,
         PaymentMethodRepositoryInterface $paymentMethodRepository,
-        DispatcherInterface $dispatcher
+        DispatcherInterface $dispatcher,
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->paymentMethodRepository = $paymentMethodRepository;
@@ -59,7 +59,7 @@ final class PaymentMethodsForOrderProvider implements PaymentMethodsForOrderProv
         }
 
         $result = $this->filterKeys(
-            $this->getGatewayConfig($paymentMethod)->getConfig()
+            $this->getGatewayConfig($paymentMethod)->getConfig(),
         );
         $result['paymentMethods'] = $this->adyenPaymentMethods($order, $code, $token);
         $result['code'] = $paymentMethod->getCode();
@@ -89,7 +89,7 @@ final class PaymentMethodsForOrderProvider implements PaymentMethodsForOrderProv
     private function adyenPaymentMethods(
         OrderInterface $order,
         ?string $code = null,
-        ?AdyenTokenInterface $adyenToken = null
+        ?AdyenTokenInterface $adyenToken = null,
     ): array {
         $method = $this->getPaymentMethod($order, $code);
 
@@ -101,7 +101,7 @@ final class PaymentMethodsForOrderProvider implements PaymentMethodsForOrderProv
 
         return $client->getAvailablePaymentMethods(
             $order,
-            $adyenToken
+            $adyenToken,
         );
     }
 

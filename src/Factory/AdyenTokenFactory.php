@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -29,7 +30,7 @@ final class AdyenTokenFactory implements AdyenTokenFactoryInterface
     {
         $result = $this->createNew();
         $result->setIdentifier(
-            bin2hex(random_bytes(32))
+            bin2hex(random_bytes(32)),
         );
         $result->setCustomer($customer);
         $result->setPaymentMethod($paymentMethod);

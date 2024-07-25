@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -28,7 +29,7 @@ final class RoutePaymentCompleteTransitionSubscriber implements EventSubscriberI
     private $dispatcher;
 
     public function __construct(
-        DispatcherInterface $dispatcher
+        DispatcherInterface $dispatcher,
     ) {
         $this->dispatcher = $dispatcher;
     }
@@ -73,9 +74,9 @@ final class RoutePaymentCompleteTransitionSubscriber implements EventSubscriberI
     public function canComplete(TransitionEvent $event): void
     {
         if (
-            !$this->isProcessableAdyenPayment($event)
-            || PaymentInterface::STATE_PROCESSING !== $event->getState()
-            || PaymentTransitions::TRANSITION_CAPTURE === $event->getTransition()
+            !$this->isProcessableAdyenPayment($event) ||
+            PaymentInterface::STATE_PROCESSING !== $event->getState() ||
+            PaymentTransitions::TRANSITION_CAPTURE === $event->getTransition()
         ) {
             return;
         }
@@ -92,9 +93,9 @@ final class RoutePaymentCompleteTransitionSubscriber implements EventSubscriberI
         $this->dispatcher->dispatch(
             new RequestCapture(
                 $this->getOrderFromPayment(
-                    $this->getObject($event)
-                )
-            )
+                    $this->getObject($event),
+                ),
+            ),
         );
 
         $event->setRejected();

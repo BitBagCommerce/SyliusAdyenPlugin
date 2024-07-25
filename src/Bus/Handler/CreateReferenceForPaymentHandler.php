@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -15,10 +16,11 @@ use BitBag\SyliusAdyenPlugin\Entity\AdyenReferenceInterface;
 use BitBag\SyliusAdyenPlugin\Factory\AdyenReferenceFactoryInterface;
 use BitBag\SyliusAdyenPlugin\Repository\AdyenReferenceRepositoryInterface;
 use Doctrine\ORM\NoResultException;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Webmozart\Assert\Assert;
 
-final class CreateReferenceForPaymentHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class CreateReferenceForPaymentHandler
 {
     /** @var AdyenReferenceRepositoryInterface */
     private $adyenReferenceRepository;
@@ -28,7 +30,7 @@ final class CreateReferenceForPaymentHandler implements MessageHandlerInterface
 
     public function __construct(
         AdyenReferenceRepositoryInterface $adyenReferenceRepository,
-        AdyenReferenceFactoryInterface $adyenReferenceFactory
+        AdyenReferenceFactoryInterface $adyenReferenceFactory,
     ) {
         $this->adyenReferenceRepository = $adyenReferenceRepository;
         $this->adyenReferenceFactory = $adyenReferenceFactory;
@@ -47,7 +49,7 @@ final class CreateReferenceForPaymentHandler implements MessageHandlerInterface
         try {
             return $this->adyenReferenceRepository->getOneByCodeAndReference(
                 $code,
-                (string) $adyenReference->getPspReference()
+                (string) $adyenReference->getPspReference(),
             );
         } catch (NoResultException $ex) {
             return null;

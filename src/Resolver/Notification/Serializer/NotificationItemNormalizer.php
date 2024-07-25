@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -11,7 +12,6 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Serializer;
 
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
-use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -19,12 +19,11 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Webmozart\Assert\Assert;
 
-final class NotificationItemNormalizer implements DenormalizerAwareInterface, DenormalizerInterface, NormalizerAwareInterface, ContextAwareNormalizerInterface
+final class NotificationItemNormalizer implements DenormalizerAwareInterface, DenormalizerInterface, NormalizerAwareInterface
 {
     private const DENORMALIZATION_PROCESSED_FLAG = '_adyen_notification_denormalization_processed';
 
     use DenormalizerAwareTrait;
-
     use NormalizerAwareTrait;
 
     /**
@@ -34,7 +33,7 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
         $data,
         string $type,
         string $format = null,
-        array $context = []
+        array $context = [],
     ) {
         if (!isset($data[self::DENORMALIZATION_PROCESSED_FLAG]) && is_array($data)) {
             $data['eventCode'] = strtolower((string) $data['eventCode']);
@@ -48,12 +47,12 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
     public function supportsDenormalization(
         mixed $data,
         ?string $type,
-        string $format = null
+        string $format = null,
     ): bool {
         return
-            NotificationItemData::class === $type
-            && isset($data['eventCode'], $data['paymentMethod'])
-            && !isset($data[self::DENORMALIZATION_PROCESSED_FLAG])
+            NotificationItemData::class === $type &&
+            isset($data['eventCode'], $data['paymentMethod']) &&
+            !isset($data[self::DENORMALIZATION_PROCESSED_FLAG])
         ;
     }
 
@@ -75,7 +74,7 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
     public function normalize(
         $object,
         string $format = null,
-        array $context = []
+        array $context = [],
     ) {
         if (!isset($context[$this->getNormalizationMarking($object)])) {
             $context[$this->getNormalizationMarking($object)] = true;
@@ -93,11 +92,11 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
     public function supportsNormalization(
         mixed $data,
         ?string $format = null,
-        array $context = []
+        array $context = [],
     ): bool {
         return
-            $data instanceof NotificationItemData
-            && !isset($context[$this->getNormalizationMarking($data)])
+            $data instanceof NotificationItemData &&
+            !isset($context[$this->getNormalizationMarking($data)])
         ;
     }
 }

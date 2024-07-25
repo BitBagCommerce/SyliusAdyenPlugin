@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -19,7 +20,7 @@ abstract class AbstractPaymentNormalizer implements NormalizerInterface
     public function supportsNormalization(
         $data,
         string $format = null,
-        array $context = []
+        array $context = [],
     ): bool {
         return isset($context[self::NORMALIZER_ENABLED]);
     }

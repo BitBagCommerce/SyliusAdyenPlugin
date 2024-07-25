@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -15,7 +16,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Tests\BitBag\SyliusAdyenPlugin\Unit\Mock\RequestMother;
 
-class SuccessfulResponseProcessorTest extends AbstractProcessorTest
+class SuccessfulResponseProcessorTest extends AbstractProcessor
 {
     protected function setUp(): void
     {
@@ -24,7 +25,7 @@ class SuccessfulResponseProcessorTest extends AbstractProcessorTest
         $this->processor = new SuccessfulResponseProcessor(
             $this->getContainer()->get('tests.bitbag.sylius_adyen_plugin.bus.dispatcher'),
             self::getRouter($this->getContainer()),
-            $this->getContainer()->get('translator')
+            $this->getContainer()->get('translator'),
         );
     }
 
@@ -57,7 +58,7 @@ class SuccessfulResponseProcessorTest extends AbstractProcessorTest
     public function testRedirect(
         Request $request,
         string $expectedUrlEnding,
-        bool $expectFlash = false
+        bool $expectFlash = false,
     ) {
         $payment = $this->createMock(PaymentInterface::class);
 

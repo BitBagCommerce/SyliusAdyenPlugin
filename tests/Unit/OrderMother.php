@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -24,16 +25,23 @@ use Sylius\Component\Core\Model\ProductVariant;
 final class OrderMother
 {
     public const CUSTOMER_EMAIL = 'ferdek@example.com';
+
     public const CUSTOMER_FIRST_NAME = 'Ferdynand';
+
     public const CUSTOMER_LAST_NAME = 'Kiepski';
 
     public const LOCALE = 'pl_PL';
 
     public const ITEM_VARIANT_NAME = 'Bulbulator';
+
     public const ITEM_PRODUCT_SLUG = 'Bakłażan';
+
     public const ITEM_UNIT_PRICE = 42;
+
     public const ITEM_TAX_VALUE = 10;
+
     public const ITEM_TAX_PERCENT = 24;
+
     public const ITEM_ID = 31337;
 
     public static function createOrderItem(): OrderItemInterface

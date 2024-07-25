@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -24,12 +25,13 @@ final class CredentialType extends PasswordType
     public function buildView(
         FormView $view,
         FormInterface $form,
-        array $options
+        array $options,
     ): void {
         if (0 === strlen((string) $view->vars['value']) || $form->isSubmitted()) {
             return;
         }
 
+        /** @psalm-suppress InvalidPropertyAssignmentValue */
         $view->vars['value'] = self::CREDENTIAL_PLACEHOLDER;
     }
 
@@ -43,9 +45,9 @@ final class CredentialType extends PasswordType
                 }
 
                 $event->setData(
-                    $event->getForm()->getNormData()
+                    $event->getForm()->getNormData(),
                 );
-            }
+            },
         );
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -36,7 +37,7 @@ final class FallbackResponseProcessor extends AbstractProcessor
     public function process(
         string $code,
         Request $request,
-        PaymentInterface $payment
+        PaymentInterface $payment,
     ): string {
         $tokenValue = $request->query->get('tokenValue');
         if (null === $tokenValue) {
@@ -49,7 +50,7 @@ final class FallbackResponseProcessor extends AbstractProcessor
                 'code' => $code,
                 'tokenValue' => $tokenValue,
             ],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
     }
 

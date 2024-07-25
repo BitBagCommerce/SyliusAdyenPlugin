@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -18,6 +19,6 @@ interface PaymentResponseProcessorInterface
     public function process(
         string $code,
         Request $request,
-        PaymentInterface $payment
+        PaymentInterface $payment,
     ): string;
 }

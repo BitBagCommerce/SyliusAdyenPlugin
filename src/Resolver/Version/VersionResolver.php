@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -34,7 +35,7 @@ final class VersionResolver implements VersionResolverInterface
             return substr(
                 FallbackVersions::getVersion(self::PACKAGE_NAME),
                 0,
-                -1
+                -1,
             );
         } catch (\Exception $ex) {
             return self::TEST_APPLICATION_VERSION;

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -31,7 +32,7 @@ class ProvinceAddressConstraintValidatorDecorator extends ConstraintValidator
 
     public function __construct(
         ProvinceAddressConstraintValidator $decorated,
-        array $provinceRequiredCountriesList = self::PROVINCE_REQUIRED_COUNTRIES_DEFAULT_LIST
+        array $provinceRequiredCountriesList = self::PROVINCE_REQUIRED_COUNTRIES_DEFAULT_LIST,
     ) {
         $this->decorated = $decorated;
         $this->provinceRequiredCountriesList = $provinceRequiredCountriesList;

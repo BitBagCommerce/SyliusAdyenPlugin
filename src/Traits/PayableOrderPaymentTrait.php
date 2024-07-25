@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -25,7 +26,7 @@ trait PayableOrderPaymentTrait
 
         if (null === $payment) {
             throw new \InvalidArgumentException(
-                sprintf('Order #%d has no Payment associated', (int) $order->getId())
+                sprintf('Order #%d has no Payment associated', (int) $order->getId()),
             );
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -14,9 +15,10 @@ use BitBag\SyliusAdyenPlugin\Bus\Command\CreateToken;
 use BitBag\SyliusAdyenPlugin\Entity\AdyenTokenInterface;
 use BitBag\SyliusAdyenPlugin\Factory\AdyenTokenFactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-final class CreateTokenHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class CreateTokenHandler
 {
     /** @var AdyenTokenFactoryInterface */
     private $tokenFactory;
@@ -26,7 +28,7 @@ final class CreateTokenHandler implements MessageHandlerInterface
 
     public function __construct(
         AdyenTokenFactoryInterface $tokenFactory,
-        RepositoryInterface $tokenRepository
+        RepositoryInterface $tokenRepository,
     ) {
         $this->tokenFactory = $tokenFactory;
         $this->tokenRepository = $tokenRepository;
@@ -36,7 +38,7 @@ final class CreateTokenHandler implements MessageHandlerInterface
     {
         $token = $this->tokenFactory->create(
             $createToken->getPaymentMethod(),
-            $createToken->getCustomer()
+            $createToken->getCustomer(),
         );
 
         $this->tokenRepository->add($token);

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -31,7 +32,7 @@ final class AddressNormalizer extends AbstractPaymentNormalizer
     public function supportsNormalization(
         $data,
         string $format = null,
-        array $context = []
+        array $context = [],
     ): bool {
         return parent::supportsNormalization($data, $format, $context) && $data instanceof AddressInterface;
     }
@@ -42,7 +43,7 @@ final class AddressNormalizer extends AbstractPaymentNormalizer
     public function normalize(
         $object,
         string $format = null,
-        array $context = []
+        array $context = [],
     ): array {
         Assert::isInstanceOf($object, AddressInterface::class);
 
@@ -55,7 +56,7 @@ final class AddressNormalizer extends AbstractPaymentNormalizer
 
         return \array_merge(
             $address,
-            $this->getStreetAddressPayload((string) $object->getStreet())
+            $this->getStreetAddressPayload((string) $object->getStreet()),
         );
     }
 

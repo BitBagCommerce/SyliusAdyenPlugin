@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -35,7 +36,7 @@ class HmacSignatureValidator extends ConstraintValidator
     public function __construct(
         SignatureValidatorProviderInterface $signatureValidatorProvider,
         PropertyAccessorInterface $propertyAccessor,
-        NormalizerInterface $normalizer
+        NormalizerInterface $normalizer,
     ) {
         $this->signatureValidatorProvider = $signatureValidatorProvider;
         $this->propertyAccessor = $propertyAccessor;
@@ -60,7 +61,7 @@ class HmacSignatureValidator extends ConstraintValidator
 
         return (string) $this->propertyAccessor->getValue(
             $objectOrArray,
-            self::PAYMENT_METHOD_FIELD_NAME
+            self::PAYMENT_METHOD_FIELD_NAME,
         );
     }
 
@@ -82,7 +83,7 @@ class HmacSignatureValidator extends ConstraintValidator
         Assert::isInstanceOf($constraint, HmacSignature::class);
 
         $validator = $this->signatureValidatorProvider->getValidatorForCode(
-            $this->getPaymentCode()
+            $this->getPaymentCode(),
         );
 
         $params = $this->getNormalizedNotificationData($value);

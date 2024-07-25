@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -31,7 +32,7 @@ final class PaymentCheckoutOrderResolver implements PaymentCheckoutOrderResolver
     public function __construct(
         RequestStack $requestStack,
         CartContextInterface $cartContext,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
     ) {
         $this->requestStack = $requestStack;
         $this->cartContext = $cartContext;
@@ -57,6 +58,7 @@ final class PaymentCheckoutOrderResolver implements PaymentCheckoutOrderResolver
     {
         /**
          * @var string|null $tokenValue
+         *
          * @psalm-suppress InternalMethod
          */
         $tokenValue = $this->getCurrentRequest()->get('tokenValue');

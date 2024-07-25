@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 final class RequestMother
 {
     public const TEST_LOCALE = 'pl_PL';
+
     public const WHERE_YOUR_HOME_IS = '127.0.0.1';
 
     public static function createWithSession(): Request

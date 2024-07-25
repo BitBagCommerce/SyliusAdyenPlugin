@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -13,9 +14,10 @@ namespace BitBag\SyliusAdyenPlugin\Bus\Handler;
 use BitBag\SyliusAdyenPlugin\Bus\Command\PrepareOrderForPayment;
 use Sylius\Bundle\OrderBundle\NumberAssigner\OrderNumberAssignerInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-final class PrepareOrderForPaymentHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class PrepareOrderForPaymentHandler
 {
     /** @var OrderNumberAssignerInterface */
     private $orderNumberAssigner;
@@ -25,7 +27,7 @@ final class PrepareOrderForPaymentHandler implements MessageHandlerInterface
 
     public function __construct(
         OrderNumberAssignerInterface $orderNumberAssigner,
-        RepositoryInterface $orderRepository
+        RepositoryInterface $orderRepository,
     ) {
         $this->orderNumberAssigner = $orderNumberAssigner;
         $this->orderRepository = $orderRepository;

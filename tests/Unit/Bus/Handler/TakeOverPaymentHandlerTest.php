@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -43,7 +44,7 @@ class TakeOverPaymentHandlerTest extends TestCase
 
         $this->handler = new TakeOverPaymentHandler(
             $this->paymentMethodRepository,
-            $this->paymentManager
+            $this->paymentManager,
         );
     }
 
@@ -59,7 +60,7 @@ class TakeOverPaymentHandlerTest extends TestCase
 
         $command = new TakeOverPayment(
             $this->createPayment($paymentMethod)->getOrder(),
-            self::TEST_PAYMENT_CODE
+            self::TEST_PAYMENT_CODE,
         );
         ($this->handler)($command);
     }
@@ -70,7 +71,7 @@ class TakeOverPaymentHandlerTest extends TestCase
             ->expects($this->once())
             ->method('persist')
             ->with(
-                $this->isInstanceOf(PaymentInterface::class)
+                $this->isInstanceOf(PaymentInterface::class),
             )
         ;
 
@@ -84,7 +85,7 @@ class TakeOverPaymentHandlerTest extends TestCase
             ->expects($this->once())
             ->method('getOneForAdyenAndCode')
             ->with(
-                $this->equalTo(self::NEW_TEST_PAYMENT_CODE)
+                $this->equalTo(self::NEW_TEST_PAYMENT_CODE),
             )
             ->willReturn($newPaymentMethod)
         ;

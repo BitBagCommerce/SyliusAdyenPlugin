@@ -33,7 +33,7 @@ final class StreetAddressResolverTest extends TestCase
     public function testResolveHouseNumberFirst(
         string $streetAddress,
         string $street,
-        string $houseNumber
+        string $houseNumber,
     ): void {
         $model = $this->streetAddressResolver->resolve($streetAddress);
 
@@ -45,7 +45,7 @@ final class StreetAddressResolverTest extends TestCase
     public function testResolveHouseNumberLast(
         string $streetAddress,
         string $street,
-        string $houseNumber
+        string $houseNumber,
     ): void {
         $model = $this->streetAddressResolver->resolve($streetAddress);
 
@@ -69,7 +69,7 @@ final class StreetAddressResolverTest extends TestCase
         self::assertEquals(self::UNKNOWN_HOUSE_NUMBER_OR_NAME, $model->getHouseNumber());
     }
 
-    public function provideHouseNumberLast(): array
+    public static function provideHouseNumberLast(): array
     {
         return [
             ['Zamojska 1', 'Zamojska', '1'],
@@ -82,7 +82,7 @@ final class StreetAddressResolverTest extends TestCase
         ];
     }
 
-    public function provideHouseNumberFirst(): array
+    public static function provideHouseNumberFirst(): array
     {
         return [
             ['1 Montfortanenlaan', 'Montfortanenlaan', '1'],

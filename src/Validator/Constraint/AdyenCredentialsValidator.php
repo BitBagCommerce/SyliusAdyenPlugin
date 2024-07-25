@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -62,7 +63,7 @@ class AdyenCredentialsValidator extends ConstraintValidator
         string $environment,
         ?string $merchantAccount,
         ?string $apiKey,
-        ?string $liveEndpointUrlPrefix
+        ?string $liveEndpointUrlPrefix,
     ): bool {
         $this->validateArguments($merchantAccount, $apiKey);
 
@@ -77,7 +78,7 @@ class AdyenCredentialsValidator extends ConstraintValidator
 
         try {
             (new Checkout(
-                $this->adyenTransportFactory->create($options)
+                $this->adyenTransportFactory->create($options),
             ))->paymentMethods($payload);
         } catch (AdyenException $exception) {
             $this->dispatchException($exception);

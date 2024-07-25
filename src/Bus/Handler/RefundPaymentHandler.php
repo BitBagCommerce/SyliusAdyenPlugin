@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -15,9 +16,10 @@ use BitBag\SyliusAdyenPlugin\RefundPaymentTransitions as BitBagRefundPaymentTran
 use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface;
 use Sylius\RefundPlugin\StateResolver\RefundPaymentTransitions;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-final class RefundPaymentHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class RefundPaymentHandler
 {
     /** @var FactoryInterface */
     private $stateMachineFactory;
@@ -27,7 +29,7 @@ final class RefundPaymentHandler implements MessageHandlerInterface
 
     public function __construct(
         FactoryInterface $stateMachineFactory,
-        EntityManagerInterface $refundPaymentManager
+        EntityManagerInterface $refundPaymentManager,
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
         $this->refundPaymentManager = $refundPaymentManager;

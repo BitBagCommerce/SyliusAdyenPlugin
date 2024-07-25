@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -32,7 +33,7 @@ final class PaymentDetailsResolver implements PaymentDetailsResolverInterface
     public function __construct(
         OrderRepository $orderRepository,
         AdyenClientProviderInterface $adyenClientProvider,
-        PaymentRepositoryInterface $paymentRepository
+        PaymentRepositoryInterface $paymentRepository,
     ) {
         $this->orderRepository = $orderRepository;
         $this->adyenClientProvider = $adyenClientProvider;

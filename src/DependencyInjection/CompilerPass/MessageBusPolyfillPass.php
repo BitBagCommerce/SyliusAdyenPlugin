@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -27,7 +28,7 @@ class MessageBusPolyfillPass implements CompilerPassInterface
         $targetBusName = in_array('sylius.command_bus', $buses, true) ? 'sylius.command_bus' : 'sylius_default.bus';
         $container->setAlias(
             self::COMMAND_BUS_TAG,
-            $targetBusName
+            $targetBusName,
         );
     }
 

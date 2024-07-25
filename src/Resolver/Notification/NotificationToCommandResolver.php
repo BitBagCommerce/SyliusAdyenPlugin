@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -23,7 +24,7 @@ final class NotificationToCommandResolver implements NotificationToCommandResolv
      * @param iterable<int, CommandResolver> $commandResolvers
      */
     public function __construct(
-        iterable $commandResolvers
+        iterable $commandResolvers,
     ) {
         $this->commandResolvers = $commandResolvers;
     }

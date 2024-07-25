@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -16,12 +17,12 @@ use BitBag\SyliusAdyenPlugin\Traits\PayableOrderPaymentTrait;
 use BitBag\SyliusAdyenPlugin\Traits\PaymentFromOrderTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-final class TakeOverPaymentHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class TakeOverPaymentHandler
 {
     use PayableOrderPaymentTrait;
-
     use PaymentFromOrderTrait;
 
     /** @var PaymentMethodRepositoryInterface */
@@ -32,7 +33,7 @@ final class TakeOverPaymentHandler implements MessageHandlerInterface
 
     public function __construct(
         PaymentMethodRepositoryInterface $paymentMethodRepository,
-        EntityManagerInterface $paymentManager
+        EntityManagerInterface $paymentManager,
     ) {
         $this->paymentMethodRepository = $paymentMethodRepository;
         $this->paymentManager = $paymentManager;

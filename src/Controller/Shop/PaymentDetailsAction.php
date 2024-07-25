@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -22,7 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
 class PaymentDetailsAction
 {
     use PayableOrderPaymentTrait;
-
     use PaymentFromOrderTrait;
 
     /** @var AdyenClientProviderInterface */
@@ -37,7 +37,7 @@ class PaymentDetailsAction
     public function __construct(
         AdyenClientProviderInterface $adyenClientProvider,
         PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver,
-        PaymentResponseProcessorInterface $paymentResponseProcessor
+        PaymentResponseProcessorInterface $paymentResponseProcessor,
     ) {
         $this->adyenClientProvider = $adyenClientProvider;
         $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;
@@ -61,9 +61,9 @@ class PaymentDetailsAction
                 'redirect' => $this->paymentResponseProcessor->process(
                     (string) $paymentMethod->getCode(),
                     $request,
-                    $payment
+                    $payment,
                 ),
-            ]
+            ],
         );
     }
 }

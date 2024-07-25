@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -40,7 +41,7 @@ final class PaymentTypeExtension extends AbstractTypeExtension
         PaymentCheckoutOrderResolverInterface $paymentCheckoutOrderResolver,
         PaymentMethodRepositoryInterface $paymentMethodRepository,
         ChannelContextInterface $channelContext,
-        AdyenClientProviderInterface $adyenClientProvider
+        AdyenClientProviderInterface $adyenClientProvider,
     ) {
         $this->paymentCheckoutOrderResolver = $paymentCheckoutOrderResolver;
         $this->paymentMethodRepository = $paymentMethodRepository;
@@ -69,7 +70,7 @@ final class PaymentTypeExtension extends AbstractTypeExtension
     }
 
     private function getPaymentMethods(
-        AdyenClientInterface $client
+        AdyenClientInterface $client,
     ): array {
         $order = $this->paymentCheckoutOrderResolver->resolve();
 

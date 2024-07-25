@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -42,7 +43,7 @@ class PreserveOrderTokenUponRedirectionCallback
 
         $this->session->set(
             self::NON_FINALIZED_CART_SESSION_KEY,
-            $tokenValue
+            $tokenValue,
         );
     }
 }

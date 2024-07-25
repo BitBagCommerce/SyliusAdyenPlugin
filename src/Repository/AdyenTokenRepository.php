@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -25,7 +26,7 @@ final class AdyenTokenRepository extends EntityRepository implements AdyenTokenR
      */
     public function findOneByPaymentMethodAndCustomer(
         PaymentMethodInterface $paymentMethod,
-        CustomerInterface $customer
+        CustomerInterface $customer,
     ): ?AdyenTokenInterface {
         return $this->findOneBy([
             'paymentMethod' => $paymentMethod,

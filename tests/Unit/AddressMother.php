@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -16,16 +17,25 @@ use Sylius\Component\Core\Model\AddressInterface;
 final class AddressMother
 {
     public const BILLING_CITY = 'Szczebrzeszyn';
+
     public const BILLING_POSTCODE = '22-460';
+
     public const BILLING_STREET = 'Zamojska 1';
+
     public const BILLING_STREET_NAME_ONLY = 'Zamojska';
+
     public const BILLING_HOUSE_NAME_OR_NUMBER = '1';
+
     public const BILLING_PROVINCE = 'lubelskie';
+
     public const BILLING_PHONE_NUMBER = '+4242424242';
 
     public const SHIPPING_CITY = 'Wrocław';
+
     public const SHIPPING_POSTCODE = '54-530';
+
     public const SHIPPING_STREET = 'Ćwiartki 3/1';
+
     public const SHIPPING_PROVINCE = 'dolnośląskie';
 
     public const ADDRESS_COUNTRY = 'PL';
@@ -56,7 +66,7 @@ final class AddressMother
     }
 
     public static function createAddressWithSpecifiedCountryAndEmptyProvince(
-        string $country = self::ADDRESS_COUNTRY
+        string $country = self::ADDRESS_COUNTRY,
     ): AddressInterface {
         $result = self::createShippingAddress();
         $result->setCountryCode($country);

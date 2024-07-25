@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -23,7 +24,7 @@ class AdyenDetailsAction
     private $paymentDetailsResolver;
 
     public function __construct(
-        PaymentDetailsResolverInterface $paymentDetailsResolver
+        PaymentDetailsResolverInterface $paymentDetailsResolver,
     ) {
         $this->paymentDetailsResolver = $paymentDetailsResolver;
     }

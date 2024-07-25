@@ -9,14 +9,12 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.0",
+        "php": "^8.0 || ^8.1",
         "adyen/php-api-library": "^11.0",
         "composer/package-versions-deprecated": "^1.11",
-        "doctrine/annotations": "^1.14",
         "nyholm/psr7": "^1.4",
-        "psalm/plugin-symfony": "^4.0",
         "sylius/refund-plugin": "~1.0.0 || ^1.1",
-        "sylius/sylius": "~1.11.0 || ~1.12.0",
+        "sylius/sylius": "~1.12.0 || ~1.13.0",
         "symfony/messenger": "^5.4 || ^6.0",
         "symfony/serializer": "^5.4 || ^6.0",
         "symfony/webpack-encore-bundle": "^1.14"
@@ -24,7 +22,7 @@
     "require-dev": {
         "behat/behat": "^3.6.1",
         "behat/mink-selenium2-driver": "^1.4",
-        "bitbag/coding-standard": "^1.0.1",
+        "bitbag/coding-standard": "^3.0.0",
         "dmore/behat-chrome-extension": "^1.3",
         "dmore/chrome-mink-driver": "^2.7",
         "friends-of-behat/mink": "^1.8",
@@ -37,19 +35,20 @@
         "lakion/mink-debug-extension": "^2.0.0",
         "phpspec/phpspec": "^7.0",
         "phpstan/extension-installer": "^1.0",
-        "phpstan/phpstan": "0.12.90",
-        "phpstan/phpstan-doctrine": "0.12.39",
-        "phpstan/phpstan-strict-rules": "^0.12.0",
-        "phpstan/phpstan-webmozart-assert": "0.12.12",
-        "phpunit/phpunit": "^9.5",
+        "phpstan/phpstan": "^1.4",
+        "phpstan/phpstan-doctrine": "^1.0",
+        "phpstan/phpstan-strict-rules": "^1.0",
+        "phpstan/phpstan-webmozart-assert": "^1.0",
+        "phpunit/phpunit": ">=8.5",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
         "symfony/browser-kit": "^5.4 || 6.0",
         "symfony/debug-bundle": "^5.4 || ^6.0",
         "symfony/dotenv": "^5.4 || ^6.0",
         "symfony/intl": "^5.4 || ^6.0",
         "symfony/web-profiler-bundle": "^5.4 || ^6.0",
-        "symplify/easy-coding-standard": "^9.3, !=9.3.27",
-        "vimeo/psalm": "^4.4.1 || ^5.0.0"
+        "symplify/easy-coding-standard": "^10.0 || ^11.0",
+        "vimeo/psalm": "~4.12 || ^5.0.0",
+        "psalm/plugin-symfony": "~4.0 || ~5.0"
     },
     "config": {
         "sort-packages": true,
@@ -60,8 +59,7 @@
         }
     },
     "conflict": {
-        "behat/mink-selenium2-driver": ">=1.7.0",
-        "doctrine/dbal": "^3.0"
+        "behat/mink-selenium2-driver": ">=1.7.0"
     },
     "extra": {
         "branch-alias": {

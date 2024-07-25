@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -35,6 +36,6 @@ interface PaymentCommandFactoryInterface
     public function createForEvent(
         string $event,
         PaymentInterface $payment,
-        ?NotificationItemData $notificationItemData = null
+        ?NotificationItemData $notificationItemData = null,
     ): PaymentLifecycleCommand;
 }

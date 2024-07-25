@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -50,7 +51,7 @@ class CreateTokenHandlerTest extends TestCase
             ->method('create')
             ->with(
                 $this->equalTo($paymentMethod),
-                $this->equalTo($customer)
+                $this->equalTo($customer),
             )
             ->willReturn($token)
         ;
@@ -59,7 +60,7 @@ class CreateTokenHandlerTest extends TestCase
             ->expects($this->once())
             ->method('add')
             ->with(
-                $this->equalTo($token)
+                $this->equalTo($token),
             )
         ;
 

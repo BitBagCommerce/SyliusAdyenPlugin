@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -37,8 +38,8 @@ class AddressNormalizerTest extends TestCase
             ->willReturn(
                 new StreetAddressModel(
                     AddressMother::BILLING_STREET_NAME_ONLY,
-                    AddressMother::BILLING_HOUSE_NAME_OR_NUMBER
-                )
+                    AddressMother::BILLING_HOUSE_NAME_OR_NUMBER,
+                ),
             );
 
         $this->normalizer = new AddressNormalizer($this->streetAddressResolver);
@@ -59,7 +60,7 @@ class AddressNormalizerTest extends TestCase
     public function testSupportsNormalization(
         array $context,
         ?AddressInterface $order,
-        bool $pass
+        bool $pass,
     ): void {
         $this->assertEquals($pass, $this->normalizer->supportsNormalization($order, null, $context));
     }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -27,7 +28,7 @@ final class PaymentCommandFactory implements PaymentCommandFactoryInterface
 
     public function __construct(
         EventCodeResolverInterface $eventCodeResolver,
-        array $mapping = []
+        array $mapping = [],
     ) {
         $this->mapping = array_merge_recursive(self::MAPPING, $mapping);
         $this->eventCodeResolver = $eventCodeResolver;
@@ -50,7 +51,7 @@ final class PaymentCommandFactory implements PaymentCommandFactoryInterface
     public function createForEvent(
         string $event,
         PaymentInterface $payment,
-        ?NotificationItemData $notificationItemData = null
+        ?NotificationItemData $notificationItemData = null,
     ): PaymentLifecycleCommand {
         if (null !== $notificationItemData) {
             $event = $this->eventCodeResolver->resolve($notificationItemData);

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -20,7 +21,7 @@ class UnboundAddressFromOrderException extends \InvalidArgumentException
         parent::__construct(
             sprintf('Unbound billing address for order #%d', (int) $order->getId()),
             0,
-            $previous
+            $previous,
         );
     }
 }

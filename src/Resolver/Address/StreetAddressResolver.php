@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -47,7 +48,7 @@ final class StreetAddressResolver implements StreetAddressResolverInterface
     {
         return new StreetAddressModel(
             $street,
-            $houseNumber
+            $houseNumber,
         );
     }
 }

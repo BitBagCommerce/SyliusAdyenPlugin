@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file has been created by developers from BitBag.
  * Feel free to contact us once you face any issues or want to start
@@ -111,7 +112,7 @@ class AlterPaymentHandlerTest extends TestCase
                         ->expects($this->once())
                         ->method('requestCapture')
                         ->with(
-                            $this->isInstanceOf(PaymentInterface::class)
+                            $this->isInstanceOf(PaymentInterface::class),
                         )
                     ;
                 },
@@ -124,7 +125,7 @@ class AlterPaymentHandlerTest extends TestCase
                         ->expects($this->once())
                         ->method('requestCancellation')
                         ->with(
-                            $this->isInstanceOf(PaymentInterface::class)
+                            $this->isInstanceOf(PaymentInterface::class),
                         )
                     ;
                 },
