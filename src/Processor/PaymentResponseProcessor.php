@@ -20,14 +20,14 @@ final class PaymentResponseProcessor implements PaymentResponseProcessorInterfac
 {
     private const DEFAULT_REDIRECT_ROUTE = 'sylius_shop_order_thank_you';
 
-    /** @var ProcessorInterface[] */
+    /** @var iterable<ProcessorInterface> */
     private $processors;
 
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
 
     /**
-     * @param ProcessorInterface[] $processors
+     * @param iterable<ProcessorInterface> $processors
      */
     public function __construct(
         iterable $processors,

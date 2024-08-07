@@ -30,7 +30,10 @@ final class PaymentMethodRepository implements PaymentMethodRepositoryInterface
 
     public function find(int $id): ?PaymentMethodInterface
     {
-        return $this->baseRepository->find($id);
+        /** @var null|PaymentMethodInterface $result  */
+        $result = $this->baseRepository->find($id);
+
+        return $result;
     }
 
     public function getOneForAdyenAndCode(string $code): PaymentMethodInterface

@@ -45,6 +45,9 @@ final class RefundPaymentRepository implements RefundPaymentRepositoryInterface
 
     public function find(int $id): ?RefundPaymentInterface
     {
-        return $this->baseRepository->find($id);
+        /** @var null|RefundPaymentInterface $result */
+        $result = $this->baseRepository->find($id);
+
+        return $result;
     }
 }

@@ -31,6 +31,7 @@ class AdyenDetailsAction
 
     public function __invoke(Request $request, string $code): Response
     {
+        /** @var string|null $referenceId */
         $referenceId = $request->query->get(self::REFERENCE_ID_KEY);
 
         if (null === $referenceId) {

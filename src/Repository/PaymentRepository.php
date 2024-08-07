@@ -26,6 +26,9 @@ final class PaymentRepository implements PaymentRepositoryInterface
 
     public function find(int $id): ?PaymentInterface
     {
-        return $this->baseRepository->find($id);
+        /** @var null|PaymentInterface $result */
+        $result = $this->baseRepository->find($id);
+
+        return $result;
     }
 }
