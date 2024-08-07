@@ -30,7 +30,7 @@ final class PaymentMethodRepository implements PaymentMethodRepositoryInterface
 
     public function find(int $id): ?PaymentMethodInterface
     {
-        /** @var null|PaymentMethodInterface $result  */
+        /** @var PaymentMethodInterface|null $result */
         $result = $this->baseRepository->find($id);
 
         return $result;
