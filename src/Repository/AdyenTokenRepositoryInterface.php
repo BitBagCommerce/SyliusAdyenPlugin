@@ -18,10 +18,6 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 interface AdyenTokenRepositoryInterface extends RepositoryInterface
 {
-    /**
-     * @psalm-suppress MixedReturnStatement
-     * @psalm-suppress MixedInferredReturnType
-     */
     public function findOneByPaymentMethodAndCustomer(
         PaymentMethodInterface $paymentMethod,
         CustomerInterface $customer,

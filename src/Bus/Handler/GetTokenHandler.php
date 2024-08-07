@@ -58,10 +58,6 @@ final class GetTokenHandler
         return $user instanceof UserInterface ? $user : null;
     }
 
-    /**
-     * @psalm-suppress MixedReturnStatement
-     * @psalm-suppress MixedInferredReturnType
-     */
     public function __invoke(GetToken $getTokenQuery): ?AdyenTokenInterface
     {
         if (null === $this->getUser()) {

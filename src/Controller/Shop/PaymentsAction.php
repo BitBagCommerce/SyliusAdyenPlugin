@@ -82,9 +82,6 @@ class PaymentsAction
 
     private function prepareOrder(Request $request, OrderInterface $order): void
     {
-        /**
-         * @psalm-suppress InternalMethod
-         */
         if (null === $request->get('tokenValue')) {
             $request->getSession()->set(self::ORDER_ID_KEY, $order->getId());
         }

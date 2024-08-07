@@ -28,23 +28,11 @@ final class PaymentMethodRepository implements PaymentMethodRepositoryInterface
         $this->baseRepository = $baseRepository;
     }
 
-    /**
-     * @psalm-suppress MixedReturnStatement
-     * @psalm-suppress MixedInferredReturnType
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
     public function find(int $id): ?PaymentMethodInterface
     {
         return $this->baseRepository->find($id);
     }
 
-    /**
-     * @psalm-suppress MixedReturnStatement
-     * @psalm-suppress MixedInferredReturnType
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
     public function getOneForAdyenAndCode(string $code): PaymentMethodInterface
     {
         return $this->baseRepository->createQueryBuilder('o')
@@ -67,9 +55,6 @@ final class PaymentMethodRepository implements PaymentMethodRepositoryInterface
         }
     }
 
-    /**
-     * @psalm-suppress QueryBuilderSetParameter
-     */
     private function getQueryForChannel(ChannelInterface $channel): QueryBuilder
     {
         return $this->baseRepository->createQueryBuilder('o')
@@ -83,10 +68,6 @@ final class PaymentMethodRepository implements PaymentMethodRepositoryInterface
         ;
     }
 
-    /**
-     * @psalm-suppress MixedReturnStatement
-     * @psalm-suppress MixedInferredReturnType
-     */
     public function findOneByChannel(ChannelInterface $channel): ?PaymentMethodInterface
     {
         return $this
@@ -99,9 +80,6 @@ final class PaymentMethodRepository implements PaymentMethodRepositoryInterface
 
     /**
      * @return array<int, PaymentMethodInterface>
-     *
-     * @psalm-suppress MixedInferredReturnType
-     * @psalm-suppress MixedReturnStatement
      */
     public function findAllByChannel(ChannelInterface $channel): array
     {

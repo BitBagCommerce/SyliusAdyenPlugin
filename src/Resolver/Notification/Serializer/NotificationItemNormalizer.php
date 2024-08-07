@@ -26,9 +26,6 @@ final class NotificationItemNormalizer implements DenormalizerAwareInterface, De
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    /**
-     * @psalm-suppress MixedReturnStatement
-     */
     public function denormalize(
         $data,
         string $type,

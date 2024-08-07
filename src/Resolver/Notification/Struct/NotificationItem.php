@@ -13,9 +13,6 @@ namespace BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct;
 
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
-/**
- * @psalm-suppress MissingConstructor
- */
 class NotificationItem
 {
     /** @var string */
