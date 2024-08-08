@@ -24,12 +24,6 @@ final class RefundPaymentRepository implements RefundPaymentRepositoryInterface
         $this->baseRepository = $baseRepository;
     }
 
-    /**
-     * @psalm-suppress MixedReturnStatement
-     * @psalm-suppress MixedInferredReturnType
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
     public function getForOrderNumberAndRefundPaymentId(
         string $orderNumber,
         int $paymentId,
@@ -49,14 +43,11 @@ final class RefundPaymentRepository implements RefundPaymentRepositoryInterface
         return $qb->getQuery()->getSingleResult();
     }
 
-    /**
-     * @psalm-suppress MixedReturnStatement
-     * @psalm-suppress MixedInferredReturnType
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
     public function find(int $id): ?RefundPaymentInterface
     {
-        return $this->baseRepository->find($id);
+        /** @var RefundPaymentInterface|null $result */
+        $result = $this->baseRepository->find($id);
+
+        return $result;
     }
 }

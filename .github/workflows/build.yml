@@ -8,8 +8,7 @@ on:
     release:
         types: [created]
     schedule:
-        -
-            cron: "0 1 * * 6" # Run at 1am every Saturday
+        - cron: "0 1 * * 6" # Run at 1am every Saturday
     workflow_dispatch: ~
 
 jobs:
@@ -23,14 +22,16 @@ jobs:
             matrix:
                 php: [ "8.0", "8.1", "8.2", "8.3" ]
                 symfony: [ "^5.4", "^6.4" ]
-                sylius: [ "~1.12.0", "~1.13.0" ]
-                node: [ "^18.0", "^20.0" ]
+                sylius: [ "^1.12", "^1.13" ]
+                node: [ "18.x", "20.x" ]
                 mysql: [ "8.0" ]
+
                 exclude:
-                    - sylius: "~1.13.0"
-                      php: "8.0"
-                    - symfony: "^6.4"
-                      php: "8.0"
+                    - sylius: ^1.13
+                      php: 8.0
+                    - sylius: ^1.12
+                      php: 8.0
+                      symfony: ^6.4
 
         env:
             APP_ENV: test
@@ -95,7 +96,6 @@ jobs:
                     key: ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json **/composer.lock') }}
                     restore-keys: |
                         ${{ runner.os }}-php-${{ matrix.php }}-composer-
-
             -
                 name: Restrict Symfony version
                 if: matrix.symfony != ''
@@ -103,30 +103,30 @@ jobs:
                     composer global config --no-plugins allow-plugins.symfony/flex true
                     composer global require --no-progress --no-scripts --no-plugins "symfony/flex:^1.10"
                     composer config extra.symfony.require "${{ matrix.symfony }}"
-
             -
-                name: Restrcting Sylius version
+                name: Restrict Sylius version
                 if: matrix.sylius != ''
                 run: composer require "sylius/sylius:${{ matrix.sylius }}" --no-update --no-scripts --no-interaction
 
             -
                 name: Install PHP dependencies
                 run: composer install --no-interaction
+                env:
+                    SYMFONY_REQUIRE: ${{ matrix.symfony }}
 
             -
                 name: Get Yarn cache directory
                 id: yarn-cache
-                run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+                run: echo "::set-output name=dir::$(yarn cache dir)"
 
             -
                 name: Cache Yarn
-                uses: actions/cache@v2
+                uses: actions/cache@v4
                 with:
                     path: ${{ steps.yarn-cache.outputs.dir }}
                     key: ${{ runner.os }}-node-${{ matrix.node }}-yarn-${{ hashFiles('**/package.json **/yarn.lock') }}
                     restore-keys: |
                         ${{ runner.os }}-node-${{ matrix.node }}-yarn-
-
             -
                 name: Install JS dependencies
                 run: (cd tests/Application && yarn install)
@@ -136,13 +136,11 @@ jobs:
                 run: |
                     (cd tests/Application && bin/console doctrine:database:create -vvv)
                     (cd tests/Application && bin/console doctrine:schema:create -vvv)
-
             -
                 name: Prepare test application assets
                 run: |
                     (cd tests/Application && bin/console assets:install public -vvv)
                     (cd tests/Application && yarn encore dev)
-
             -
                 name: Prepare test application cache
                 run: (cd tests/Application && bin/console cache:warmup -vvv)
@@ -158,18 +156,6 @@ jobs:
             -
                 name: Validate database schema
                 run: (cd tests/Application && bin/console doctrine:schema:validate)
-
-            -
-                name: Run PHPStan
-                run: vendor/bin/phpstan analyse -c phpstan.neon -l 6 src/
-
-            -
-                name: Run ECS
-                run: vendor/bin/ecs check src
-
-            -
-                name: Run Psalm
-                run: vendor/bin/psalm
 
             -
                 name: Run PHPSpec

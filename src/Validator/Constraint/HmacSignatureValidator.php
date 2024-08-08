@@ -68,7 +68,7 @@ class HmacSignatureValidator extends ConstraintValidator
     private function getNormalizedNotificationData(NotificationItemData $value): array
     {
         $params = (array) $this->normalizer->normalize($value);
-        $params['success'] = $value->success ? 'true' : 'false';
+        $params['success'] = ($value->success ?? false) ? 'true' : 'false';
 
         return $params;
     }

@@ -24,14 +24,11 @@ final class PaymentRepository implements PaymentRepositoryInterface
         $this->baseRepository = $baseRepository;
     }
 
-    /**
-     * @psalm-suppress MixedReturnStatement
-     * @psalm-suppress MixedInferredReturnType
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
     public function find(int $id): ?PaymentInterface
     {
-        return $this->baseRepository->find($id);
+        /** @var PaymentInterface|null $result */
+        $result = $this->baseRepository->find($id);
+
+        return $result;
     }
 }

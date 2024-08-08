@@ -49,17 +49,10 @@ final class PaymentCheckoutOrderResolver implements PaymentCheckoutOrderResolver
         return $result;
     }
 
-    /**
-     * @psalm-suppress MixedInferredReturnType
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
-     */
     private function getCurrentOrder(): ?OrderInterface
     {
         /**
          * @var string|null $tokenValue
-         *
-         * @psalm-suppress InternalMethod
          */
         $tokenValue = $this->getCurrentRequest()->get('tokenValue');
 

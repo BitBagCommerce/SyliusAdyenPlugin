@@ -101,17 +101,9 @@ final class PaymentStatusReceivedHandler
 
             // This is necessary because in Sylius 1.11 namespace of SendOrderConfirmation has been changed
             if (null !== $token) {
-                /**
-                 * @psalm-suppress MixedArgument
-                 * @psalm-suppress UndefinedClass
-                 */
                 if (class_exists('\Sylius\Bundle\ApiBundle\Command\SendOrderConfirmation')) {
                     $this->commandBus->dispatch(new \Sylius\Bundle\ApiBundle\Command\SendOrderConfirmation($token));
                 } elseif (class_exists('\Sylius\Bundle\ApiBundle\Command\Checkout\SendOrderConfirmation')) {
-                    /**
-                     * @psalm-suppress MixedArgument
-                     * @psalm-suppress UndefinedClass
-                     */
                     $this->commandBus->dispatch(new \Sylius\Bundle\ApiBundle\Command\Checkout\SendOrderConfirmation($token));
                 }
             }

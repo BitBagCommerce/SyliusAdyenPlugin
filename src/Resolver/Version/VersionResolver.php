@@ -19,12 +19,6 @@ final class VersionResolver implements VersionResolverInterface
 
     private const TEST_APPLICATION_VERSION = 'dev';
 
-    /**
-     * @psalm-suppress MixedReturnStatement
-     * @psalm-suppress MixedInferredReturnType
-     * @psalm-suppress InternalClass
-     * @psalm-suppress InternalMethod
-     */
     private function getPluginVersion(): string
     {
         try {

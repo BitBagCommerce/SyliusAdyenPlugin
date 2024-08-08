@@ -50,7 +50,7 @@ class ProcessNotificationsAction
     public function __invoke(string $code, Request $request): Response
     {
         foreach ($this->notificationResolver->resolve($code, $request) as $notificationItem) {
-            if (!$notificationItem->success) {
+            if (null === $notificationItem || false === $notificationItem->success) {
                 $this->logger->error(\sprintf(
                     'Payment with pspReference [%s] did not return success',
                     $notificationItem->pspReference ?? '',

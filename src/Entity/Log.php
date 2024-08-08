@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Entity;
 
-/** @psalm-suppress MissingConstructor */
 class Log implements LogInterface
 {
     /** @var int */
