@@ -33,7 +33,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
     /** @var RequestStack */
     private $requestStack;
 
-    /** @var array */
+    /** @var string[] */
     private $allowedMethodsList = [
         'ideal',
         'paypal',
@@ -42,6 +42,7 @@ final class ClientPayloadFactory implements ClientPayloadFactoryInterface
         'googlepay',
         'alipay',
         'twint',
+        'bizum',
         'blik',
         'dotpay',
         'scheme',

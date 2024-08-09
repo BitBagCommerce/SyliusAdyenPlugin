@@ -51,6 +51,7 @@ It supports all methods available to [drop-in](https://docs.adyen.com/online-pay
 | **Payments** |
 | [Payment dropin](https://docs.adyen.com/online-payments/web-drop-in) | Yes |
 | [Card payments](https://docs.adyen.com/payment-methods/cards) | Yes |
+| [Bizum](https://docs.adyen.com/payment-methods/bizum) (Spain only) | Yes |
 | [3D Secure](https://docs.adyen.com/online-payments/3d-secure) | Yes |
 | **Wallet payments** |
 | [WeChat Pay](https://docs.adyen.com/payment-methods/wechat-pay) | Yes |
