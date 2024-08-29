@@ -86,19 +86,20 @@ This **open-source plugin was developed to help the Sylius community** and make 
 
 We work on stable, supported and up-to-date versions of packages. We recommend you to do the same.
 
-| Package | Version            |
-| --- |--------------------|
-| PHP | ^8.0               |
-| ext-json:  | *                  |
-| sylius/refund-plugin | ^1.0.0             |
-| sylius/resource-bundle | ^1.8               |
-| sylius/sylius | ~1.12.0 or ~1.13.0 |
-| symfony/messenger | ^5.4 or ^6.0       |
-| adyen/php-api-library | ^11.0              |
+| Package                | Version        |
+|------------------------|----------------|
+| PHP                    | ^8.0           |
+| ext-json:              | *              |
+| sylius/refund-plugin   | ^1.0.0         |
+| sylius/resource-bundle | ^1.8           |
+| sylius/sylius          | ~1.12 or ~1.13 |
+| symfony/messenger      | ^5.4 or ^6.0   |
+| adyen/php-api-library  | ^11.0          |
 
 ----
 
-For the full installation guide please go to [installation](doc/installation.md)
+### Full installation guide
+- [See the full installation guide](doc/installation.md)
 
 ## Customization
 ----
