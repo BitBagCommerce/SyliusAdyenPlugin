@@ -49,7 +49,14 @@ class ProcessNotificationsAction
 
     public function __invoke(string $code, Request $request): Response
     {
-        foreach ($this->notificationResolver->resolve($code, $request) as $notificationItem) {
+        try {
+            $notifications = $this->notificationResolver->resolve($code, $request);
+        } catch (NotificationItemsEmptyException) {
+            $this->logger->error('Request payload did not contain any notification items');
+            $notifications = [];
+        }
+
+        foreach ($notifications as $notificationItem) {
             if (null === $notificationItem || false === $notificationItem->success) {
                 $this->logger->error(\sprintf(
                     'Payment with pspReference [%s] did not return success',
