@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Resolver\Notification;
 
+use BitBag\SyliusAdyenPlugin\Exception\NotificationItemsEmptyException;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,6 +19,8 @@ interface NotificationResolverInterface
 {
     /**
      * @return NotificationItemData[]
+     *
+     * @throws NotificationItemsEmptyException
      */
     public function resolve(string $paymentCode, Request $request): array;
 }
