@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProcessNotificationsAction
 {
-    public const EXPECTED_ADYEN_RESPONSE = '[accepted]';
+    private const EXPECTED_ADYEN_RESPONSE = '[accepted]';
 
     /** @var DispatcherInterface */
     private $dispatcher;
