@@ -16,6 +16,6 @@ class NotificationRequest
     /** @var ?bool */
     public $live;
 
-    /** @var ?NotificationItem[] */
-    public $notificationItems;
+    /** @var NotificationItem[] */
+    public $notificationItems = [];
 }
