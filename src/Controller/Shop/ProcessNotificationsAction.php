@@ -12,9 +12,10 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
 use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
-use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver;
+use BitBag\SyliusAdyenPlugin\Exception\NotificationItemsEmptyException;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver\NoCommandResolvedException;
-use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationToCommandResolver;
+use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolverInterface;
+use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationToCommandResolverInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,10 +27,10 @@ class ProcessNotificationsAction
     /** @var DispatcherInterface */
     private $dispatcher;
 
-    /** @var NotificationToCommandResolver */
+    /** @var NotificationToCommandResolverInterface */
     private $notificationCommandResolver;
 
-    /** @var NotificationResolver */
+    /** @var NotificationResolverInterface */
     private $notificationResolver;
 
     /** @var LoggerInterface */
@@ -37,8 +38,8 @@ class ProcessNotificationsAction
 
     public function __construct(
         DispatcherInterface $dispatcher,
-        NotificationToCommandResolver $notificationCommandResolver,
-        NotificationResolver $notificationResolver,
+        NotificationToCommandResolverInterface $notificationCommandResolver,
+        NotificationResolverInterface $notificationResolver,
         LoggerInterface $logger,
     ) {
         $this->dispatcher = $dispatcher;
