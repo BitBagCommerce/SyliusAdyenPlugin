@@ -16,11 +16,11 @@ Do you like our work? Would you like to join us? Check out the “Career” tab:
 
 BitBag is a software house that implements tailor-made eCommerce platforms with the entire infrastructure—from creating eCommerce platforms to implementing PIM and CMS systems to developing custom eCommerce applications, specialist B2B solutions, and migrations from other platforms.
 
-We actively participate in Sylius's development. We have already completed over 150 projects, cooperating with clients from all over the world, including smaller enterprises and large international companies. We have completed projects for such important brands as Mytheresa, Foodspring, Planeta Huerto (Carrefour Group), Albeco, Mollie, and ArtNight.
+We actively participate in Sylius's development. We have already completed over 150 projects, cooperating with clients from all over the world, including smaller enterprises and large international companies. We have completed projects for such important brands as **Mytheresa, Foodspring, Planeta Huerto (Carrefour Group), Albeco, Mollie, and ArtNight.**
 
-We have a 70-person team of experts: business analysts and consultants eCommerce, developers, project managers, and QA testers.
+We have a 70-person team of experts: business analysts and eCommerce consultants, developers, project managers, and QA testers.
 
-# Our services:
+**Our services:**
 * B2B and B2C eCommerce platform implementations
 * Multi-vendor marketplace platform implementations
 * eCommerce migrations
@@ -29,7 +29,7 @@ We have a 70-person team of experts: business analysts and consultants eCommerce
 * Project maintenance and long-term support
 * PIM and CMS implementations
 
-# Some numbers from BitBag regarding Sylius:
+**Some numbers from BitBag regarding Sylius:**
 * 70 experts on board 
 * +150 projects delivered on top of Sylius,
 * 30 countries of BitBag’s customers,
@@ -111,7 +111,7 @@ It supports all methods available to [drop-in](https://docs.adyen.com/online-pay
 
 
 # Installation
-For the full installation guide please go to [here](doc/installation.md)
+For the full installation guide please go to [here](doc/installation.md).
 
 ----
 
