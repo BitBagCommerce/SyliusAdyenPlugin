@@ -1,22 +1,53 @@
-## Installation
+# Installation
 
-1. Complete [refund plug-in](https://github.com/Sylius/RefundPlugin) installation steps
+## Overview:
+GENERAL
+- [Requirements](#requirements)
+- [Composer](#composer)
+- [Basic configuration](#basic-configuration)
+---
+FRONTEND
+- [Templates](#templates)
+- [Webpack](#webpack)
+---
+ADDITIONAL
+- [Additional configuration](#additional-configuration)
+- [Known Issues](#known-issues)
+---
 
-2. Require with composer
+## Requirements:
+### Installed BitBagRefundPlugin
+Complete installation instructions for the BitBagRefundPlugin can be found here:
 
+- [BitBagRefundPlugin installation](https://github.com/Sylius/RefundPlugin)
+
+We work on stable, supported and up-to-date versions of packages. We recommend you to do the same.
+
+| Package       | Version         |
+|---------------|-----------------|
+| PHP           | \>8.0           |
+| sylius/sylius | 1.12.x - 1.13.x |
+| MySQL         | \>= 5.7         |
+| NodeJS        | \>= 18.x        |
+
+## Composer:
 ```bash
 composer require bitbag/sylius-adyen-plugin --no-scripts
 ```
-3. When using Symfony flex the proper bundle class will be automatically registered in your bundles.php file. Otherwise, add it to your `config/bundles.php` file:
+
+## Basic configuration:
+Add plugin dependencies to your `config/bundles.php` file:
 
 ```php
+# config/bundles.php
+
 return [
-    // ...
+    ...
     BitBag\SyliusAdyenPlugin\BitBagSyliusAdyenPlugin::class => ['all' => true],
 ];
 ```
 
-4. Import required config in your `config/packages/_sylius.yaml` file:
+Import required config in your `config/packages/_sylius.yaml` file:
 
 ```yaml
 # config/packages/_sylius.yaml
@@ -26,8 +57,17 @@ imports:
     - { resource: "@BitBagSyliusAdyenPlugin/Resources/config/config.yaml" }
 ```
 
-5. Import the routing in your `config/routes.yaml` file:
+Add Adyen payment method as a supported refund gateway in `config/packages/_sylius.yaml`:
+```yaml
+# config/packages/_sylius.yaml
 
+parameters:
+  sylius_refund.supported_gateways:
+     - offline
+     - adyen
+```
+
+Import routing in your `config/routes.yaml` file:
 ```yaml
 # config/routes.yaml
 
@@ -35,9 +75,10 @@ bitbag_sylius_adyen_plugin:
     resource: "@BitBagSyliusAdyenPlugin/Resources/config/routing.yaml"
 ```
 
-6. Add logging to your environment in config/packages/{dev, prod, staging}/monolog.yaml
-
+Add logging to your environment in config/packages/{dev, prod, staging}/monolog.yaml
 ```yaml
+# config/packages/{dev, prod, staging}/monolog.yaml
+
 monolog:
     channels: [adyen]
     handlers: # Add alongside other handlers you might have
@@ -47,56 +88,58 @@ monolog:
             id: bitbag.sylius_adyen_plugin.logging.monolog.doctrine_handler
 ```
 
-7. Add Adyen payment method as a supported refund gateway in `config/packages/_sylius.yaml`
-
-```yaml
-# config/packages/_sylius.yaml
-
-   parameters:
-      sylius_refund.supported_gateways:
-         - offline
-         - adyen
-```
-
-8. Configure config/packages/webpack_encore.yaml
-```yaml
-    builds:
-        *: *
-        shop: '%kernel.project_dir%/public/build/shop'
-        admin: '%kernel.project_dir%/public/build/admin'
-```
-
-9. Copy Sylius templates overridden by plug-in to your templates directory (`templates/bundles/`):
-
-```
-mkdir -p templates/bundles/SyliusAdminBundle/
-mkdir -p templates/bundles/SyliusShopBundle/
-
-cp -R vendor/bitbag/sylius-adyen-plugin/tests/Application/templates/bundles/SyliusAdminBundle/* templates/bundles/SyliusAdminBundle/
-cp -R vendor/bitbag/sylius-adyen-plugin/tests/Application/templates/bundles/SyliusShopBundle/* templates/bundles/SyliusShopBundle/
-```
-
-10. Execute migrations
-
-```
+### Update your database
+First, please run legacy-versioned migrations by using command:
+```bash
 bin/console doctrine:migrations:migrate
 ```
 
-11. Install assets
-
+After migration, please create a new diff migration and update database:
+```bash
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate
 ```
+### Clear application cache by using command:
+```bash
+bin/console cache:clear
+```
+**Note:** If you are running it on production, add the `-e prod` flag to this command.
+
+## Templates
+Copy required templates into correct directories in your project.
+
+**AdminBundle** (`templates/bundles/SyliusAdminBundle`):
+```
+vendor/bitbag/sylius-adyen-plugin/tests/Application/templates/bundles/SyliusAdminBundle/Order/Show/_payment.html.twig
+vendor/bitbag/sylius-adyen-plugin/tests/Application/templates/bundles/SyliusAdminBundle/Order/Show/_payments.html.twig
+```
+
+**ShopBundle** (`templates/bundles/SyliusShopBundle`):
+```
+vendor/bitbag/sylius-adyen-plugin/tests/Application/templates/bundles/SyliusShopBundle/Checkout/Complete/_navigation.html.twig
+vendor/bitbag/sylius-adyen-plugin/tests/Application/templates/bundles/SyliusShopBundle/Checkout/SelectPayment/_payment.html.twig
+```
+
+Install assets:
+```bash
 bin/console assets:install
 ```
 
-12. Clear cache
-
+## Webpack
+### Run commands
+```bash
+yarn install
+yarn encore dev # or prod, depends on your environment
 ```
+
+## Additional configuration
+- [Obtain Adyen credentials and configure the payment method](https://github.com/BitBagCommerce/SyliusAdyenPlugin/blob/master/doc/configuration.md)
+
+If you want to access the log page, visit /adyen/log.
+
+## Known issues
+### Translations not displaying correctly
+For incorrectly displayed translations, execute the command:
+```bash
 bin/console cache:clear
 ```
-
-**Note:** If you are running it on production, add the `-e prod` flag to this command.
-
-13. [Obtain Adyen credentials and configure the payment method](configuration.md)
-
-
-14. If you want to access the log page, visit /adyen/log.

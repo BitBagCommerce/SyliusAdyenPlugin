@@ -111,6 +111,7 @@ It supports all methods available to [drop-in](https://docs.adyen.com/online-pay
 
 
 # Installation
+
 For the full installation guide please go to [here](doc/installation.md).
 
 ----
@@ -119,17 +120,21 @@ For the full installation guide please go to [here](doc/installation.md).
 
 We work on stable, supported and up-to-date versions of packages. We recommend you to do the same.
 
-| Package | Version            |
-| --- |--------------------|
-| PHP | ^8.0               |
-| ext-json:  | *                  |
-| sylius/refund-plugin | ^1.0.0             |
-| sylius/resource-bundle | ^1.8               |
-| sylius/sylius | ~1.12.0 or ~1.13.0 |
-| symfony/messenger | ^5.4 or ^6.0       |
-| adyen/php-api-library | ^11.0              |
+| Package                | Version        |
+|------------------------|----------------|
+| PHP                    | ^8.0           |
+| ext-json:              | *              |
+| sylius/refund-plugin   | ^1.0.0         |
+| sylius/resource-bundle | ^1.8           |
+| sylius/sylius          | ~1.12 or ~1.13 |
+| symfony/messenger      | ^5.4 or ^6.0   |
+| adyen/php-api-library  | ^11.0          |
 
 ----
+
+### Full installation guide
+- [See the full installation guide](doc/installation.md)
+
 ## Customization
 ----
 ##### You can [decorate](https://symfony.com/doc/current/service_container/service_decoration.html) available services and [extend](https://symfony.com/doc/current/form/create_form_type_extension.html) current forms.
