@@ -5,14 +5,51 @@
 
 [![](https://img.shields.io/packagist/l/bitbag/adyen-plugin.svg) ](https://packagist.org/packages/bitbag/adyen-plugin "License") [![Slack](https://img.shields.io/badge/community%20chat-slack-FF1493.svg)](http://sylius-devs.slack.com) [![Support](https://img.shields.io/badge/support-contact%20author-blue])](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen)
 
-At BitBag we do believe in open source. However, we are able to do it just because of our awesome clients, who are kind enough to share some parts of our work with the community. Therefore, if you feel like there is a possibility for us working together, feel free to reach us out. You will find out more about our professional services, technologies and contact details at [https://bitbag.io/](https://bitbag.io/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen).
+We want to impact many unique eCommerce projects and build our brand recognition worldwide, so we are heavily involved in creating open-source solutions, especially for Sylius. We have already created over 35 extensions, which have been downloaded almost 2 million times.
+
+You can find more information about our eCommerce services and technologies on our website: https://bitbag.io/. We have also created a unique service dedicated to creating plugins: https://bitbag.io/services/sylius-plugin-development. 
+
+Do you like our work? Would you like to join us? Check out the “Career” tab: https://bitbag.io/pl/kariera. 
+
+# About us
+---
+
+BitBag is a software house that implements tailor-made eCommerce platforms with the entire infrastructure—from creating eCommerce platforms to implementing PIM and CMS systems to developing custom eCommerce applications, specialist B2B solutions, and migrations from other platforms.
+
+We actively participate in Sylius's development. We have already completed over 150 projects, cooperating with clients from all over the world, including smaller enterprises and large international companies. We have completed projects for such important brands as **Mytheresa, Foodspring, Planeta Huerto (Carrefour Group), Albeco, Mollie, and ArtNight.**
+
+We have a 70-person team of experts: business analysts and eCommerce consultants, developers, project managers, and QA testers.
+
+**Our services:**
+* B2B and B2C eCommerce platform implementations
+* Multi-vendor marketplace platform implementations
+* eCommerce migrations
+* Sylius plugin development
+* Sylius consulting
+* Project maintenance and long-term support
+* PIM and CMS implementations
+
+**Some numbers from BitBag regarding Sylius:**
+* 70 experts on board 
+* +150 projects delivered on top of Sylius,
+* 30 countries of BitBag’s customers,
+* 7 years in the Sylius ecosystem.
+* +35 plugins created for Sylius
+
+***
+
+ [![](https://bitbag.io/wp-content/uploads/2024/09/badges-sylius.png)](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen)
+ 
+***
+
+
+
 
 ## Table of Content
 
 ***
 
 * [Overview](#overview)
-* [Support](#we-are-here-to-help)
 * [Features](#features)
 * [Installation](#installation)
     * [Requirements](#requirements)
@@ -21,14 +58,14 @@ At BitBag we do believe in open source. However, we are able to do it just becau
     * [Security](#security)  
     * [Testing](#testing)
     * [Frontend part](#frontend-part)
-* [About us](#about-us)
-    * [Community](#community)
 * [Additional Sylius resources for developers](#additional-resources-for-developers)
 * [License](#license)
-* [Contact](#contact)
+* [Contact and Support](#contact-and-support)
+* [Community](#community)
 
 # Overview
 ----
+Elevate your Sylius store's payment processing capabilities with the Adyen Plugin. Developed in collaboration with the Adyen Team, this plugin seamlessly integrates Sylius with Adyen, a globally recognized payment processing company. By enabling a wide range of payment methods, this plugin offers a comprehensive solution for your payment gateway needs. It supports all methods available to drop-in.
 
 ![Screenshot showing payment methods show in shop](doc/choose-payment.png)
 
@@ -51,6 +88,7 @@ It supports all methods available to [drop-in](https://docs.adyen.com/online-pay
 | **Payments** |
 | [Payment dropin](https://docs.adyen.com/online-payments/web-drop-in) | Yes |
 | [Card payments](https://docs.adyen.com/payment-methods/cards) | Yes |
+| [Bizum](https://docs.adyen.com/payment-methods/bizum) (Spain only) | Yes |
 | [3D Secure](https://docs.adyen.com/online-payments/3d-secure) | Yes |
 | **Wallet payments** |
 | [WeChat Pay](https://docs.adyen.com/payment-methods/wechat-pay) | Yes |
@@ -71,15 +109,11 @@ It supports all methods available to [drop-in](https://docs.adyen.com/online-pay
 | [Capture](https://docs.adyen.com/issuing/payment-stages#captures) | Yes |
 | [Partial refunds](https://docs.adyen.com/issuing/payment-stages#refunds) | Yes |
 
-If you want to learn more about plugins functionalities, please go under this [link](https://github.com/BitBagCommerce/SyliusAdyenPlugin/blob/master/doc/functionalities.md).
-
-## We are here to help
-This **open-source plugin was developed to help the Sylius community** and make Adyen payments platform available to any Sylius store. If you have any additional questions, would like help with installing or configuring the plugin or need any assistance with your Sylius project - let us know!
-
-[![](https://bitbag.io/wp-content/uploads/2020/10/button-contact.png)](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen)
-
 
 # Installation
+
+For the full installation guide please go to [here](doc/installation.md).
+
 ----
 
 ### Requirements
@@ -165,23 +199,7 @@ $ bin/phpunit
 $ bin/behat
 ```
 
-# About us
----
 
-BitBag is an agency that provides high-quality **eCommerce and Digital Experience software**. Our main area of expertise includes eCommerce consulting and development for B2C, B2B, and Multi-vendor Marketplaces.
-The scope of our services related to Sylius includes:
-- **Consulting** in the field of strategy development
-- Personalized **headless software development**
-- **System maintenance and long-term support**
-- **Outsourcing**
-- **Plugin development**
-- **Data migration**
-
-Some numbers regarding Sylius:
-* **20+ experts** including consultants, UI/UX designers, Sylius trained front-end and back-end developers,
-* **100+ projects** delivered on top of Sylius,
-* Clients from  **20+ countries**
-* **3+ years** in the Sylius ecosystem.
 
 ---
 
@@ -189,29 +207,30 @@ If you need some help with Sylius development, don't be hesitated to contact us 
 
 ---
 
-[![](https://bitbag.io/wp-content/uploads/2021/08/sylius-badges-transparent-wide.png)](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen)
-
-## Community
-----
-For online communication, we invite you to chat with us & other users on [Sylius Slack](https://sylius-devs.slack.com/).
-
-
 ## Additional resources for developers
 ---
 To learn more about our contribution workflow and more, we encourage ypu to use the following resources:
 * [Sylius Documentation](https://docs.sylius.com/en/latest/)
 * [Sylius Contribution Guide](https://docs.sylius.com/en/latest/contributing/)
 * [Sylius Online Course](https://sylius.com/online-course/)
+* [Sylius Adyen Plugin Blog](https://bitbag.io/blog/adyen-payments-for-sylius)
 
 ## License
 ---
 
 This plugin's source code is completely free and released under the terms of the MIT license.
 
-[//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen.)
+[//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format them nicely because they shouldn't be seen.)
 
-## Contact
+## Contact and Support
 ---
-If you want to contact us, the best way is to fill the form on [our website](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen) or send us an e-mail to hello@bitbag.io with your question(s). We guarantee that we answer as soon as we can!
+If you find anything that could be a security problem, please reach us first on hello@bitbag.io in order to prepare a patch before disclosure.
 
-[![](https://bitbag.io/wp-content/uploads/2021/08/badges-bitbag.png)](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen)
+We know that your money is valuable, so we designed this plug-in to change the payment statuses only at the request of Adyen systems that are signed using the HMAC signature.
+
+## Community
+----
+For online communication, we invite you to chat with us & other users on [Sylius Slack](https://sylius-devs.slack.com/).
+
+
+[![](https://bitbag.io/wp-content/uploads/2024/09/badges-partners.png)](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=plugins_adyen)
