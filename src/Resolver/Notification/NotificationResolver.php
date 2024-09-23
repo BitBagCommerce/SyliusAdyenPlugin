@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace BitBag\SyliusAdyenPlugin\Resolver\Notification;
 
+use BitBag\SyliusAdyenPlugin\Exception\NotificationItemsEmptyException;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\Struct\NotificationItemData;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,11 +49,12 @@ final class NotificationResolver implements NotificationResolverInterface
      */
     private function denormalizeRequestData(Request $request): array
     {
+        $result = [];
         $payload = $request->request->all();
 
         /** @var array $notificationItems */
-        $notificationItems = $payload['notificationItems'];
-        $result = [];
+        $notificationItems = $payload['notificationItems']
+            ?? throw new NotificationItemsEmptyException();
 
         /** @var array $notificationItem */
         foreach ($notificationItems as $notificationItem) {
@@ -70,7 +72,7 @@ final class NotificationResolver implements NotificationResolverInterface
     }
 
     /**
-     * @return NotificationItemData[]
+     * @inheritDoc
      */
     public function resolve(string $paymentCode, Request $request): array
     {

@@ -12,24 +12,25 @@ declare(strict_types=1);
 namespace BitBag\SyliusAdyenPlugin\Controller\Shop;
 
 use BitBag\SyliusAdyenPlugin\Bus\DispatcherInterface;
-use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver;
+use BitBag\SyliusAdyenPlugin\Exception\NotificationItemsEmptyException;
 use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolver\NoCommandResolvedException;
-use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationToCommandResolver;
+use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationResolverInterface;
+use BitBag\SyliusAdyenPlugin\Resolver\Notification\NotificationToCommandResolverInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProcessNotificationsAction
 {
-    public const EXPECTED_ADYEN_RESPONSE = '[accepted]';
+    private const EXPECTED_ADYEN_RESPONSE = '[accepted]';
 
     /** @var DispatcherInterface */
     private $dispatcher;
 
-    /** @var NotificationToCommandResolver */
+    /** @var NotificationToCommandResolverInterface */
     private $notificationCommandResolver;
 
-    /** @var NotificationResolver */
+    /** @var NotificationResolverInterface */
     private $notificationResolver;
 
     /** @var LoggerInterface */
@@ -37,8 +38,8 @@ class ProcessNotificationsAction
 
     public function __construct(
         DispatcherInterface $dispatcher,
-        NotificationToCommandResolver $notificationCommandResolver,
-        NotificationResolver $notificationResolver,
+        NotificationToCommandResolverInterface $notificationCommandResolver,
+        NotificationResolverInterface $notificationResolver,
         LoggerInterface $logger,
     ) {
         $this->dispatcher = $dispatcher;
@@ -49,7 +50,14 @@ class ProcessNotificationsAction
 
     public function __invoke(string $code, Request $request): Response
     {
-        foreach ($this->notificationResolver->resolve($code, $request) as $notificationItem) {
+        try {
+            $notifications = $this->notificationResolver->resolve($code, $request);
+        } catch (NotificationItemsEmptyException) {
+            $this->logger->error('Request payload did not contain any notification items');
+            $notifications = [];
+        }
+
+        foreach ($notifications as $notificationItem) {
             if (null === $notificationItem || false === $notificationItem->success) {
                 $this->logger->error(\sprintf(
                     'Payment with pspReference [%s] did not return success',

@@ -18,14 +18,21 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 final class RequestMother
 {
-    public const TEST_LOCALE = 'pl_PL';
+    private const ROOT_PATH = '/';
+
+    private const TEST_LOCALE = 'pl_PL';
 
     public const WHERE_YOUR_HOME_IS = '127.0.0.1';
+
+    public static function createDummy(): Request
+    {
+        return Request::create(self::ROOT_PATH);
+    }
 
     public static function createWithSession(): Request
     {
         $session = new Session(new MockArraySessionStorage());
-        $request = Request::create('/');
+        $request = Request::create(self::ROOT_PATH);
         $request->setSession($session);
 
         return $request;
@@ -49,7 +56,7 @@ final class RequestMother
 
     public static function createWithLocaleSet(): Request
     {
-        $result = Request::create('/', 'GET', [], [], [], ['REMOTE_ADDR' => self::WHERE_YOUR_HOME_IS]);
+        $result = Request::create(self::ROOT_PATH, 'GET', [], [], [], ['REMOTE_ADDR' => self::WHERE_YOUR_HOME_IS]);
         $result->setLocale(self::TEST_LOCALE);
 
         return $result;
