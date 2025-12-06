@@ -23,6 +23,7 @@ jobs:
                 php: [ "8.0", "8.1", "8.2", "8.3" ]
                 symfony: [ "^5.4", "^6.4" ]
                 sylius: [ "^1.12", "^1.13" ]
+                adyen: [ "^11.0", "^12.0", "^13.0"]
                 node: [ "18.x", "20.x" ]
                 mysql: [ "8.0" ]
 
@@ -107,6 +108,10 @@ jobs:
                 name: Restrict Sylius version
                 if: matrix.sylius != ''
                 run: composer require "sylius/sylius:${{ matrix.sylius }}" --no-update --no-scripts --no-interaction
+            -
+                name: Restrict Adyen version
+                if: matrix.adyen != ''
+                run: composer require "adyen/php-api-library:${{ matrix.adyen }}" --no-update --no-scripts --no-interaction
 
             -
                 name: Install PHP dependencies
